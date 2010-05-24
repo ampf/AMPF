@@ -2,7 +2,7 @@
 
     <property name="product" value="appscio-nrl-mpf"/>
     <property name="MPF" location="."/>
-    <property name="GRDF" location="../grdf"/>
+    <property name="GRDF" location="../GRDF"/>
     <property name="USR_LIB" location="/usr/lib64"/>
     <property name="build.compiler" value="modern"/>
     <property name="junit.results" value="junit_results"/>
