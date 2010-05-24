@@ -20,9 +20,7 @@ The Appscio MPF project contains the following subdirectories:
 
 - GRDF - The G Resource Definition Framework
 - MPF - The Media Processing Framework, including sample components
-- applications - Applications built on Appscio MPF
 - docs - Supporting documentation
-- tools - Tools that extend the Appscio MPF
 
 
 BUILDING MPF
@@ -47,32 +45,6 @@ following prerequisites:
 Once the prerequisites are installed, go to the MPF subdirectory and run:
 
 ant build-all
-
-
-BUILDING THE GRAILS-MPF-DETECTOR PLUGIN
-=======================================
-
-The plugin requires Grails version 1.2.1 (http://grails.org/download/archive/Grails)
-
-To build the plugin for installation in a standalone Grails application, go to
-tools/grails-plugins/VideoEventDetect and run:
-
-grails package-plugin
-
-To run the plugin under a test application, go to
-tools/grails-plugins/VideoEventDetect/test/projects/MpfDetectorPluginTestbed and run:
-
-grails run-app
-
-
-BUILDING THE LARGE DATA EVALUATOR APPLICATION
-=============================================
-
-Requires Grails version 1.2.1 (http://grails.org/download/archive/Grails)
-
-Go to applications/LDE and run:
-
-grails run-app
 
 
 ROAD MAP
