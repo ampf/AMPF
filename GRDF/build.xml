@@ -1,0 +1,31 @@
+<project name="grdf" default="all">
+
+    <property name="product" value="appscio-nrl-mpf" />
+    <property name="USR_LIB" location="/usr/lib64" />
+    <property name="build.compiler" value="modern"/>
+    <property name="junit.results" value="junit_results"/>
+
+    <!-- Override on command line if desired -->
+    <property name="test.enabled" value=""/>
+    <property name="test.disabled" value=""/>
+    <property name="test.env" value="@@"/>
+    <property name="timeout" value="40"/>
+
+    <target name="all" depends="build-all" />
+
+    <target name="clean" depends="clean-all" />
+
+    <target name="build-all">
+        <exec command="sh -c ./build-all.sh" >
+        </exec>
+    </target>
+
+    <target name="clean-all">
+        <exec command="make svnclean" />
+    </target>
+
+	<target name="test-build">
+		<echo>No Tests</echo>
+	</target>
+
+</project>

@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# Inputs: (apply to launch line like this: gstargs=-v ./test-2)
+#
+#   prefix:	  Prefix to apply to launch line (e.g. "gdb --args" for debugging)
+#   args:     Arguments to supply to prefix (e.g. prefix=valgrind args=-v)
+#   version:  Use specific version of gstlaunch (e.g. prefix=valgrind version=-0.10)
+#   gstargs:  Gstreamer arguments (e.g. gst-args=-v)
+#
+
+export GST_PLUGIN_PATH=../.libs:$GST_PLUGIN_PATH
+
+# Use pipeline to fork multiple gstreamer launch processes.
+#
+$prefix $args gst-launch$version $gstargs \
+    fakesrc num-buffers=100 sizetype=2 sizemax=10 filltype=4 datarate=10 do-timestamp=true ! mpf-identity sleep=0.1 ! \
+    mpf-pipeline loglevel=0 concurrent=1 pipeline="appsrc ! mpf-identity dump=buffers sleep=0.2 name=identity-%d ! \
+       mpf-fork sink-first=true loglevel=1 command=\"gst-launch filesrc location=%%1\$s ! queue ! mpf-identity dump=buffers name=identity-fork-%d ! filesink location=%%2$\s async=false sync=false\" ! fakesink "  ! fakesink dump=true async=false sync=false

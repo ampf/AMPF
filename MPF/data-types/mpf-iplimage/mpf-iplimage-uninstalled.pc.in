@@ -1,0 +1,11 @@
+prefix=
+exec_prefix=
+libdir=${pcfiledir}/mpf
+includedir=${pcfiledir}
+
+Name: MPF OpenCV IplImage data type (uninstalled)
+Description: Appscio MPF OpenCV IplImage data type (uninstalled)
+Requires: mpf-core opencv
+Version: @VERSION@
+Libs: ${pcfiledir}/mpf/libmpf-iplimage.la
+Cflags: -I${pcfiledir}

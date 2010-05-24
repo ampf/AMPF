@@ -1,0 +1,15 @@
+mpfcomponent:
+
+In _chain, buffers come in with one reference inherited by the element.
+For management purposes (collecting data of the same timestamp), another reference 
+will be added as the buffer comes in.
+This reference will be removed after the processing cycle completes as all the 
+buffers for the current timestamp are removed from their queues.
+
+
+user component:
+
+When getting a piece of data, a reference is being inherited by the component.  The 
+component is responsible for requesting that it be made writable if necessary.  Once 
+the component is done with a piece of data, it must dispose of it one of two ways: 
+a) push it out to the next component, or free it.

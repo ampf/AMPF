@@ -1,0 +1,24 @@
+#!/bin/sh
+#
+# Test wrapping a system command for multi-buffer execution.
+
+java=../../../java
+cp=$java/../target/classes
+
+# TODO: Not totally safe, but pretty close.
+#
+sink=`mktemp -u /tmp/appscio-mpf/test-pipe-$$-XXXXXX`
+src=`mktemp -u /tmp/appscio-mpf/test-pipe-$$-XXXXXX`
+mkfifo $sink $src
+
+# Try to fork a JVM for a non-existent class to make sure error terminates pipeline.
+#
+$1 $prefix $args gst-launch$version fakesrc datarate=1 num-buffers=2 sizetype=2 sizemax=10 filltype=4 ! \
+  mpf-buf-rdf name="buf" ! mpf-rdf-ton3 ! \
+  mpf-fork loglevel=0 mode=wrap command="java -classpath $cp -Dmpf-debug=false NoClass %s %s \"cat <$sink >$src\" $sink $src || kill \$PPID" ! \
+  fakesink dump=true
+
+status=$?
+rm -f $sink $src
+
+exit $status

@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+# Tests the GRDF muxer.  Generate two streams of buffers with different data rates.  This demonstrates
+# that time is not currently taken into account when multiplexing RDF buffers together.
+#
+src1="fakesrc num-buffers=10 sizetype=2 sizemax=10 filltype=4 do-timestamp=true datarate=10"
+src2="fakesrc num-buffers=10 sizetype=2 sizemax=10 filltype=4 do-timestamp=true datarate=5"
+
+$1 $prefix $args gst-launch$version \
+  $src1 ! mpf-buf-rdf name=rdf-a \
+  $src2 ! mpf-buf-rdf name=rdf-b \
+  rdf-a.rdf ! mpf-rdf-mux mpf-debug=0 name=mux \
+  rdf-b.rdf ! mux. \
+  mux. ! queue ! mpf-rdf-ton3 ! filesink location=/dev/stdout \

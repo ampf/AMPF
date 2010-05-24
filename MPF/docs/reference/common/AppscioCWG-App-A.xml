@@ -1,0 +1,1012 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article lang="">
+<para>
+<ulink url="http://confluence.appscio.com/display/ENG/APPSCIO%28TM%29+MPF+Component+Writer%27s+Guide">APPSCIO(TM) MPF Component Writer's Guid</ulink>
+<ulink url="http://confluence.appscio.com/display/ENG/APPSCIO%28TM%29+MPF+Component+Writer%27s+Guide">e – Appendix A</ulink>
+</para>
+<para>Introduction</para>
+<para>According to [1], there is a lack of video analytics software components for the Linux world. Each video analytics software component's capability, such as face recognition, is delivered in a monolithic software application rather than as a reusable plug-in.</para>
+<para>Linux has historically lagged behind other operating systems in multimedia processing software applications [2]. Microsoft Windows™ and Apple's MacOS™ both have strong support for multimedia devices, multimedia content creation, playback, and real-time processing. On the other hand, Linux has a poorly integrated collection of multimedia software utilities and applications available, which can't begin to compete with the professional level of software available for Microsoft Windows™ and Apple's MacOS™.</para>
+<para>The Linux user who wishes to hear a sound file must hunt through his collection of sound file players in order to play the tens of sound file formats in wide use today. Most of these players basically reimplement the same logic over and over again. The Linux developer who wishes to embed a video clip in their application must use crude hacks to run an external video player. There is no library available that a developer can use to create a custom media player.</para>
+<para>A typical media player might have a plug-in for different media types. Two media players will typically implement their own plug-in mechanism so that the codecs cannot be easily exchanged. The plug-in system of a typical media player is also very tailored to the specific needs of the software application. This lack of a unified plug-in mechanism seriously hinders the creation of binary only codecs for no company is willing to port their code to all the different plugin mechanisms.</para>
+<para>While GStreamer also uses it own plug-in mechanism it offers a rich framework for the plugin developer and ensures the plug-in can be used in a wide range of software applications, transparently interacting with other plug-ins. The framework that GStreamer provides for the plug-ins is flexible enough to host even the most demanding plug-ins.</para>
+<para>The Media Processing Framework (MPF), which is an extension of GStreamer, is an extremely powerful and versatile framework for creating multimedia-based software components. Many of the virtues of the MPF framework come from its modularity: MPF can seamlessly incorporate new plugin modules. But because modularity and power often come at a cost of greater complexity, writing new applications is not always easy.</para>
+<para>This guide is intended to help you understand the MPF framework (version 0.0.3) so you can develop multimedia-based software applications with it. The first chapter of this guide defines a framework for understanding software architecture via elements, revealing how these elements can be used to guide the architectural design of multimedia-based software applications.</para>
+<para>Chapter 2 introduces the standard architectural constraints necessary to create new GstElements for use as MPF software plug-in components in an pipeline.</para>
+<para>Architecting an MPF component requires an understanding of its requirements, as we shall discuss in Chapter 3. Here we integrate the Open Source Computer Vision library (Open CV) into an MPF component. Open CV is a library mainly aimed at real time computer vision-based software applications. Some example areasw would be: Human-Computer Interaction (HCI); Object Identification, Segmentation, and Recognition; Face Recognition; Gesture Recognition; Motion Tracking, Ego Motion, Motion Understanding; Structure From Motion (SFM); and Mobile Robotics [3].</para>
+<para>The last two chapters present the some of the source code and the build artifacts necessaries to design and implement an MPF software component.</para>
+<para>In summary, this writer's guide makes the following contributions to plug-in or component development within the field of Video Analytics Software Applications for the Linux Desktop:</para>
+<orderedlist>
+<listitem>
+<para>a framework for understanding video analytics software component development through architectural styles; </para>
+</listitem>
+<listitem>
+<para>a classification of ; and, </para>
+</listitem>
+<listitem>
+<para>. </para>
+</listitem>
+</orderedlist>
+<para>CHAPTER 1: Defining the MPF Open CV Component: Sources</para>
+<para>This chapter focuses on the format of the data that is expected to flow through the source pads [4] by the Open CV software library. It is worth noting that images in Open CV are not stored using the traditional RGB color space; rather they're stored in BGR.</para>
+<para>How to Create An Image using the Open CV library</para>
+<para>To draw a red square we'll need to start off by creating an image:</para>
+<para>IplImage *img = cvCreateImage(cvSize(100, 100), IPL_DEPTH_8U, 3);</para>
+<para>This creates an image of widthxheight 100x100, using 8-bit unsigned integers to represent the color values, and with 3 color channels. However, 8-bit unsigned values are not the only type available; values can also be held as 32-bit floating point numbers (IPL_DEPTH_32F) and a variety of other ways. In each case the depth is represented as IPL_DEPTH_&lt;bits&gt;{U|S|F}</para>
+<para>where U, S and F stand for unsigned, signed and floating point. i.e.IPL_DEPTH_8UIPL_DEPTH_8SIPL_DEPTH_16UIPL_DEPTH_16SIPL_DEPTH_32SIPL_DEPTH_32FIPL_DEPTH_64FAlso notice that it's a pointer to an image - all images should be created in this way when using Open CV as most (if not all) of its methods take image pointers as parameters in order to modify images directly.</para>
+<para>Image Data</para>
+<para>Images are not stored by pixel. Instead they are stored as arrays of color levels which means less processor overhead as you're not constantly dereferencing pointers. These arrays of color are stored in BGR order (as mentioned above).</para>
+<para>e.g. IplImage's imageData field looks like this...</para>
+<informaltable frame="all">
+<tgroup cols="6">
+<colspec colnum="1" colname="c1"/>
+<colspec colnum="2" colname="c2"/>
+<colspec colnum="3" colname="c3"/>
+<colspec colnum="4" colname="c4"/>
+<colspec colnum="5" colname="c5"/>
+<colspec colnum="6" colname="c6"/><tbody>
+<row>
+<entry>
+<para>imageData[0] </para>
+</entry>
+<entry>
+<para>imageData[1] </para>
+</entry>
+<entry>
+<para>imageData[2] </para>
+</entry>
+<entry>
+<para>imageData[3] </para>
+</entry>
+<entry>
+<para>imageData[4] </para>
+</entry>
+<entry>
+<para>imageData[5] </para>
+</entry>
+</row>
+<row>
+<entry>
+<para>B </para>
+</entry>
+<entry>
+<para>G </para>
+</entry>
+<entry>
+<para>R </para>
+</entry>
+<entry>
+<para>B </para>
+</entry>
+<entry>
+<para>G </para>
+</entry>
+<entry>
+<para>R </para>
+</entry>
+</row>
+<row>
+<entry>
+<para>colour </para>
+</entry>
+<entry>
+<para>values </para>
+</entry>
+<entry>
+<para>go </para>
+</entry>
+<entry>
+<para>in </para>
+</entry>
+<entry>
+<para>these </para>
+</entry>
+<entry>
+<para>elements </para>
+</entry>
+</row></tbody></tgroup>
+</informaltable>
+<para>...as opposed to this:</para>
+<informaltable frame="all">
+<tgroup cols="6"><tbody>
+<row>
+<entry>
+<para> </para>
+</entry>
+<entry>
+<para>imageData[0] </para>
+</entry>
+<entry>
+<para> </para>
+</entry>
+<entry>
+<para> </para>
+</entry>
+<entry>
+<para>imageData[1] </para>
+</entry>
+<entry>
+<para> </para>
+</entry>
+</row>
+<row>
+<entry>
+<para>-&gt; red </para>
+</entry>
+<entry>
+<para>-&gt; green </para>
+</entry>
+<entry>
+<para>-&gt; blue </para>
+</entry>
+<entry>
+<para>-&gt; red </para>
+</entry>
+<entry>
+<para>-&gt; green </para>
+</entry>
+<entry>
+<para>-&gt; blue </para>
+</entry>
+</row>
+<row>
+<entry>
+<para>colour </para>
+</entry>
+<entry>
+<para>values </para>
+</entry>
+<entry>
+<para>go </para>
+</entry>
+<entry>
+<para>in </para>
+</entry>
+<entry>
+<para>these </para>
+</entry>
+<entry>
+<para>elements </para>
+</entry>
+</row></tbody></tgroup>
+</informaltable>
+<para>Greyscale image structures differ very slightly - instead of having three channels they have just the one (for brightness) that can be accessed in the same way.i.e. cvCreateImage(cvSize(100, 100), IPL_DEPTH_8U, 1)In this case the first pixel would be imageData<ulink url="http://confluence.appscio.com/pages/createpage.action?spaceKey=ENG&amp;title=0&amp;linkCreation=true&amp;fromPageId=5342292">0</ulink>, the second would be imageData<ulink url="http://confluence.appscio.com/pages/createpage.action?spaceKey=ENG&amp;title=1&amp;linkCreation=true&amp;fromPageId=5342292">1</ulink> and so on.</para>
+<para>Finally, images in Open CV are padded. Most image formats available today such as JPEG, PNG, TIFF and the like are padded out so that the number of columns in an image is divisible by 4 - with the exception of BMPs. This means that if you ever get around to converting between image structures using BMPs, you can get some rather interesting skewing effects if you try to simply copy the data arrays over. (This was discovered whilst trying to convert between Leeds' libRTImage library and Open CV.)</para>
+<para>CHAPTER 2: Defining the MPF Open CV Component: Sinks</para>
+<para>CHAPTER 3: Designing and Implementing the MPF Open CV Component</para>
+<para>This chapter presents a detailed architectural design of the elements, pads and capabilities sufficient to host some of the OpenCV <ulink url="http://confluence.appscio.com/pages/createpage.action?spaceKey=ENG&amp;title=4&amp;linkCreation=true&amp;fromPageId=5342292">4</ulink> library image detection algorithms as an MPF component.</para>
+<para>Elements</para>
+<para>The GstFromIplImage Element</para>
+<para>The type casting macros</para>
+<para>#define GST_TYPE_FROMIPLIMAGE            (gst_fromiplimage_get_type ())</para>
+<para>#define GST_FROMIPLIMAGE(obj)            (G_TYPE_CHECK_INSTANCE_CAST((obj),GST_TYPE_FROMIPLIMAGE,GstFromIplImage))</para>
+<para>#define GST_FROMIPLIMAGE_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST((klass),GST_TYPE_FROMIPLIMAGE,GstFromIplImageClass))</para>
+<para>#define GST_IS_FROMIPLIMAGE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE((obj),GST_TYPE_FROMIPLIMAGE))</para>
+<para>#define GST_IS_FROMIPLIMAGE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass),GST_TYPE_FROMIPLIMAGE))</para>
+<para>The instance structure</para>
+<para>struct _GstFromIplImage {</para>
+<para>   GstElement element;</para>
+<para/>
+<para>   /* instance members */</para>
+<para>   GstPad *sinkpad, *srcpad;</para>
+<para>   GstCaps *srccaps;</para>
+<para>   gint depth;    /// The color depth</para>
+<para>   gint channels; /// The number of channels</para>
+<para>   gint width;    /// The width</para>
+<para>   gint height;   /// The height</para>
+<para>};</para>
+<para>The following figure shows the memory layout of a struc _GstFromIplImage instance structure:</para>
+<informaltable frame="all">
+<tgroup cols="3">
+<colspec colnum="1" colname="c1"/>
+<colspec colnum="2" colname="c2"/>
+<colspec colnum="3" colname="c3"/><tbody>
+<row>
+<entry>
+<para>GstElement </para>
+</entry>
+<entry>
+<para>GstPad* </para>
+</entry>
+<entry>
+<para>GstPad* </para>
+</entry>
+<entry>
+<para>gint </para>
+</entry>
+<entry>
+<para>gint </para>
+</entry>
+<entry>
+<para>gint </para>
+</entry>
+<entry>
+<para>gint </para>
+</entry>
+</row></tbody></tgroup>
+</informaltable>
+<para>Note that the GstElement is contained, making the GstFromIplImage type a subtype of GstElement.</para>
+<para>The class structure</para>
+<para>struct _GstFromIplImageClass {</para>
+<para>  GstElementClass parent_class;</para>
+<para>};</para>
+<para>The GstToIplImage Element</para>
+<para>The type casting macros</para>
+<para>#define GST_TYPE_TOIPLIMAGE            (gst_toiplimage_get_type ())</para>
+<para>#define GST_TOIPLIMAGE(obj)            (G_TYPE_CHECK_INSTANCE_CAST((obj),GST_TYPE_TOIPLIMAGE,GstToIplImage))</para>
+<para>#define GST_TOIPLIMAGE_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST((klass),GST_TYPE_TOIPLIMAGE,GstToIplImageClass))</para>
+<para>#define GST_IS_TOIPLIMAGE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE((obj),GST_TYPE_TOIPLIMAGE))</para>
+<para>#define GST_IS_TOIPLIMAGE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass),GST_TYPE_TOIPLIMAGE))</para>
+<para>The instance structure</para>
+<para>stuct _GstToIplImage {</para>
+<para>  GstElement element;</para>
+<para/>
+<para>  /* instance members */</para>
+<para>  GstPad *sinkpad, *srcpad;</para>
+<para>  GstCaps *srccaps;</para>
+<para>  gint depth;    /// The color depth</para>
+<para>  gint channels; /// The channels</para>
+<para>  gint width;    /// The width</para>
+<para>  gint height;   /// The height</para>
+<para>};</para>
+<para>The following figure shows the memory layout of a struct _GstToIplImage instance structure:</para>
+<informaltable frame="all">
+<tgroup cols="3">
+<colspec colnum="1" colname="c1"/>
+<colspec colnum="2" colname="c2"/>
+<colspec colnum="3" colname="c3"/><tbody>
+<row>
+<entry>
+<para>GstElement </para>
+</entry>
+<entry>
+<para>GstPad* </para>
+</entry>
+<entry>
+<para>GstPad* </para>
+</entry>
+<entry>
+<para>gint </para>
+</entry>
+<entry>
+<para>gint </para>
+</entry>
+<entry>
+<para>gint </para>
+</entry>
+<entry>
+<para>gint </para>
+</entry>
+</row></tbody></tgroup>
+</informaltable>
+<para>Note that the GstElement is contained, making the GstToIplImage type a subtype of GstElement.</para>
+<para>The class structure</para>
+<para>struct _GstToIplImageClass {</para>
+<para>  GstElementClass parent_class;</para>
+<para>};</para>
+<para>Pads and Capabilities</para>
+<para>The GstStaticCaps mpf_iplimage_caps Capabilities</para>
+<para>#define MPF_IPLIMAGE_CAPS                                                \</para>
+<para>        "video/x-raw-iplimage, "                                        \</para>
+<para>        "format = (string) { 8U, 8S, 16U, 16S, 32S, 32F, 64F }, "        \</para>
+<para>        "channels = (int) [ 1, 4 ], "                                        \</para>
+<para>        "width = " GST_VIDEO_SIZE_RANGE ", "                                \</para>
+<para>        "height = " GST_VIDEO_SIZE_RANGE</para>
+<para>The GstStaticCaps mpf_objlist_caps Capabilities</para>
+<para>#define MPF_OBJLIST_CAPS                \</para>
+<para>        "application/x-mpf-objectlist"</para>
+<para>Implementing the OpenCV Haar Object Detection Component</para>
+<para>Start out by including the C header files for the data types needed: iplimage and objlist.</para>
+<para>#include &lt;mpf/mpf-iplimage.h&gt;#include &lt;mpf/mpf-objlist.h&gt;</para>
+<para>These #define's MUST exist, and provide the template with the various pieces of identification GStreamer needs.</para>
+<para>#define COMPONENT_NAME "cvhaar"#define COMPONENT_DESC "OpenCV Haar object detection"#define COMPONENT_AUTH "Erik Walthinsen &lt;omega@appscio.com&gt;"</para>
+<para>This structure exists separately as mpf_private for each instance of a component; it is used for storing parameters and persistant data. This structure must exist even if it's empty, or the compiler will error out.</para>
+<para>struct component_private {</para>
+<para>  CvHaarClassifierCascade *cascade;</para>
+<para>};</para>
+<para>Here we include the template itself, which is responsible for making this component easy to code.</para>
+<para>#include &lt;mpf/mpfcomponenttemplate.h&gt;</para>
+<para>Class Initialization</para>
+<para>class_init</para>
+<para>The class_init function must register the inputs and outputs of the component, as well as any parameters it might provide. This is also a good place to do any loading of common datasets.</para>
+<para>/**</para>
+<para> *</para>
+<para> */</para>
+<para>static void component_class_init(MpfComponentClass *klass) {</para>
+<para>  mpf_iplimage_add_input("input", MPF_IPLIMAGE_FORMAT_ANY);</para>
+<para>  mpf_objlist_add_output("output");</para>
+<para>}</para>
+<para>Component Initialization</para>
+<para>component_init</para>
+<para>The component_init function is called for each instance of the component, and is where we are going to load the Haar cascade into our private structure.</para>
+<para>/**</para>
+<para> *</para>
+<para> */</para>
+<para>static void component_init(MpfComponent *component) {</para>
+<para>  mpf_private.cascade = (CvHaarClassifierCascade *)cvLoad("haarcascade_frontalface_alt.xml", 0, 0, 0);</para>
+<para>}</para>
+<para>Component Processing</para>
+<para>The main process function is where our work begins. It is called once per frame, at which point all the buffers of the same timestamp from each of the element's inputs are available.</para>
+<para>component_processs</para>
+<para>/**</para>
+<para> *</para>
+<para> */</para>
+<para>static MpfComponentProcessReturn component_process(MpfComponent *component) {</para>
+<para>  struct component_private *priv = &amp;MPF_COMPONENT_PRIVATE(component);</para>
+<para>  CvMemStorage *storage;</para>
+<para>  CvSeq *faces;</para>
+<para>  int i;</para>
+<para>  MpfObjectList *facelist;</para>
+<para/>
+<para> /* The first thing we do is pull the image we want to work on from our</para>
+<para>  * input pad.  We are using the data-type specific function for this,</para>
+<para>  * which means its return is indeed an IplImage *.</para>
+<para>  */</para>
+<para>  IplImage *src = mpf_iplimage_pull("input");</para>
+<para/>
+<para> /* Here we perform our actual processing, which is a call out to OpenCV.</para>
+<para>  */</para>
+<para>  storage = cvCreateMemStorage(0);</para>
+<para>  faces = cvHaarDetectObjects (src, priv-&gt;cascade, storage, 1.1, 2,</para>
+<para>        CV_HAAR_DO_CANNY_PRUNING, cvSize(30,30));</para>
+<para/>
+<para> /* As we are now done with the image data itself, and we are not going</para>
+<para>  * to be pushing it further down the pipeline, we must release our</para>
+<para>  * reference to it.  If we are the only user of the image, it will be</para>
+<para>  * freed from memory.</para>
+<para>  */</para>
+<para>  mpf_iplimage_unref(src);</para>
+<para/>
+<para> /* The output of this component is an object list, in this case</para>
+<para>  * containing the locations and sizes of the faces found in the image.</para>
+<para>  * We use a data-type specific allocation routine, which gives us the</para>
+<para>  * structure of the right size.</para>
+<para>  */</para>
+<para>  facelist = mpf_objlist_new(faces-&gt;total);</para>
+<para/>
+<para> /* Looping through the OpenCV-provided list of found objects, we</para>
+<para>  * transliterate it into the objlist format.</para>
+<para>  */</para>
+<para>  for (i=0;i&lt; faces-&gt;total; i++) {</para>
+<para>    CvRect *r = (CvRect *)cvGetSeqElem(faces, i);</para>
+<para>    facelist-&gt;list[i].type = MPF_OBJLIST_TYPE_FACE;</para>
+<para>    facelist-&gt;list[i].x = r-&gt;x;</para>
+<para>    facelist-&gt;list[i].y = r-&gt;y;</para>
+<para>    facelist-&gt;list[i].w = r-&gt;width;</para>
+<para>    facelist-&gt;list[i].h = r-&gt;height;</para>
+<para>    facelist-&gt;list[i].quality = 10;</para>
+<para>    facelist-&gt;list[i].uid = -1;</para>
+<para>    facelist-&gt;list[i].name = g_strdup_printf("Face");</para>
+<para>  }</para>
+<para/>
+<para> /* And finally, we push the face list out to whatever the next element</para>
+<para>  * is in the chain.  The reference we "owned" by creating the objlist is</para>
+<para>  * implicitly transfered over to the next element.</para>
+<para>  */</para>
+<para>  mpf_objlist_push("output", facelist);</para>
+<para/>
+<para>  return MPF_GOOD;</para>
+<para/>
+<para>}</para>
+<para>Summary</para>
+<para>CHAPTER 4: Building the MPF Open CV Component: Problems and Insights</para>
+<para>This chapter presents the configure.ac and Makefile.am files used to build the Open CV component present in the Appscio SVN repository [5]. The Open CV component has the following directory structure:</para>
+<para>  .</para>
+<para>  |--m4/</para>
+<para>  |--mpf</para>
+<para>  |  |--fromiplimage.h</para>
+<para>  ...</para>
+<para>  |--notes/</para>
+<para>  |--configure.ac</para>
+<para>  |--Makefile.am</para>
+<para>  |--gst-autogen.sh</para>
+<para>  ...</para>
+<para/>
+<para>Autotools</para>
+<para>configure.ac</para>
+<para>AC_INIT</para>
+<para/>
+<para>dnl versions of gstreamer and plugins-base</para>
+<para>GST_MAJORMINOR=0.10</para>
+<para>GST_REQUIRED=0.10.0</para>
+<para>MPF_CORE_REQUIRED=0.0.2</para>
+<para/>
+<para>dnl fill in your package name and version here</para>
+<para>dnl the fourth (nano) number should be 0 for a release, 1 for CVS,</para>
+<para>dnl and 2... for a prerelease</para>
+<para/>
+<para>dnl when going to/from release please set the nano correctly !</para>
+<para>dnl releases only do Wall, cvs and prerelease does Werror too</para>
+<para>AS_VERSION(mpf-opencv, MPF_OPENCV_VERSION, 0, 0, 3, 1,</para>
+<para>    GST_PLUGIN_CVS="no", GST_PLUGIN_CVS="yes")</para>
+<para/>
+<para>dnl AM_MAINTAINER_MODE provides the option to enable maintainer mode</para>
+<para>AM_MAINTAINER_MODE</para>
+<para/>
+<para>AM_INIT_AUTOMAKE($PACKAGE, $VERSION)</para>
+<para/>
+<para>dnl make aclocal work in maintainer mode</para>
+<para>AC_SUBST(ACLOCAL_AMFLAGS, "-I m4")</para>
+<para/>
+<para>AM_CONFIG_HEADER(config.h)</para>
+<para/>
+<para>dnl check for tools</para>
+<para>AC_PROG_CC</para>
+<para>AC_PROG_LIBTOOL</para>
+<para/>
+<para/>
+<para>dnl decide on error flags</para>
+<para>AS_COMPILER_FLAG(-Wall, GST_WALL="yes", GST_WALL="no")</para>
+<para/>
+<para>if test "x$GST_WALL" = "xyes"; then</para>
+<para>#   GST_ERROR="$GST_ERROR -Wall"</para>
+<para/>
+<para>   if test "x$GST_PLUGIN_CVS" = "xno"; then</para>
+<para>     AS_COMPILER_FLAG(-Werror,GST_ERROR="$GST_ERROR -Werror",GST_ERROR="$GST_ERROR")</para>
+<para>   fi</para>
+<para>fi</para>
+<para/>
+<para>dnl Check for pkgconfig first</para>
+<para>AC_CHECK_PROG(HAVE_PKGCONFIG, pkg-config, yes, no)</para>
+<para/>
+<para>dnl Give error and exit if we don't have pkgconfig</para>
+<para>if test "x$HAVE_PKGCONFIG" = "xno"; then</para>
+<para>  AC_MSG_ERROR(you need to have pkgconfig installed !)</para>
+<para>fi</para>
+<para/>
+<para>dnl Now we're ready to ask for gstreamer libs and cflags</para>
+<para>dnl And we can also ask for the right version of gstreamer</para>
+<para/>
+<para/>
+<para>PKG_CHECK_MODULES(GST, \</para>
+<para>  gstreamer-$GST_MAJORMINOR &gt;= $GST_REQUIRED,</para>
+<para>  HAVE_GST=yes,HAVE_GST=no)</para>
+<para/>
+<para>dnl Give error and exit if we don't have gstreamer</para>
+<para>if test "x$HAVE_GST" = "xno"; then</para>
+<para>  AC_MSG_ERROR(you need gstreamer development packages installed !)</para>
+<para>fi</para>
+<para/>
+<para>dnl append GST_ERROR cflags to GST_CFLAGS</para>
+<para>GST_CFLAGS="$GST_CFLAGS $GST_ERROR"</para>
+<para/>
+<para>dnl make GST_CFLAGS and GST_LIBS available</para>
+<para>AC_SUBST(GST_CFLAGS)</para>
+<para>AC_SUBST(GST_LIBS)</para>
+<para/>
+<para>dnl make GST_MAJORMINOR available in Makefile.am</para>
+<para>AC_SUBST(GST_MAJORMINOR)</para>
+<para/>
+<para/>
+<para/>
+<para/>
+<para>export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:`pwd`/../mpf-core</para>
+<para>PKG_CHECK_MODULES(MPF_CORE,</para>
+<para>                  mpf-core,</para>
+<para>                  HAVE_MPF_CORE=yes, HAVE_MPF_CORE=no)</para>
+<para/>
+<para>dnl Give error and exit if we don't have mpf-core</para>
+<para>if test "x$HAVE_MPF_CORE" = "xno"; then</para>
+<para>  AC_MSG_ERROR(no MPF Core libraries found (mpf-core))</para>
+<para>fi</para>
+<para/>
+<para>dnl make _CFLAGS and _LIBS available</para>
+<para>AC_SUBST(MPF_CORE_CFLAGS)</para>
+<para>AC_SUBST(MPF_CORE_LIBS)</para>
+<para/>
+<para/>
+<para>dnl Pull in OpenCV</para>
+<para>PKG_CHECK_MODULES(OPENCV, opencv, HAVE_OPENCV=yes, HAVE_OPENCV=no)</para>
+<para/>
+<para>dnl Give error and exit if we don't have opencv</para>
+<para>if test "x$HAVE_OPENCV" = "xno"; then</para>
+<para>  AC_MSG_ERROR(you need OpenCV development packages installed !)</para>
+<para>fi</para>
+<para/>
+<para>dnl make _CFLAGS and _LIBS available</para>
+<para>AC_SUBST(OPENCV_CFLAGS)</para>
+<para>AC_SUBST(OPENCV_LIBS)</para>
+<para/>
+<para/>
+<para/>
+<para>dnl set the plugindir where plugins should be installed</para>
+<para>if test "x${prefix}" = "x$HOME"; then</para>
+<para>  plugindir="$HOME/.gstreamer-$GST_MAJORMINOR/plugins"</para>
+<para>else</para>
+<para>  plugindir="\$(libdir)/gstreamer-$GST_MAJORMINOR"</para>
+<para>fi</para>
+<para>AC_SUBST(plugindir)</para>
+<para/>
+<para/>
+<para>dnl set proper LDFLAGS etc for plugins</para>
+<para>GST_PLUGIN_LDFLAGS='-module -avoid-version -export-symbols-regex [_]*\(gst_\|Gst\|GST_\).*'</para>
+<para>AC_SUBST(GST_PLUGIN_LDFLAGS)</para>
+<para/>
+<para/>
+<para>AC_OUTPUT([</para>
+<para>  Makefile</para>
+<para>  mpf-opencv.pc</para>
+<para>  mpf-opencv.spec</para>
+<para>  mpf/Makefile</para>
+<para>])</para>
+<para>Makefile.am</para>
+<para>lib_LTLIBRARIES = libmpf-iplimage.la libmpf-objlist.la</para>
+<para/>
+<para>libmpf_iplimage_la_SOURCES = mpf-iplimage.c</para>
+<para>libmpf_iplimage_la_CFLAGS = $(GST_CFLAGS) $(MPF_CORE_CFLAGS) $(OPENCV_CFLAGS)</para>
+<para>libmpf_iplimage_la_LIBADD = $(GST_LIBS) $(MPF_CORE_LIBS) $(OPENCV_LIBS)</para>
+<para>#libmpf_iplimage_la_LDFLAGS = $(GST_LIB_LDFLAGS)</para>
+<para/>
+<para>libmpf_iplimageincludedir = $(includedir)/gstreamer/mpf</para>
+<para>libmpf_iplimageinclude_HEADERS = mpf-iplimage.h</para>
+<para/>
+<para>libmpf_objlist_la_SOURCES = mpf-objlist.c</para>
+<para>libmpf_objlist_la_CFLAGS = $(GST_CFLAGS) $(MPF_CORE_CFLAGS)</para>
+<para>libmpf_objlist_la_LIBADD = $(GST_LIBS) $(MPF_CORE_LIBS)</para>
+<para>#libmpf_objlist_la_LDFLAGS = $(GST_LIB_LDFLAGS)</para>
+<para/>
+<para>libmpf_objlistincludedir = $(includedir)/gstreamer/mpf</para>
+<para>libmpf_objlistinclude_HEADERS = mpf-objlist.h</para>
+<para/>
+<para>plugin_LTLIBRARIES =                                \</para>
+<para>        libtoiplimage.la                        \</para>
+<para>        libfromiplimage.la                        \</para>
+<para>        libcvsmooth.la                                \</para>
+<para>        libcvsobel.la                                \</para>
+<para>        libcvcanny.la                                \</para>
+<para>        libcvcvtcolor.la                        \</para>
+<para>        libcvhaar.la                                \</para>
+<para>        libobjmarkup.la                                \</para>
+<para>        libobjcorrelate.la                        \</para>
+<para>        libiplsink.la                                \</para>
+<para>        libiplidentity.la</para>
+<para/>
+<para>libtoiplimage_la_SOURCES = toiplimage.c</para>
+<para>libtoiplimage_la_CFLAGS = $(GST_CFLAGS) $(MPF_CORE_CFLAGS) $(OPENCV_CFLAGS)</para>
+<para>libtoiplimage_la_LIBADD = $(GST_LIBS) $(MPF_CORE_LIBS) $(OPENCV_LIBS) libmpf-iplimage.la</para>
+<para>libtoiplimage_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)</para>
+<para/>
+<para>libfromiplimage_la_SOURCES = fromiplimage.c</para>
+<para>libfromiplimage_la_CFLAGS = $(GST_CFLAGS) $(MPF_CORE_CFLAGS) $(OPENCV_CFLAGS)</para>
+<para>libfromiplimage_la_LIBADD = $(GST_LIBS) $(MPF_CORE_LIBS) $(OPENCV_LIBS) libmpf-iplimage.la</para>
+<para>libfromiplimage_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)</para>
+<para/>
+<para>libcvsmooth_la_SOURCES = cvsmooth.c</para>
+<para>libcvsmooth_la_CFLAGS = $(GST_CFLAGS) $(MPF_CORE_CFLAGS) $(OPENCV_CFLAGS)</para>
+<para>libcvsmooth_la_LIBADD = $(GST_LIBS) $(MPF_CORE_LIBS) $(OPENCV_LIBS) libmpf-iplimage.la</para>
+<para>libcvsmooth_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)</para>
+<para/>
+<para>libcvsobel_la_SOURCES = cvsobel.c</para>
+<para>libcvsobel_la_CFLAGS = $(GST_CFLAGS) $(MPF_CORE_CFLAGS) $(OPENCV_CFLAGS)</para>
+<para>libcvsobel_la_LIBADD = $(GST_LIBS) $(MPF_CORE_LIBS) $(OPENCV_LIBS) libmpf-iplimage.la</para>
+<para>libcvsobel_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)</para>
+<para/>
+<para>libcvcanny_la_SOURCES = cvcanny.c</para>
+<para>libcvcanny_la_CFLAGS = $(GST_CFLAGS) $(MPF_CORE_CFLAGS) $(OPENCV_CFLAGS)</para>
+<para>libcvcanny_la_LIBADD = $(GST_LIBS) $(MPF_CORE_LIBS) $(OPENCV_LIBS) libmpf-iplimage.la</para>
+<para>libcvcanny_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)</para>
+<para/>
+<para>libcvcvtcolor_la_SOURCES = cvcvtcolor.c</para>
+<para>libcvcvtcolor_la_CFLAGS = $(GST_CFLAGS) $(MPF_CORE_CFLAGS) $(OPENCV_CFLAGS)</para>
+<para>libcvcvtcolor_la_LIBADD = $(GST_LIBS) $(MPF_CORE_LIBS) $(OPENCV_LIBS) libmpf-iplimage.la</para>
+<para>libcvcvtcolor_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)</para>
+<para/>
+<para>libcvhaar_la_SOURCES = cvhaar.c</para>
+<para>libcvhaar_la_CFLAGS = $(GST_CFLAGS) $(MPF_CORE_CFLAGS) $(OPENCV_CFLAGS)</para>
+<para>libcvhaar_la_LIBADD = $(GST_LIBS) $(MPF_CORE_LIBS) $(OPENCV_LIBS) libmpf-iplimage.la libmpf-objlist.la</para>
+<para>libcvhaar_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)</para>
+<para/>
+<para>libobjmarkup_la_SOURCES = objmarkup.c</para>
+<para>libobjmarkup_la_CFLAGS = $(GST_CFLAGS) $(MPF_CORE_CFLAGS) $(OPENCV_CFLAGS)</para>
+<para>libobjmarkup_la_LIBADD = $(GST_LIBS) $(MPF_CORE_LIBS) $(OPENCV_LIBS) libmpf-iplimage.la libmpf-objlist.la</para>
+<para>libobjmarkup_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)</para>
+<para/>
+<para>libobjcorrelate_la_SOURCES = objcorrelate.c</para>
+<para>libobjcorrelate_la_CFLAGS = $(GST_CFLAGS) $(MPF_CORE_CFLAGS) $(OPENCV_CFLAGS)</para>
+<para>libobjcorrelate_la_LIBADD = $(GST_LIBS) $(MPF_CORE_LIBS) $(OPENCV_LIBS) libmpf-iplimage.la libmpf-objlist.la</para>
+<para>libobjcorrelate_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)</para>
+<para/>
+<para>libiplsink_la_SOURCES = iplsink.c</para>
+<para>libiplsink_la_CFLAGS = $(GST_CFLAGS) $(MPF_CORE_CFLAGS) $(OPENCV_CFLAGS)</para>
+<para>libiplsink_la_LIBADD = $(GST_LIBS) $(MPF_CORE_LIBS) $(OPENCV_LIBS) libmpf-iplimage.la</para>
+<para>libiplsink_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)</para>
+<para/>
+<para>libiplidentity_la_SOURCES = iplidentity.c</para>
+<para>libiplidentity_la_CFLAGS = $(GST_CFLAGS) $(MPF_CORE_CFLAGS) $(OPENCV_CFLAGS)</para>
+<para>libiplidentity_la_LIBADD = $(GST_LIBS) $(MPF_CORE_LIBS) $(OPENCV_LIBS) libmpf-iplimage.la</para>
+<para>libiplidentity_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)</para>
+<para/>
+<para>noinst_HEADERS = toiplimage.h fromiplimage.h</para>
+<para>Summary</para>
+<para>Appendix 1: Software Architecture</para>
+<para>This chapter defines the basic building blocks of plug-in or component software development. Each definition, highlighted by an image, is followed by a discussion of how it is utilized in, or relates to, component software development.</para>
+<para>Elements</para>
+<para>The most important class of objects in GStreamer for the software application programmer is the <ulink url="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html">GstElement</ulink>. An element is the basic building block for a multi-media pipeline. All the different high-level components you will use are derived from <ulink url="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html">GstElement</ulink>. Every decoder, encoder, demuxer, video or audio output is a <ulink url="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html">GstElement</ulink>.</para>
+<para>Source Elements</para>
+<para>Source elements generate data for use by a pipeline. For instance, reading from the filesystem or a sound card. Figure 1-1 shows how we will visualise a source element. We always draw a source pad to the right of the element.</para>
+<para>
+<inlinegraphic fileref="embedded:Picture 1" width="1.3744inch" depth="1.1661inch"/>
+</para>
+<para>Source elements do not accept data, they only generate data. You can see this in the figure because it only has a source pad (on the right). A source pad can only generate data.</para>
+<para>Filters, Convertors, Demuxers, Muxers, and Codecs</para>
+<para>Filters and filter-like elements have both input and outputs pads. They operate on data they receive on their input (sink) pads, and provide data on their output (source) pads. Examples of such elements are: a volume element (filter), a video scaler (convertor), an Ogg demuxer, or a Vorbis decoder.</para>
+<para>Filter-like elements can have any number of source or sink pads. A video demuxer, for example, would have one sink pad and several (1...N) source pads, one for each elementary stream contained in the container format. Decoders, on the other hand, will only have one source and sink pads.</para>
+<para>
+<inlinegraphic fileref="embedded:Picture 2" width="1.3744inch" depth="1.1661inch"/>
+</para>
+<para>Figure 1-2 shows how we will visualise a filter-like element. This specific element has one source and one sink element. Sink pads, receiving input data, are depicted at the left of the element; source pads are on the right of the element.</para>
+<para>
+<inlinegraphic fileref="embedded:Picture 3" width="1.3744inch" depth="1.1661inch"/>
+</para>
+<para>Figure 1-3 shows another filter-like element, this one having more than one output (source) pad. An example of one such element could be an Ogg demuxer for an Ogg stream containing both audio and video. One source pad will contain the elementary video stream, another will contain the elementary audio stream. Demuxers will generally fire signals when a new pad is created. The application programmer can then handle the new elementary stream in the signal handler.</para>
+<para>Sink Elements</para>
+<para>Sink elements are end points in a media pipeline. They receive data from other elements in the pipeline. Filesystem writing, soundcard playback, and video output would all be implemented by sink elements. Figure 1-4 shows a sink element.</para>
+<para>
+<inlinegraphic fileref="embedded:Picture 4" width="1.3744inch" depth="1.1661inch"/>
+</para>
+<para>Bins and Pipelines</para>
+<para>A bin is a container element; one can add elements to a bin. Since a bin is an element itself, a bin can be handled in the same way as any other element. Therefore, the whole previous heading (Elements) applies to bins as well. Bins allow one to combine a group of linked elements into one logical element. This is very powerful when construction pipelines for it allows one to break the pipeline into smaller, or more manageable, chunks. Figure 1-5 shows a bin with some linked elements in it.</para>
+<para>
+<inlinegraphic fileref="embedded:Picture 5" width="6.0091inch" depth="1.9992inch"/>
+</para>
+<para>There is one specialized type of bin available to the GStreamer programmer:</para>
+<orderedlist>
+<listitem>
+<para>A pipeline: a generic container that allows scheduling of the containing elements. The toplevel bin has to be a pipeline; hence, every application needs at least one of these. Pipelines will automatically run themselves in a background thread when started. </para>
+</listitem>
+</orderedlist>
+<para>Pads</para>
+<para>As we have seen in Elements, the pads are the element's interface to external devices or other elements. Data streams from one element's source pad to another element's sink pad. The specific type of media that the element can handle will be exposed by the pad's capabilities.</para>
+<para>A pad type is defined by two properties: its direction and its availability. As we've mentioned before, GStreamer defines two pad directions: source pads and sink pads. This terminology is defined from the perspective of an element: elements receive data on their sink pads and generate data on their source pads.</para>
+<para>Summary</para>
+<para>Appendix 2: Designing and Implementing New Data Types</para>
+<para>This chapter presents the architectural constraints or standard boiler plate code necessary to define and implement a new GstElement within context of the MPF framework. This chapter borrows heavily from the GObject Reference Manual <ulink url="http://confluence.appscio.com/pages/createpage.action?spaceKey=ENG&amp;title=3&amp;linkCreation=true&amp;fromPageId=5342292">3</ulink>.</para>
+<para>How to Define and Implement a New GstElement</para>
+<para>Clearly, this is one of the most common questions people are going to ask: how can they crank code and implement a subclass of a GstElement. This chapter will focus on the implementation of a subtype of GstElement. The sample source code associated with this section can be found in the mpf-opencv SVN repository:</para>
+<orderedlist>
+<listitem>
+<para>maman-bar.{h|c}: this is the source for a object which derives from GstElement and which shows how to declare different types of methods on the object. </para>
+</listitem>
+<listitem>
+<para>maman-subbar.{h|c}: this is the source for a object which derives from MamanBar and which shows how to override some of its parent's methods. </para>
+</listitem>
+<listitem>
+<para>maman-foo.{h|c}: this is the source for an object which derives from GstElement and which declares a signal. </para>
+</listitem>
+</orderedlist>
+<para>Boilerplate header code</para>
+<para>The first step before writing the code for your GstElement is to write the type's header which contains the needed type, function and macro definitions. Each of these elements is nothing but a convention which is followed not only by GStreamer's code but also by most users of GstElement. If you feel the need not to obey the rules stated below, think about it twice.</para>
+<para>Pick a name convention for your headers and source code and stick to it:</para>
+<orderedlist>
+<listitem>
+<para>Use a dash to separate the prefix from the typename: maman-bar.h and maman-bar.c (this is the convention used by Nautilus and most GNOME libraries). </para>
+</listitem>
+<listitem>
+<para>Use an underscore to separate the prefix from the typename: maman_bar.h and maman_bar.c. </para>
+</listitem>
+<listitem>
+<para>Do not separate the prefix from the typename: mamanbar.h and mamanbar.c. (this is the convention used by GTK+) </para>
+</listitem>
+</orderedlist>
+<para>I personally like the first solution better for it makes reading file names easier.</para>
+<para>When you need some private (internal) declarations in several (sub)classes, you can define them in a private header file which is often named by appending the private keyword to the public header name. For example, one could use maman-bar-private.h, maman_bar_private.h or mamanbarprivate.h. Typically, such private header files are not installed.</para>
+<para>The basic conventions for any header which exposes a GType are described in the section called "<ulink url="http://library.gnome.org/devel/gobject/unstable/gtype-conventions.html">Conventions</ulink>". Most GObject-based code also obeys one of of the following conventions: pick one and stick to it.</para>
+<orderedlist>
+<listitem>
+<para>If you want to declare a type named bar with prefix maman, name the type instance MamanBar and its class MamanBarClass (name is case-sensitive). It is customary to declare them with code similar to the following: </para>
+</listitem>
+</orderedlist>
+<para>/*</para>
+<para> * Copyright/Licensing information.</para>
+<para> */</para>
+<para/>
+<para>#ifndef MAMAN_BAR_H</para>
+<para>#define MAMAN_BAR_H</para>
+<para/>
+<para>/*</para>
+<para> * Potentially, include other headers on which this header depends.</para>
+<para> */</para>
+<para/>
+<para>/*</para>
+<para> * Type macros.</para>
+<para> */</para>
+<para>#define MAMAN_TYPE_BAR                  (maman_bar_get_type ())</para>
+<para>#define MAMAN_BAR(obj)                  (G_TYPE_CHECK_INSTANCE_CAST ((obj), MAMAN_TYPE_BAR, MamanBar))</para>
+<para>#define MAMAN_IS_BAR(obj)               (G_TYPE_CHECK_INSTANCE_TYPE ((obj), MAMAN_TYPE_BAR))</para>
+<para>#define MAMAN_BAR_CLASS(klass)          (G_TYPE_CHECK_CLASS_CAST ((klass), MAMAN_TYPE_BAR, MamanBarClass))</para>
+<para>#define MAMAN_IS_BAR_CLASS(klass)       (G_TYPE_CHECK_CLASS_TYPE ((klass), MAMAN_TYPE_BAR))</para>
+<para>#define MAMAN_BAR_GET_CLASS(obj)        (G_TYPE_INSTANCE_GET_CLASS ((obj), MAMAN_TYPE_BAR, MamanBarClass))</para>
+<para/>
+<para>typedef struct _MamanBar MamanBar;</para>
+<para>typedef struct _MamanBarClass MamanBarClass;</para>
+<para/>
+<para>struct _MamanBar {</para>
+<para>  GstElement parent;</para>
+<para>  /* instance members */</para>
+<para>};</para>
+<para/>
+<para>struct _MamanBarClass {</para>
+<para>  GstElementClass parent;</para>
+<para>  /* class members */</para>
+<para>};</para>
+<para/>
+<para>/* used by MAMAN_TYPE_BAR */</para>
+<para>GType maman_bar_get_type (void);</para>
+<para/>
+<para>/*</para>
+<para> * Method definitions.</para>
+<para> */</para>
+<para/>
+<para>#endif</para>
+<orderedlist>
+<listitem>
+<para>Private fields can be declared in the public header with a /* private */ comment, relying on their user's intelligence not to try to play with these fields. Fields not marked private are considered public by default. </para>
+</listitem>
+</orderedlist>
+<para>struct _MamanBar {</para>
+<para>  GObject parent;</para>
+<para/>
+<para>  /* private */</para>
+<para>  int hsize;</para>
+<para>};</para>
+<orderedlist>
+<listitem>
+<para>Another alternative is to use private indirection members, as described by Herb Sutter in his Pimpl articles (see <ulink url="http://www.gotw.ca/gotw/024.htm">Compilation Firewalls</ulink> and <ulink url="http://www.gotw.ca/gotw/028.htm">The Fast Pimpl Idiom</ulink>). </para>
+</listitem>
+</orderedlist>
+<para>typedef struct _MamanBarPrivate MamanBarPrivate;</para>
+<para>struct _MamanBar {</para>
+<para>  GObject parent;</para>
+<para/>
+<para>  /* private */</para>
+<para>  MamanBarPrivate *priv;</para>
+<para>};</para>
+<para>The private structure is then defined in the .c file, instantiated in the object's init function and destroyed in the object's finalize function.</para>
+<para>static void</para>
+<para>maman_bar_finalize (GObject *object) {</para>
+<para>  MamanBar *self = MAMAN_BAR (object);</para>
+<para>  /* do your stuff */</para>
+<para>  g_free (self-&gt;priv);</para>
+<para>}</para>
+<para/>
+<para>static void</para>
+<para>maman_bar_init (GTypeInstance *instance, gpointer g_class) {</para>
+<para>  MamanBar *self = MAMAN_BAR (instance);</para>
+<para>  self-&gt;priv = g_new0 (MamanBarPrivate,1);</para>
+<para>  /* do your stuff */</para>
+<para>}</para>
+<para>Boilerplate code</para>
+<para>In your code, the first step is to #include the needed headers: depending on your header include strategy, this can be as simple as #include "maman-bar.h" or as complicated as tens of #include lines ending with #include "maman-bar.h":</para>
+<para>/*</para>
+<para> * Copyright information</para>
+<para> */</para>
+<para/>
+<para>#include "maman-bar.h"</para>
+<para/>
+<para>/* If you use Pimpls, include the private structure</para>
+<para> * definition here. Some people create a maman-bar-private.h header</para>
+<para> * which is included by the maman-bar.c file and which contains the</para>
+<para> * definition for this private structure.</para>
+<para> */</para>
+<para>struct _MamanBarPrivate {</para>
+<para>  int member_1;</para>
+<para>  /* stuff */</para>
+<para>};</para>
+<para/>
+<para>/*</para>
+<para> * forward definitions</para>
+<para> */</para>
+<para>Implement maman_bar_get_type and make sure the code compiles:</para>
+<para>GType</para>
+<para>maman_bar_get_type (void)</para>
+<para>{</para>
+<para>  static GType type = 0;</para>
+<para>  if (type == 0) {</para>
+<para>    static const GTypeInfo info = {</para>
+<para>      sizeof (MamanBarClass),</para>
+<para>      NULL,   /* base_init */</para>
+<para>      NULL,   /* base_finalize */</para>
+<para>      NULL,   /* class_init */</para>
+<para>      NULL,   /* class_finalize */</para>
+<para>      NULL,   /* class_data */</para>
+<para>      sizeof (MamanBar),</para>
+<para>      0,      /* n_preallocs */</para>
+<para>      NULL    /* instance_init */</para>
+<para>      };</para>
+<para>      type = g_type_register_static (G_TYPE_OBJECT,</para>
+<para>                                     "MamanBarType",</para>
+<para>                                     &amp;info, 0);</para>
+<para>    }</para>
+<para>    return type;</para>
+<para>}</para>
+<para>Object Construction</para>
+<para>People often get confused when trying to construct their GObjects because of the sheer number of different ways to hook into the objects's construction process: it is difficult to figure which is the correct, recommended way.</para>
+<para>
+<ulink url="http://library.gnome.org/devel/gobject/unstable/chapter-gobject.html#gobject-construction-table">Table 1</ulink>, "g_object_new" shows what user-provided functions are invoked during object instantiation and in which order they are invoked. A user looking for the equivalent of the simple C++ constructor function should use the instance_init method. It will be invoked after all the parent's instance_init functions have been invoked. It cannot take arbitrary construction parameters (as in C++) but if your object needs arbitrary parameters to complete initialization, you can use construction properties.</para>
+<para>Construction properties will be set only after all instance_init functions have run. No object reference will be returned to the client of g_object_new until all the construction properties have been set.</para>
+<para>As such, I would recommend writing the following code first:</para>
+<para>static void</para>
+<para>maman_bar_init (GTypeInstance   *instance,</para>
+<para>                gpointer         g_class)</para>
+<para>{</para>
+<para>  MamanBar *self = (MamanBar *)instance;</para>
+<para>  self-&gt;private = g_new0 (MamanBarPrivate, 1);</para>
+<para/>
+<para>  /* initialize all public and private members to reasonable default values. */</para>
+<para>  /* If you need specific construction properties to complete initialization,</para>
+<para>   * delay initialization completion until the property is set.</para>
+<para>   */</para>
+<para>}</para>
+<para>Object Destruction</para>
+<para>Object Methods</para>
+<para>Just as with C+, there are many different ways to define object methods and extend them: the following list and sections draw on C+ vocabulary. (Readers are expected to know basic C++ buzzwords. Those who have not had to write C++ code recently can refer to e.g. <ulink url="http://www.cplusplus.com/doc/tutorial/">http://www.cplusplus.com/doc/tutorial/</ulink> to refresh their memories.)</para>
+<para>non-virtual public methods,virtual public methods andvirtual private methods</para>
+<para>Non-virtual public methods</para>
+<para>These are the simplest: you want to provide a simple method which can act on your object. All you need to do is to provide a function prototype in the header and an implementation of that prototype in the source file.</para>
+<para>/* declaration in the header. */</para>
+<para>void maman_bar_do_action (MamanBar *self, /* parameters */);</para>
+<para>/* implementation in the source file */</para>
+<para>void maman_bar_do_action (MamanBar *self, /* parameters */)</para>
+<para>{</para>
+<para>  /* do stuff here. */</para>
+<para>}</para>
+<para>There is really nothing scary about this.</para>
+<para>Virtual public methods</para>
+<para>This is the preferred way to create polymorphic GObjects. All you need to do is to define the common method and its class function in the public header, implement the common method in the source file and re-implement the class function in each object which inherits from you.</para>
+<para>/* declaration in maman-bar.h. */</para>
+<para>struct _MamanBarClass {</para>
+<para>  GObjectClass parent;</para>
+<para/>
+<para>  /* stuff */</para>
+<para>  void (*do_action) (MamanBar *self, /* parameters */);</para>
+<para>};</para>
+<para>void maman_bar_do_action (MamanBar *self, /* parameters */);</para>
+<para>/* implementation in maman-bar.c */</para>
+<para>void maman_bar_do_action (MamanBar *self, /* parameters */)</para>
+<para>{</para>
+<para>  MAMAN_BAR_GET_CLASS (self)-&gt;do_action (self, /* parameters */);</para>
+<para>}</para>
+<para>The code above simply redirects the do_action call to the relevant class function. Some users, concerned about performance, do not provide the maman_bar_do_action wrapper function and require users to dereference the class pointer themselves. This is not such a great idea in terms of encapsulation and makes it difficult to change the object's implementation afterwards, should this be needed.</para>
+<para>Other users, also concerned by performance issues, declare the maman_bar_do_action function inline in the header file. This, however, makes it difficult to change the object's implementation later (although easier than requiring users to directly dereference the class function) and is often difficult to write in a portable way (the inline keyword is not part of the C standard).</para>
+<para>In doubt, unless a user shows you hard numbers about the performance cost of the function call, just maman_bar_do_action in the source file.</para>
+<para>Please, note that it is possible for you to provide a default implementation for this class method in the object's class_init function: initialize the klass-&gt;do_action field to a pointer to the actual implementation. You can also make this class method pure virtual by initializing the klass-&gt;do_action field to NULL:</para>
+<para>static void</para>
+<para>maman_bar_real_do_action_two (MamanBar *self, /* parameters */)</para>
+<para>{</para>
+<para>  /* Default implementation for the virtual method. */</para>
+<para>}</para>
+<para/>
+<para>static void</para>
+<para>maman_bar_class_init (BarClass *klass)</para>
+<para>{</para>
+<para>  /* pure virtual method: mandates implementation in children. */</para>
+<para>  klass-&gt;do_action_one = NULL;</para>
+<para>  /* merely virtual method. */</para>
+<para>  klass-&gt;do_action_two = maman_bar_real_do_action_two;</para>
+<para>}</para>
+<para/>
+<para>void maman_bar_do_action_one (MamanBar *self, /* parameters */)</para>
+<para>{</para>
+<para>  MAMAN_BAR_GET_CLASS (self)-&gt;do_action_one (self, /* parameters */);</para>
+<para>}</para>
+<para>void maman_bar_do_action_two (MamanBar *self, /* parameters */)</para>
+<para>{</para>
+<para>  MAMAN_BAR_GET_CLASS (self)-&gt;do_action_two (self, /* parameters */);</para>
+<para>}</para>
+<para>Virtual private methods</para>
+<para>These are very similar to Virtual Public methods. They just don't have a public function to call the function directly. The header file contains only a declaration of the class function:</para>
+<para>/* declaration in maman-bar.h. */</para>
+<para>struct _MamanBarClass {</para>
+<para>  GObjectClass parent;</para>
+<para/>
+<para>  /* stuff */</para>
+<para>  void (*helper_do_specific_action) (MamanBar *self, /* parameters */);</para>
+<para>};</para>
+<para>void maman_bar_do_any_action (MamanBar *self, /* parameters */);</para>
+<para>These class functions are often used to delegate part of the job to child classes:</para>
+<para>/* this accessor function is static: it is not exported outside of this file. */</para>
+<para>static void</para>
+<para>maman_bar_do_specific_action (MamanBar *self, /* parameters */)</para>
+<para>{</para>
+<para>  MAMAN_BAR_GET_CLASS (self)-&gt;do_specific_action (self, /* parameters */);</para>
+<para>}</para>
+<para/>
+<para>void maman_bar_do_any_action (MamanBar *self, /* parameters */)</para>
+<para>{</para>
+<para>  /* random code here */</para>
+<para/>
+<para>  /*</para>
+<para>   * Try to execute the requested action. Maybe the requested action cannot be implemented</para>
+<para>   * here. So, we delegate its implementation to the child class:</para>
+<para>   */</para>
+<para>  maman_bar_do_specific_action (self, /* parameters */);</para>
+<para/>
+<para>  /* other random code here */</para>
+<para>}</para>
+<para>Again, it is possible to provide a default implementation for this private virtual class function:</para>
+<para>static void</para>
+<para>maman_bar_class_init (MamanBarClass *klass)</para>
+<para>{</para>
+<para>  /* pure virtual method: mandates implementation in children. */</para>
+<para>  klass-&gt;do_specific_action_one = NULL;</para>
+<para>  /* merely virtual method. */</para>
+<para>  klass-&gt;do_specific_action_two = maman_bar_real_do_specific_action_two;</para>
+<para>}</para>
+<para>Children can then implement the subclass with code such as:</para>
+<para>static void</para>
+<para>maman_bar_subtype_class_init (MamanBarSubTypeClass *klass)</para>
+<para>{</para>
+<para>  MamanBarClass *bar_class = MAMAN_BAR_CLASS (klass);</para>
+<para>  /* implement pure virtual class function. */</para>
+<para>  bar_class-&gt;do_specific_action_one = maman_bar_subtype_do_specific_action_one;</para>
+<para>}</para>
+<para>Chaining Up</para>
+<para>Chaining up is often loosely defined by the following set of conditions:</para>
+<orderedlist>
+<listitem>
+<para>Parent class A defines a public virtual method named foo and provides a default implementation. </para>
+</listitem>
+<listitem>
+<para>Child class B re-implements method foo. </para>
+</listitem>
+<listitem>
+<para>In the method B::foo, the child class B calls its parent class method A::foo. </para>
+</listitem>
+</orderedlist>
+<para>There are many uses to this idiom:</para>
+<orderedlist>
+<listitem>
+<para>You need to change the behaviour of a class without modifying its code. You create a subclass to inherit its implementation, re-implement a public virtual method to modify the behaviour slightly and chain up to ensure that the previous behaviour is not really modified, just extended. </para>
+</listitem>
+<listitem>
+<para>You are lazy, you have access to the source code of the parent class but you don't want to modify it to add method calls to new specialized method calls: it is faster to hack the child class to chain up than to modify the parent to call down. </para>
+</listitem>
+<listitem>
+<para>You need to implement the Chain Of Responsibility pattern: each object of the inheritance tree chains up to its parent (typically, at the beginning or the end of the method) to ensure that they each handler is run in turn. </para>
+</listitem>
+</orderedlist>
+<para>I am personally not really convinced any of the last two uses are really a good idea but since this programming idiom is often used, this section attempts to explain how to implement it.</para>
+<para>To explicitly chain up to the implementation of the virtual method in the parent class, you first need a handle to the original parent class structure. This pointer can then be used to access the original class function pointer and invoke it directly. []</para>
+<para>The function <ulink url="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#g-type-class-peek-parent">g_type_class_peek_parent</ulink> is used to access the original parent class structure. Its input is a pointer to the class of the derived object and it returns a pointer to the original parent class structure. The code below shows how you could use it:</para>
+<para>static void</para>
+<para>b_method_to_call (B *obj, int a)</para>
+<para>{</para>
+<para>  BClass *klass;</para>
+<para>  AClass *parent_class;</para>
+<para/>
+<para>  klass = B_GET_CLASS (obj);</para>
+<para>  parent_class = g_type_class_peek_parent (klass);</para>
+<para/>
+<para>  /* do stuff before chain up */</para>
+<para/>
+<para>  parent_class-&gt;method_to_call (obj, a);</para>
+<para/>
+<para>  /* do stuff after chain up */</para>
+<para>}</para>
+<para>
+<ulink url="http://confluence.appscio.com/pages/createpage.action?spaceKey=ENG&amp;title=13&amp;linkCreation=true&amp;fromPageId=5342292">13</ulink> The original adjective used in this sentence is not innocuous. To fully understand its meaning, you need to recall how class structures are initialized: for each object type, the class structure associated to this object is created by first copying the class structure of its parent type (a simple memcpy) and then by invoking the class_init callback on the resulting class structure. Since the class_init callback is responsible for overwriting the class structure with the user re-implementations of the class methods, we cannot merely use the modified copy of the parent class structure stored in our derived instance. We want to get a copy of the class structure of an instance of the parent class.</para>
+<para>Summary</para>
+<para>References</para>
+<para>1. Stidolph, Wayne. Personal interview. 14 Jul. 2008.</para>
+<para>2. Walthinsen, Erik. Personal interview. 3 Jul. 2008.</para>
+<para>3. Intel. Open CV Library Overview - Open Source Computer Vision Library [Online]. Available at: <ulink url="http://www.intel.com/technology/computing/opencv/overview.htm">http://www.intel.com/technology/computing/opencv/overview.htm</ulink>
+</para>
+<para>4. GNOME. GObject Reference Manual [Online]. Available at: <ulink url="http://library.gnome.org/devel/gobject/unstable/">http://library.gnome.org/devel/gobject/unstable/</ulink>
+</para>
+<para>
+<anchor id="APPSCIO(TM)MPFComponentWriter'sGui"/>5. Appscio. MPF-Open CV Subversion Repository [Online]. Available at: <ulink url="https://svn.appscio.com/svn/public/MPF">https://svn.appscio.com/svn/public/MPF</ulink>
+</para>
+<para>
+<anchor id="_PictureBullets"/>
+<inlinegraphic fileref="embedded:link_out_bot" width="0.1665inch" depth="0.1665inch"/>
+<para/>
+<para/>
+<para/>
+<para/>
+<para/>
+<para/>
+<para/>
+<para/>
+</para>
+</article>

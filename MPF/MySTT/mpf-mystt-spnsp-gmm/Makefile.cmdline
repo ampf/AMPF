@@ -1,0 +1,18 @@
+# This Makefile is only for command line testing of the speech
+# non-speech detector. It is not for the MPF component nor for
+# training. Call with make -f Makefile.cmdline
+
+CXXFLAGS = -g -DLINUX
+CFLAGS = $(CXXFLAGS)
+
+CC = gcc
+CXX = g++
+
+OBJS_SPNSP = spnsp_test.o gmmbridge.o gmm.o global.o
+
+
+spnsp_test: $(OBJS_SPNSP)
+	$(CXX) -o spnsp_test $(OBJS_SPNSP) -lm
+
+clean:
+	rm -f spnsp_test $(OBJS_SPNSP) *~

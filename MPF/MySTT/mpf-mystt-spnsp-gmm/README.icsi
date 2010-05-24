@@ -1,0 +1,23 @@
+See the top of spnsp.c for comments on the code.
+
+To install locally:
+
+./configure 
+make
+
+This will produce the component in the .libs directory under the
+current directory. To run locally, this directory must be added to
+your GST_PLUGIN_PATH. For example:
+
+export GST_PLUGIN_PATH=`pwd`/.libs:$GST_PLUGIN_PATH
+
+You can then use the component with MPF and gstreamer applications.
+
+The spnsp component is shipped with sample models generated from the
+ICSI Meeting Corpus. Currently, they are not installed (since I'm not
+sure where they would go -- /usr/share/mpf/models?). You must provide
+a path to the models as a parameter of the component.
+
+The spnsp component requires features as generated from rasta_mpf.
+
+gst-launch sfsrc location=Bed003-excerpt.wav ! rasta_mpf ! spnsp speech=speech.gmm nonspeech=nonspeech.gmm ! filesink location=Bed003-excerpt.spnsp

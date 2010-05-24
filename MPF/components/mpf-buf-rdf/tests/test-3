@@ -1,0 +1,9 @@
+#!/bin/sh
+#
+# Demonstrate use of the key property to set the names of RDF triple subjects.
+#
+src="fakesrc num-buffers=10 sizetype=2 sizemax=10 filltype=4 datarate=10 do-timestamp=true"
+
+$prefix $args gst-launch$version \
+  $src ! mpf-buf-rdf name=rdf-a key=subj \
+  rdf-a.rdf ! queue ! mpf-rdf-ton3 ! filesink location=/dev/stdout \

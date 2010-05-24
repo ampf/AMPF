@@ -1,0 +1,14 @@
+#!/bin/sh
+
+GST_PLUGIN_PATH=../.libs:$GST_PLUGIN_PATH
+
+function src {
+    echo "fakesrc num-buffers=5 name=src-$1 sizetype=2 filltype=4 sizemax=10"
+}
+
+$prefix $args gst-launch$version $gstargs \
+    `src 1` ! tee name = t \
+    jira-mpf-213-join name=join \
+    t. ! join.input \
+    t. ! mpf-buf-rdf ! join.metadata \
+    join. ! fakesink \

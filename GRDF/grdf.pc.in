@@ -1,0 +1,12 @@
+prefix=${pcfiledir}/../..
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: GRDF
+Description: Simple RDF library
+Requires: gobject-2.0
+Version: @VERSION@
+Libs: -L${libdir} -lgrdf
+Cflags: -I${includedir}
+

@@ -1,0 +1,65 @@
+#!/bin/sh -x
+#
+# Perform semantic compression on a video segmented using the motion detector.
+
+video=${video:=$MPF_HOME/media/freedom-day.1.mpg}
+
+basename=`basename $video`
+
+mkdir sc/videos
+mkdir sc/videos/markup
+mkdir sc/jpegs
+mkdir sc/jpegs/markup
+
+# Best images.
+#
+$prefix $args gst-launch$version $gstargs filesrc location=${video} ! decodebin name=dec dec. ! tee name=t \
+    t. ! queue ! mpf-n3-toi n3=sc/$basename.n3 name=n3toi \
+    n3toi.interest ! queue ! fakesink sync=false async=false \
+    n3toi.best ! queue ! seg.metadata \
+    t. ! queue ! mpf-segmenter name=seg loglevel=1 \
+    seg.output ! queue ! videoscale ! jpegenc ! multifilesink location=sc/jpegs/$basename.%d.best.jpg async=false \
+
+$prefix $args gst-launch$version $gstargs filesrc location=sc/${video}.markup.mpg ! decodebin name=dec dec. ! tee name=t \
+    t. ! queue ! mpf-n3-toi n3=sc/${video}.n3 name=n3toi \
+    n3toi.interest ! queue ! fakesink sync=false async=false \
+    n3toi.best ! queue ! seg.metadata \
+    t. ! queue ! mpf-segmenter name=seg loglevel=1 \
+    seg.output ! queue ! videoscale ! jpegenc ! multifilesink location=sc/jpegs/markup/$basename.markup.%d.best.jpg async=false \
+
+# Semantic compressed marked up video.
+$prefix $args gst-launch$version $gstargs filesrc location=sc/$basename.markup.mpg ! decodebin name=dec dec. ! tee name=t \
+    t. ! queue ! mpf-n3-toi n3=sc/${video}.n3 name=n3toi \
+    n3toi.best ! queue ! fakesink sync=false async=false \
+    n3toi.interest ! queue ! seg.metadata \
+    t. ! queue ! mpf-segmenter name=seg loglevel=1 \
+    seg.output ! queue ! videoscale ! ffenc_mpeg1video ! filesink location=sc/$basename.markup.sc.mpg async=false \
+
+exit 0
+
+# Split videos.  TODO: dig number of segments out of the n3 file.
+#
+for i in {0..9}; do
+    echo split $i
+    gst-launch filesrc location=${video} ! decodebin name=dec dec. ! tee name = t \
+        t. ! queue ! mpf-n3-toi n3=sc/${video}.n3 name=n3toi segment=$i \
+        n3toi.best ! queue ! fakesink sync=false async=false \
+        n3toi.interest ! queue ! seg.metadata \
+        t. ! queue ! mpf-segmenter name=seg loglevel=1 \
+        seg.output ! queue ! videoscale ! ffenc_mpeg1video ! filesink location=sc/videos/$basename.$i.mpg async=false
+
+    gst-launch filesrc location=sc/${video}.markup.mpg ! decodebin name=dec dec. ! tee name = t \
+        t. ! queue ! mpf-n3-toi n3=sc/${video}.n3 name=n3toi segment=$i \
+        n3toi.best ! queue ! fakesink sync=false async=false \
+        n3toi.interest ! queue ! seg.metadata \
+        t. ! queue ! mpf-segmenter name=seg loglevel=1 \
+        seg.output ! queue ! videoscale ! ffenc_mpeg1video ! filesink location=sc/videos/markup/$basename.markup.$i.mpg async=false
+
+done
+
+# The original video, into mpeg1
+gst-launch filesrc location=${video} ! decodebin ! videoscale ! ffmpegcolorspace ! ffenc_mpeg1video ! filesink location=sc/$basename.mpg
+
+# Cleanup.
+rm `find sc/videos -size 0`
+

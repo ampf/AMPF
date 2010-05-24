@@ -1,0 +1,12 @@
+prefix=${pcfiledir}/../..
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+mpftypes=iplimage,objlist
+
+Name: MPF OpenCV
+Description: Appscio OpenCV integration
+Requires: gstreamer-@GST_MAJORMINOR@ mpf-core opencv
+Version: @VERSION@
+Libs: -L${libdir} -lmpf-iplimage -lmpf-objlist
+Cflags: -I${includedir}

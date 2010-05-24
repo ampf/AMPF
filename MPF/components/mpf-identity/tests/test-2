@@ -1,0 +1,3 @@
+#!/bin/bash
+
+gst-launch -v filesrc location=/home/stuffs/Workspaces/AppscioWork/mpf-pittpatt-ftr/tests/video_02.mp4 ! decodebin ! video/x-raw-yuv ! mpf-identity dump=buffers ! videoscale ! ffmpegcolorspace ! ximagesink

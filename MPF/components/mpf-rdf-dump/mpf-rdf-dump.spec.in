@@ -1,0 +1,33 @@
+Summary:	Appscio MPF RDF dump component
+Name:		mpf-rdf-dump
+Version:	@VERSION@
+Release:	1
+License:	LGPL or Apache License
+Group:		Applications/Multimedia
+Source:		%{name}-%{version}.tar.gz
+URL:		www.appscio.com
+Vendor:		Appscio, Inc.
+Packager:	build@issues.appscio.com
+BuildRoot:	%{_tmppath}/%{name}-%{version}-root
+Requires:	mpf-core mpf-rdf grdf
+BuildRequires:	mpf-core-devel mpf-rdf-devel grdf-devel
+
+%description
+Appscio MPF RDF test components
+
+%prep
+%setup
+
+%configure --prefix=%{_prefix}
+
+%build
+make
+
+%install
+rm -rf $RPM_BUILD_ROOT
+make DESTDIR=$RPM_BUILD_ROOT install
+rm -f $RPM_BUILD_ROOT%{_libdir}/gstreamer-@GST_MAJORMINOR@/*.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/gstreamer-@GST_MAJORMINOR@/*.a
+
+%files
+%{_libdir}/gstreamer-@GST_MAJORMINOR@/libmpf-rdf-dump.so

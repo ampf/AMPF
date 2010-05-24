@@ -1,0 +1,11 @@
+#!/bin/sh -x
+
+# Verifies that EOS works properly when shifting.
+
+filesink="filesink location=/dev/stdout async=false sync=false"
+
+$prefix gst-launch$version $args fakesrc num-buffers=10 sizetype=2 sizemax=10 filltype=4 datarate=10 do-timestamp=true ! \
+    mpf-shift shift=2 ! mpf-test-eos name=eos \
+    eos.output ! queue ! mpf-buf-rdf ! mpf-rdf-ton3 ! $filesink \
+    eos.events ! queue ! $filesink
+

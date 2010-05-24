@@ -1,0 +1,1 @@
+resource.input=predator-1.mpg & !resource.ximagesink=true

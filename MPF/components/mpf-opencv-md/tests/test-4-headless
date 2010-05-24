@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# Perform motion detection on a video, and show the internal object detection in one video window.
+# When regions of interest are detected, show them in a second window, and capture them to a file.
+
+alpha=${alpha:=0.03}
+video=${video:=$MPF_HOME/media/freedom-day.1.mpg}
+draw_all=${draw_all:=true}
+visualization=${visualization:=final}
+width=${width:=320}
+height=${height:=240}
+
+$prefix $args gst-launch$version $gstargs filesrc location=$video ! decodebin ! mpf-identity dump=dot ! ffmpegcolorspace ! tee name=t ! queue ! \
+    toiplimage ! queue ! mpf-opencv-md name=md draw-all=$draw_all alpha=$alpha visualization=$visualization picture-threshold=80 \
+    md.output ! fakesink sync=false async=false \
+    md.interest ! queue ! mpf-loi-smooth ! seg.metadata \
+    mpf-segmenter name=seg loglevel=1 mpf-debug=0 fps=12 \
+    t. ! queue ! seg.input \
+    seg.output ! tee name=t2 \
+    t2. ! videoscale !  video/x-raw-rgb, width=$width, height=$height ! ffmpegcolorspace ! ffenc_mpeg4 ! ffmux_mp4 ! filesink location=$video.4.1.mp4 sync=false async=false \
+    t2. ! ffmpegcolorspace ! mpf-pittpatt-ftr verbose=2 generate-rdf=1 name=ppt \
+    ppt.output ! queue ! mpf-rdf-ton3 ! filesink location="$video-faces.n3" buffer-mode=1  sync=false async=false  \
+    ppt.bestimages ! queue ! ffmpegcolorspace ! jpegenc ! mpf-multifilesink location="$video-%015lld.jpg"  sync=false async=false  \

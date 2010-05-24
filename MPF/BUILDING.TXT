@@ -1,0 +1,41 @@
+Pre-requisites for MPF Build
+----------------------------
+
+Fedora 10
+---------
+1. Install the Redhat Fusion repository (current URLs as of 12/2008)
+
+      sudo rpm -Uvh http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-stable.noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-stable.noarch.rpm
+
+2. Bring all of GStreamer up-to-date
+  
+      yum install gstreamer*
+  
+3. Make sure you have lots of packages (92 isn't enough)
+
+	  gst-inspect
+	  ... blah blah blah
+	  Total count: 197 plugins, 894 features
+  
+4. Turn off SE Linux Management (change Enforced mode to Permissive in System and Current Enforcing modes) 
+   to suppress relocation errors for libgstproc
+   
+      SELinux is preventing gst-inspect-0.1 from loading /usr/lib/sse2/libpostproc.so.51.2.0 which requires text relocation. 
+   
+      System | Administration | SE Linux Management
+  
+
+5. Add the Appscio repository to yum:
+ 
+	  sudo wget http://www.appscio.com/repository/packages/continuous/trunk/fedora/10/RPMS/appscio.repo -O /etc/yum.repos.d/appscio.repo
+
+6. Install the mpf core
+
+      sudo yum install mpf*
+      
+7. Build everything:
+
+      ./build-all --no-install
+      
+8. You should have the distribution below `pwd`.
+      

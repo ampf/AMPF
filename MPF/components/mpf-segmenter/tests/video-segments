@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Segment a video stream into 2 second chunks, skipping by 10 seconds.  To play the output file:
+# gst-launch filesrc location=out/red-baron-out.mp3 ! decodebin ! ffmpegcolorspace ! ximagesink
+
+mkdir out
+
+$1 gst-launch$VERSION $2 filesrc location=data/video_02.mp4 ! decodebin name=dec dec. ! ffmpegcolorspace ! tee name=t \
+  t. ! mpf-toi interval=4 duration=1 $3 name=toi ! seg.metadata \
+  t. ! mpf-segmenter $4 name=seg ! videoscale ! ffmpegcolorspace ! ffenc_mpeg4 ! ffmux_mp4 ! filesink location=out/video_02_chopped.mp4

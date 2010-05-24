@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# Inputs: (apply to launch line like this: gstargs=-v ./test-4)
+#
+#   prefix:	  Prefix to apply to launch line (e.g. "gdb --args" for debugging)
+#   args:     Arguments to supply to prefix (e.g. prefix=valgrind args=-v)
+#   version:  Use specific version of gstlaunch (e.g. prefix=valgrind version=-0.10)
+#   gstargs:  Gstreamer arguments (e.g. gst-args=-v)
+#
+
+export GST_PLUGIN_PATH=../.libs:$GST_PLUGIN_PATH
+
+# Drive a video source into a multi-pipe identity.
+#
+
+$prefix $args gst-launch$version $gstargs \
+    videotestsrc num-buffers=100 ! video/x-raw-yuv, format='(fourcc)I420' ! ffmpegcolorspace ! \
+    mpf-pipeline loglevel=0 one-pipeline=true pipeline="appsrc ! videobalance ! appsink" ! ffmpegcolorspace ! ximagesink async=false sync=false max-lateness=-1 \

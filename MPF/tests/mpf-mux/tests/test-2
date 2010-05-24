@@ -1,0 +1,26 @@
+#!/bin/sh
+
+rm -f test-2.out
+
+$prefix $args gst-launch$version $gstargs \
+    filesrc location=test-n.in blocksize=11 name=f1 \
+    filesrc location=test-a.in blocksize=11 name=f2 \
+    mpf-mux name=mux debug=0 ! filesink location=test-2.out \
+    f1. ! mux. \
+    f2. ! mux. \
+
+# assertions
+if [ `cat test-2.out | wc -l` -ne 8 ]; then
+    echo "Incorrect word count in test-2.out"
+    exit 1
+fi
+
+if [ `grep -c 1234567890 test-2.out` -ne 4 ]; then
+    echo "test-2.out did not contain expected numeric string"
+    exit 1
+fi
+
+if [ `grep -c abcdefghij test-2.out` -ne 4 ]; then
+    echo "test-2.out did not contain expected alpha string"
+    exit 1
+fi

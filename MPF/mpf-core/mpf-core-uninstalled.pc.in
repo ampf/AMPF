@@ -1,0 +1,11 @@
+prefix=
+exec_prefix=
+libdir=${pcfiledir}/mpf
+includedir=${pcfiledir}
+
+Name: MPF Core (uninstalled)
+Description: Appscio pipeline core libraries (uninstalled)
+Requires: gstreamer-@GST_MAJORMINOR@
+Version: @VERSION@
+Libs: ${pcfiledir}/mpf/libmpf-core.la
+Cflags: -I${pcfiledir}

@@ -1,0 +1,9 @@
+{
+   g_type_register_fundamental_1
+   Memcheck:Leak
+   fun:calloc
+   fun:g_malloc0
+   obj:/usr/lib/libgobject-2.0.so.0.1800.2
+   obj:/usr/lib/libgobject-2.0.so.0.1800.2
+   fun:g_type_register_fundamental
+}

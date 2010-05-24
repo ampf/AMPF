@@ -1,0 +1,7 @@
+/*
+ * Preserve this non-appscio header.
+ */
+This text should be passed through.
+/*
+ * Header should be left alone.
+ */

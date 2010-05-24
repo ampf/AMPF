@@ -1,0 +1,44 @@
+Summary:	Simple RDF library
+Name:		@PACKAGE@
+Version:	@VERSION@
+Release:	1
+License:	LGPL or Apache License
+Group:		System Environment/Libraries
+Source:		@PACKAGE@-@VERSION@.tar.gz
+URL:		www.appscio.com
+Vendor:		Appscio, Inc.
+Packager:	build@issues.appscio.com
+BuildRoot:	%{_tmppath}/%{name}-%{version}-root
+
+%description
+Simple RDF library
+
+%package devel
+Summary:	Simple RDF library development files
+Group:		Development/Libraries
+Requires:	%{name} = %{version}-%{release}
+
+%description devel
+Simple RDF library development files
+
+%prep
+%setup
+
+%configure --prefix=%{_prefix}
+
+%build
+make
+
+%install
+rm -rf $RPM_BUILD_ROOT
+make DESTDIR=$RPM_BUILD_ROOT install
+
+%files
+%{_libdir}/libgrdf.so.*
+
+%files devel
+%{_libdir}/libgrdf.so
+%{_libdir}/libgrdf.a
+%{_libdir}/libgrdf.la
+%{_includedir}/*.h
+%{_libdir}/pkgconfig/grdf.pc

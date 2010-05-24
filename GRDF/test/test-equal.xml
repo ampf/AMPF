@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<testsuites xmlns="http://check.sourceforge.net/ns">
+  <datetime>2009-05-29 15:31:51</datetime>
+  <suite>
+    <title>test_equal</title>
+    <test result="success">
+      <path>.</path>
+      <fn>test-equal.c:30</fn>
+      <id>make_graph_with_stuff</id>
+      <iteration>0</iteration>
+      <description>make_graph_with_stuff</description>
+      <message>Passed</message>
+    </test>
+  </suite>
+  <duration>0.293157</duration>
+</testsuites>

@@ -1,0 +1,15 @@
+#!/bin/sh -x
+#
+# Remove then re-instate buffer times.  Without the restamp-true on mpf-identity the playback will run ahead of
+# real-time, as at the fastest rate supported by the sink.
+#
+debug=0
+
+width=${width:=320}
+height=${height:=240}
+video=${video:=$MPF_HOME/media/freedom-day.1.mpg}
+
+$prefix $args gst-launch$version \
+    filesrc location=$video ! decodebin ! mpf-window preserve=false ! \
+    videoscale ! video/x-raw-yuv, width=$width, height=$height ! \
+    ffmpegcolorspace ! ximagesink max-lateness=-1 async=false \

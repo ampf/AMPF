@@ -1,0 +1,2 @@
+#!/bin/sh
+$1 $prefix $args gst-launch$version fakesrc datarate=1 num-buffers=5 sizetype=2 sizemax=10 filltype=4 ! mpf-fork loglevel=0 mode=wrap ! identity dump=true ! filesink location=test-1.out

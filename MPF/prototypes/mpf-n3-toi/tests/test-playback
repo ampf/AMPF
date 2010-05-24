@@ -1,0 +1,5 @@
+#!/bin/bash
+
+video=${video:=test-1.mjpeg}
+
+gst-launch filesrc location=${video} ! decodebin ! videoscale ! video/x-raw-yuv, width=320, height=240 ! ffmpegcolorspace ! videoscale ! ximagesink

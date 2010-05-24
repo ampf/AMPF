@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# Rips then reconstitutes an audio+video stream (no segmenting).
+
+mkdir out
+
+$1 gst-launch$VERSION $2 filesrc location=data/video_02.mp4 ! decodebin name=dec dec. \
+  dec. ! ffmpegcolorspace ! ffenc_mpeg4 ! queue ! mux. \
+  dec. ! audioconvert ! faac ! queue ! mux. \
+  ffmux_mp4 name=mux ! filesink location="output.mp4"
+
+# Player:
+
+gst-launch filesrc location=output.mp4 ! decodebin name=dec dec. ! audioconvert ! osssink dec. ! ffmpegcolorspace ! ximagesink

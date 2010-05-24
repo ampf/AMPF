@@ -1,0 +1,9 @@
+#!/bin/sh -x
+
+# Turns a video stream into a sequence of jpeg storyboard images, taken at 10 second intervals.
+
+test -d out || mkdir out
+
+$1 gst-launch$VERSION $2 filesrc location=$3 ! decodebin ! ffmpegcolorspace ! tee name=t \
+  t. ! mpf-toi interval=10 $4 name=toi ! seg.metadata \
+  t. ! mpf-segmenter name=seg $5 ! ffmpegcolorspace ! jpegenc ! mpf-multifilesink location="out/storyboard-%015lld.jpg"

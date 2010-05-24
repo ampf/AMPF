@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Segment an audio stream into 2 second chunks, skipping by 10 seconds.  To play the output file:
+# gst-launch filesrc location=out/red-baron-out.mp3 ! decodebin ! audioconvert ! osssink
+
+mkdir out
+
+$1 gst-launch $2 filesrc location=data/RedBaron.wmv-0s-END.mp3 ! decodebin ! tee name=t \
+  t. ! mpf-toi interval=10 duration=2 $3 name=toi ! seg. \
+  t. ! mpf-segmenter name=seg $4 ! audioconvert ! lame ! filesink location="out/red-baron-out.mp3"

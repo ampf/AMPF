@@ -1,0 +1,12 @@
+prefix=${pcfiledir}/../..
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+mpftypes=newdatatype
+
+Name: MPF GD Newdatatype
+Description: Appscio MPF bindings for GD's Newdatatype data type
+Requires: mpf-core newdatatype
+Version: @VERSION@
+Libs: -L${libdir} -lmpf-newdatatype
+Cflags: -I${includedir}

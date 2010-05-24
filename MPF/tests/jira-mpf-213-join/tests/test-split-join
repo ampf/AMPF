@@ -1,0 +1,19 @@
+#!/bin/sh
+
+GST_PLUGIN_PATH=../.libs:../../jira-mpf-213-split/.libs:$GST_PLUGIN_PATH
+
+function src {
+    echo "fakesrc num-buffers=5 name=src-$1 sizetype=2 filltype=4 sizemax=10"
+}
+
+# Fails because src-1 goes EOS before src-2 starts to generate.  Solution: handle EOS on multiple inputs, and only
+# forward EOS when both go EOS.
+#
+$prefix $args gst-launch$version $gstargs \
+    `src 1` \
+    jira-mpf-213-split name=split \
+    jira-mpf-213-join mpf-debug=1 name=join \
+    src-1. ! split.input \
+    split.output ! join.input \
+    split.metadata ! join.metadata \
+    join. ! fakesink \

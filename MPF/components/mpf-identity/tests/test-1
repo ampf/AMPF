@@ -1,0 +1,3 @@
+#!/bin/bash
+
+gst-launch fakesrc sizetype=2 sizemax=10 filltype=5 num-buffers=100 datarate=10 ! mpf-identity dump=none ! fakesink

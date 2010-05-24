@@ -1,0 +1,17 @@
+#!/bin/bash
+
+video=${video:=axis-cam.mjpeg}
+
+if [ ! -e "${video}" ]; then
+    echo "Please specify video=<video> $0"
+    exit 1
+fi
+
+$prefix gst-launch$version $args filesrc location=${video} ! decodebin name=dec dec. ! tee name=t \
+  t. ! mpf-n3-toi n3=${video}.n3 loglevel=0 name=n3-toi \
+  n3-toi.interest ! seg.metadata \
+  t. ! mpf-segmenter $seg name=seg fps=10 verbose=0 ! videoscale ! ffmpegcolorspace ! matroskamux ! filesink location=${video}.sc async=false \
+  n3-toi.best ! queue ! fakesink async=false
+
+
+

@@ -1,0 +1,3 @@
+#!/bin/bash
+$prefix gst-launch$version $args fakesrc num-buffers=10 sizetype=2 sizemax=10 filltype=4 datarate=20 do-timestamp=true ! \
+    mpf-toi end=4 ! mpf-loi-smooth sustain=4 ! mpf-rdf-ton3 ! fakesink

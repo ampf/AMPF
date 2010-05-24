@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [ $# != 1 ]
+then
+read -p "Enter filename to convert to wmv: " FILENAME
+else
+FILENAME=$1
+fi
+
+echo "Converting $FILENAME to $FILENAME.wmv"
+gst-launch -v filesrc location=$FILENAME ! decodebin name=dec ffmux_asf name=mux \
+ ! filesink location=$FILENAME.wmv dec. ! queue ! ffmpegcolorspace \
+ ! videoscale ! video/x-raw-yuv,width=320 ! ffenc_wmv2 ! queue \
+ ! mux. dec.audio_01 ! queue ! audioconvert ! lame ! mp3parse ! queue ! mux.
+

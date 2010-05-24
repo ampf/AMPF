@@ -1,0 +1,2 @@
+#!/bin/sh
+$prefix $args gst-launch$version filesrc location=test.in ! mpf-fork command="cat < %s | rev | cat >%s" ! identity dump=true ! filesink location=test-2.out

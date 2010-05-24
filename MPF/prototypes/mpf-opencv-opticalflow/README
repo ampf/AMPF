@@ -1,0 +1,3 @@
+README for mpf-opencv-opticalflow component.
+This component uses the OpenCV library to perform optical flow analysis of a stream of IplImages.
+

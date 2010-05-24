@@ -1,0 +1,30 @@
+#!/bin/sh -x
+
+# Perform motion detection on a video, and show the internal object detection in one video window.
+# When regions of interest are detected, show them in a second window, and capture them to a file.
+
+alpha=${alpha:=0.05}
+median=${median:=21}
+video=${video:=$MPF_HOME/media/freedom-day.1.mpg}
+draw_all=${draw_all:=false}
+visualization=${visualization:=final}
+picture_threshold=${picture_threshold:=40}
+motion_threshold=${motion_threshold:=1000}
+width=${width:=320}
+height=${height:=240}
+fps=${fps:=0}
+bitrate=${bitrate:=500000}
+
+mkdir sc
+
+$prefix $args gst-launch$version $gstargs filesrc location=$video ! decodebin ! ffmpegcolorspace ! \
+    toiplimage ! mpf-opencv-md name=md mpf-debug=0 loglevel=1 draw-all=$draw_all alpha=$alpha median=$median visualization=$visualization picture-threshold=$picture_threshold momentum-threshold=$motion_threshold \
+    md.output ! queue ! fromiplimage name=ipl \
+    mpf-segmenter name=seg mpf-debug=0 loglevel=1 threshold=1 \
+    ipl. ! queue ! seg.input \
+    md.interest ! queue !  mpf-loi-smooth threshold=1 ! seg.metadata \
+    seg.output ! queue ! mpf-pipeline mpf-debug=0 name=pipe loglevel=0 pipeline="appsrc ! ffmpegcolorspace ! ffenc_mpeg1video bitrate=${bitrate}  bitrate=${bitrate} ! filesink location=sc/`basename $video`-%d.sc.markup.mpg sync=false async=false" ! fakesink async=false sync=false \
+
+
+#    seg.output ! queue ! fakesink dump=true sync=false async=false
+

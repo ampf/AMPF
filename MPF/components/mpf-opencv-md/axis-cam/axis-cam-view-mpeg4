@@ -1,0 +1,14 @@
+#!/bin/sh
+
+video=${video:=$MPF_HOME/media/freedom-day.1.mpg}
+width=${width:=320}
+height=${height:=240}
+
+if [ -z "$credentials" ]; then
+    . $PWD/credentials
+fi
+
+# Monitor the video in a separate stream, so as to not interfere with capture.
+gst-launch rtspsrc location="rtsp://${credentials}@axiscam.appscio.com/mpeg4/media.3gp" ! \
+     decodebin ! mpf-identity dump=dot ! videobalance contrast=1.5 ! queue ! ffmpegcolorspace ! videoscale ! video/x-raw-rgb, width=$width, height=$height ! ximagesink sync=false \
+

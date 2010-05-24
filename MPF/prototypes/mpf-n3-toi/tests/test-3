@@ -1,0 +1,19 @@
+#!/bin/bash
+
+video=${video:=axis-cam.mjpeg}
+
+if [ ! -e "${video}" ]; then
+    echo "Please specify video=<video> $0"
+    exit 1
+fi
+
+width=${width:=640}
+height=${height:=480}
+
+for i in 1 2 3; do
+  $prefix gst-launch$version $args filesrc location=${video} ! decodebin name=dec dec. ! tee name=t \
+    t. ! mpf-n3-toi n3=${video}.n3 segment=${i} ! seg.metadata \
+    t. ! mpf-segmenter $4 name=seg fps=15 ! videoscale ! video/x-raw-yuv, width=${width}, height=${height} ! ffmpegcolorspace ! matroskamux ! filesink location=${video}.$i.sc
+done
+
+

@@ -1,0 +1,37 @@
+#!/bin/sh
+
+sleep=${sleep:=0}
+video=${video:=../../../../MPF/media/freedom-day.1.mpg}
+draw_all=${draw_all:=false}
+visualization=${visualization:=final}
+daytime=${daytime:=true}
+sync=${sync:=false}
+
+basename=`basename $video`
+
+if [ $daytime == true ]; then
+    echo "Day-Time"
+    alpha=${alpha:=0.03}
+    picture_threshold=${picture_threshold:=25}
+    motion_threshold=${motion_threshold:=3000}
+    median=${median:=11}
+else
+    echo "Night-Time"
+    alpha=${alpha:=0.01}
+    picture_threshold=${picture_threshold:=20}
+    motion_threshold=${motion_threshold:=1000}
+    median=${median:=9}
+fi
+
+width=${width:=320}
+height=${height:=240}
+
+. $PWD/credentials
+
+$prefix $args gst-launch$version $gstargs \
+    filesrc location=$video ! \
+    decodebin ! videobalance contrast=1 ! mpf-identity sleep=$sleep dump=none ! ffmpegcolorspace ! \
+    toiplimage ! mpf-opencv-md name=md draw-all=$draw_all alpha=$alpha visualization=$visualization picture-threshold=$picture_threshold momentum-threshold=$motion_threshold median=$median ! queue ! fromiplimage ! \
+    videoscale ! video/x-raw-rgb, width=$width, height=$height ! ffmpegcolorspace ! ximagesink sync=$sync async=false max-lateness=-1 \
+    md.interest ! queue ! mpf-loi-stats interval=10 ! mpf-rdf-ton3 ! filesink location=$basename.stats.n3 sync=false async=false
+

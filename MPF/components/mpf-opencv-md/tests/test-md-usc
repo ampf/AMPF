@@ -1,0 +1,49 @@
+#!/bin/sh
+
+# Perform motion detection on a video, and show the internal object detection in one video window.
+# When regions of interest are detected, show them in a second window, and capture them to a file.
+
+alpha=${alpha:=0.03}
+median=${median:=19}
+video=${video:=$MPF_HOME/media/freedom-day.1.mpg}
+draw_all=${draw_all:=false}
+visualization=${visualization:=final}
+picture_threshold=${picture_threshold:=30}
+momentum_threshold=${momentum_threshold:=5000}
+width=${width:=320}
+height=${height:=240}
+fps=${fps:=0}
+concurrent=${concurrent:=1}
+vel=${vel:=25}
+
+NRL_MPF_HOME=../../../../NRL-MPF
+
+mkdir sc
+basename=sc/`basename $video`
+
+usc=${usc:=true}
+
+if [ $usc = "true" ]; then
+    echo "USC detector"
+    export LD_PRELOAD=$NRL_MPF_HOME/components/uav-vad-usc/lib/libuscuavactivity.so
+    export LD_LIBRARY_PATH=$NRL_MPF_HOME/components/uav-vad-usc/lib:$NRL_MPF_HOME/components/uav-vad-usc/lib/fedora
+else
+    echo "MOCK detector"
+    export USC_UAV_MOCK_EVENTS=3
+fi
+
+fakesink="fakesink async=false sync=false"
+rdfsink_events="mpf-rdf-ton3 ! filesink location=$basename-%1\$d.events.n3 buffer-mode=2 sync=false async=false"
+rdfsink_tracks="mpf-rdf-ton3 ! filesink location=$basename-%1\$d.tracks.n3 buffer-mode=2 sync=false async=false"
+
+$prefix $args gst-launch$version $gstargs filesrc location=$video ! decodebin ! mpf-identity dump=buffers ! tee name=t ! queue ! \
+    ffmpegcolorspace ! toiplimage ! queue ! mpf-opencv-md name=md draw-all=$draw_all alpha=$alpha median=$median visualization=$visualization picture-threshold=$picture_threshold momentum-threshold=$momentum_threshold \
+    md.output ! tee name=t1 \
+    t1. ! queue ! fromiplimage ! videoscale ! video/x-raw-rgb, width=$width, height=$height ! ffmpegcolorspace ! videoscale ! ximagesink sync=false async=false max-lateness=-1 \
+    md.interest ! queue ! mpf-loi-smooth threshold=1 sustain=120 ! mpf-shift shift=4 ! tee name=ti \
+    mpf-segmenter name=seg threshold=1 fps=$fps mpf-debug=0 loglevel=2 \
+    ti. ! queue ! seg.metadata \
+    t. ! queue ! seg.input \
+    seg.output ! tee name=to \
+    to. ! queue ! mpf-pipeline name=pipe concurrent=$concurrent loglevel=1 pipeline="appsrc ! ffmpegcolorspace ! toiplimage ! uav-vad-usc name=vad-%1\$d vel=$vel loglevel=1 vad-%1\$d.events ! $rdfsink_events vad-%1\$d.tracks ! $rdfsink_tracks" ! $fakesink \
+    to. ! queue ! mpf-pipeline name=pipe1 concurrent=0 loglevel=2 pipeline="appsrc ! ffmpegcolorspace ! ffenc_mpeg4 bitrate=10000000 ! ffmux_mp4 ! filesink location=$basename-%1\$d.mp4 async=false sync=false" ! $fakesink \

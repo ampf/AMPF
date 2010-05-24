@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+# Fire up one data-buffer sources, and pass it through the mpf-rdf-buf element.
+# This element generates RDF descriptions of the buffer index, length, and timestamp, which is then converted
+# into readable N3 format and sent out of stdout.
+#
+src="fakesrc num-buffers=10 sizetype=2 sizemax=10 filltype=4 datarate=10 do-timestamp=true"
+
+$prefix $args gst-launch$version \
+  $src ! mpf-buf-rdf name=rdf-a \
+  rdf-a.rdf ! queue ! mpf-rdf-ton3 ! filesink location=/dev/stdout \

@@ -1,0 +1,35 @@
+#!/bin/sh
+
+# Attempts (so far failed) to segment an audio+video stream.
+
+test -d out || mkdir out
+
+#$1 gst-launch$VERSION $2 filesrc location=data/video_02.mp4 ! mpf-xml-pipeline-dump location="dump.xml" ! tee name=t1 ! decodebin ! ffmpegcolorspace ! tee name=t \
+#  t. ! mpf-toi name=toi interval=4 duration=2 name=toi $3 toi. debug=1 ! tee name=t2 \
+#  t2. ! seg.metadata \
+#  t.  ! mpf-segmenter name=seg verbose=2 $4 debug=1 ! videoscale ! ffenc_libx264 ! filesink location=out/video_02_chopped.mp4 \
+#  t2. ! seg2.metadata \
+#  t1. ! decodebin ! audioconvert ! mpf-segmenter name=seg2 debug=1 ! lame ! filesink location=out/audio_02_chopped.mp3
+
+
+#$1 gst-launch$VERSION $2 filesrc location=data/video_02.mp4 ! mpf-xml-pipeline-dump location="dump.xml" ! decodebin name=dec ! ffmpegcolorspace ! tee name=t \
+#  t. ! mpf-toi name=toi interval=4 duration=2 name=toi $3 ! seg.metadata \
+#  t. ! mpf-segmenter name=seg verbose=2 $4 ! videoscale ! ffenc_libx264 ! filesink location=out/video_02_chopped.mp4 \
+#  dec. ! audioconvert ! lame ! filesink location=out/audio_02_chopped.mp3
+
+#$1 gst-launch$VERSION $2 filesrc location=data/video_02.mp4 ! mpf-xml-pipeline-dump location="dump.xml" ! decodebin name=dec ! tee name=t \
+#  t. ! mpf-toi name=toi interval=4 duration=2 $3 ! tee name=t2 \
+#  t2.0 ! seg.metadata \
+#  t2.1 ! seg2.metadata \
+#  t. ! mpf-segmenter name=seg verbose=2 $4 ! ffmpegcolorspace ! videoscale ! ffenc_libx264 ! filesink location=out/video_02_chopped.mp4 \
+#  t. ! decodebin ! audioconvert ! mpf-segmenter name=seg2 debug=1 ! lame ! filesink location=out/audio_02_chopped.mp3
+
+$1 gst-launch$VERSION $2 filesrc location=data/video_02.mp4 ! mpf-xml-pipeline-dump location="dump.xml" ! decodebin name=dec ! tee name=t \
+  t. ! mpf-toi name=toi interval=4 duration=2 $3 ! tee name=t2 ! seg.metadata \
+  t2. ! seg2.metadata \
+  t. ! mpf-segmenter name=seg verbose=2 debug=1 ! fakesink dump=true \
+  t. ! mpf-segmenter name=seg2 verbose=2 debug=1 ! fakesink dump=true
+
+# Player:
+#
+# gst-launch$VERSION filesrc location=out/video_02_chopped.mp4 ! decodebin name=dec dec. ! ffmpegcolorspace ! ximagesink

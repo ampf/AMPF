@@ -1,0 +1,16 @@
+Appscio.org Projects
+--------------------
+
+GRDF - G Resource Definition Framework
+--------------------------------------
+
+Prerequisites: install check and check-devel:
+
+  sudo yum install check check-devel
+
+To build and install GRDF:
+  
+  cd GRDF/trunk/grdf
+  ./autogen.sh 
+  make
+  sudo make install

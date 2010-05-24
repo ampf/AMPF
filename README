@@ -1,0 +1,86 @@
+ME:       Appscio Media Processing Framework (MPF)
+VERSION:    Initial GitHub Release
+CREATED BY: Gareth Bowles (gbowles@appscio.com)
+====================================================
+
+INDEX:
+
+-> Directory Structure
+-> Building MPF
+-> Building the grails-mpf-detector plugin
+-> Building the Large Data Evaluator application
+-> Road Map
+-> Version History
+
+
+DIRECTORY STUCTURE
+==================
+
+The Appscio MPF project contains the following subdirectories:
+
+- GRDF - The G Resource Definition Framework
+- MPF - The Media Processing Framework, including sample components
+- applications - Applications built on Appscio MPF
+- docs - Supporting documentation
+- tools - Tools that extend the Appscio MPF
+
+
+BUILDING MPF
+============
+
+To build MPF you will need a recent, 64-bit Linux distribution with the
+following prerequisites:
+
+- Apache Ant (http://ant.apache.org)
+- ffmpeg version 0.5 or above (can be obtained from http://rpmfusion.org)
+- ffmpeg-devel
+- gstreamer version 0.10.24 or above
+- gstreamer-devel
+- gstreamer-ffmpeg
+- gstreamer-plugins-base
+- gstreamer-plugins-base-devel
+- gstreamer-plugins-flumpegdemux
+- Java JDK version 1.6.0 or above
+- opencv version 1.0.0 or above
+- opencv-devel
+
+Once the prerequisites are installed, go to the MPF subdirectory and run:
+
+ant build-all
+
+
+BUILDING THE GRAILS-MPF-DETECTOR PLUGIN
+=======================================
+
+The plugin requires Grails version 1.2.1 (http://grails.org/download/archive/Grails)
+
+To build the plugin for installation in a standalone Grails application, go to
+tools/grails-plugins/VideoEventDetect and run:
+
+grails package-plugin
+
+To run the plugin under a test application, go to
+tools/grails-plugins/VideoEventDetect/test/projects/MpfDetectorPluginTestbed and run:
+
+grails run-app
+
+
+BUILDING THE LARGE DATA EVALUATOR APPLICATION
+=============================================
+
+Requires Grails version 1.2.1 (http://grails.org/download/archive/Grails)
+
+Go to applications/LDE and run:
+
+grails run-app
+
+
+ROAD MAP
+========
+
+
+VERSION HISTORY
+===============
+
+05-24-10 - Initial version checked into GitHub
+

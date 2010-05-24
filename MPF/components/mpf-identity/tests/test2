@@ -1,0 +1,5 @@
+#!/bin/sh
+gst-launch fakesrc sizetype=2 sizemax=10 filltype=5 num-buffers=10 datarate=10 ! mux. \
+  fakesrc sizetype=2 sizemax=10 filltype=5 num-buffers=10 datarate=10 ! mux. \
+  mpf-mux name=mux debug=1 ! mpf-xml-pipeline-dump location=dump.xml ! fakesink dump=true
+

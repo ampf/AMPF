@@ -1,0 +1,8 @@
+This is a mildly modified version of the standard ICSI rasta
+release. The only changes are to modernize slightly for more recent
+versions of gcc. Installation should be as simple as ./configure,
+make, make install.
+
+There is also a file called rasta_mpf_test.c. This is NOT the mpf
+component! It's used for debugging the interface, but just reads and
+writes to stdin/stdout. The mpf component is bundled separately.

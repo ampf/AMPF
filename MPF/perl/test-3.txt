@@ -1,0 +1,24 @@
+/* ---------------------------------------------------------------------
+ *Copyright (c) 2008 Appscio, Inc.
+ *All rights reserved.  This file is dual-licensed under the terms of
+ *either the Apache License version 2.0, or the GNU Lesser General
+ *Public License version 2.1, at your choice. See the COPYING file
+ *distributed with this file for Licenses governing your use of this file;
+ *if the COPYING file is unavailable, the terms of
+ *http://www.appscio.org/General-Notice.html shall apply.
+ *
+ *Copies of the ALv2 and LGPLv2 text should be supplied with the
+ *distribution which provides this file, but if they are not then you
+ *can find them at http://www.apache.org/licenses/LICENSE-2.0.txt
+ *and http://www.gnu.org/licenses/lgpl-2.1.html
+ *
+ *Contributors:
+ *    Appscio, Inc - initial API and implementation
+ * ------------------------------------------------------------------ */
+/*
+ * Preserve this header.
+ */
+This text should be passed through.
+/*
+ * Header should be left alone.
+ */

@@ -1,0 +1,53 @@
+Summary:	Appscio MPF RDF integration data-type library
+Name:		mpf-rdf
+Version:	@VERSION@
+Release:	1
+License:	LGPL or Apache License
+Group:		Applications/Multimedia
+Source:		%{name}-%{version}.tar.gz
+URL:		www.appscio.com
+Vendor:		Appscio, Inc.
+Packager:	build@issues.appscio.com
+BuildRoot:	%{_tmppath}/%{name}-%{version}-root
+BuildRequires:	mpf-core-devel grdf-devel
+Requires:	grdf
+
+%description
+Appscio MPF RDF integration data-type library
+
+%package devel
+Summary:	Appsio MPF RDF integration data-type library development files
+Group:		Development/Libraries
+Requires:	%{name} = %{version}-%{release}
+Requires:	gstreamer-devel mpf-core-devel
+
+%description devel
+Appscio MPF RDF integration data-type library
+
+This package contiains libraries and includes files necessary to use this data type.
+
+%prep
+%setup
+
+%configure --prefix=%{_prefix}
+
+%build
+make
+
+%install
+rm -rf $RPM_BUILD_ROOT
+make DESTDIR=$RPM_BUILD_ROOT install
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
+rm -f $RPM_BUILD_ROOT%{_libdir}/gstreamer-0.10/*.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/gstreamer-0.10/*.a
+
+%files
+%{_libdir}/libmpf-rdf.so.*
+%{_libdir}/gstreamer-0.10/libmpf-rdf-ton3.so
+
+%files devel
+%{_libdir}/libmpf-rdf.so
+%{_includedir}/mpf/mpf-rdf.h
+%{_libdir}/pkgconfig/mpf-rdf.pc

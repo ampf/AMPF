@@ -1,0 +1,9 @@
+#!/bin/sh
+#
+# Overlapping buffers, datarate of zero.
+#
+debug=0
+
+$prefix $args gst-launch$version fakesrc num-buffers=40 sizemax=10 filltype=4 sizetype=2 datarate=0 ! tee name=t \
+  t. ! queue ! mpf-window start=0 count=10 repeat=15 mpf-debug=$debug loglevel=1 ! fakesink dump=false \
+  t. ! queue ! mpf-window start=8 count=10 repeat=15 mpf-debug=$debug loglevel=1 ! fakesink dump=false

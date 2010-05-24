@@ -1,0 +1,35 @@
+Summary:	Appscio MPF template tools
+Name:		mpf-template
+Version:	@VERSION@
+Release:	1
+License:	LGPL or Apache License
+Group:		Applications/Multimedia
+Source:		%{name}-%{version}.tar.gz
+URL:		www.appscio.com
+Vendor:		Appscio, Inc.
+Packager:	build@issues.appscio.com
+BuildRoot:	%{_tmppath}/%{name}-%{version}-root
+BuildRequires:	mpf-core
+Requires:	mpf-core
+
+%description
+Set of templates and generator scripts for various MPF component and library
+situations.
+
+%prep
+%setup
+
+%configure --prefix=%{_prefix}
+
+%build
+make
+
+%install
+rm -rf $RPM_BUILD_ROOT
+make DESTDIR=$RPM_BUILD_ROOT install
+find $RPM_BUILD_ROOT%{_prefix}/share/mpf/templates | sed "s@$RPM_BUILD_ROOT@@" > template-files
+
+%files -f template-files
+%{_bindir}/mpf-new-component.sh
+%{_bindir}/mpf-new-multipipe.sh
+%{_bindir}/mpf-new-data-type.sh

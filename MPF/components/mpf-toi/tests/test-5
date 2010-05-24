@@ -1,0 +1,5 @@
+#!/bin/sh
+echo expect buffers at 10, 11, 20, 21 seconds etc, same as test3 but with different pipeline.
+set -x
+
+$1 gst-launch $2 fakesrc sizetype=2 sizemax=1 filltype=5 num-buffers=30 datarate=1 ! mpf-toi $3 start=10 duration=2 interval=10 verbose=2 ! fakesink 2>&1

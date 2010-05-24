@@ -1,0 +1,3 @@
+#!/bin/sh
+javac Test.java
+$prefix $args gst-launch$version filesrc location=test.in ! mpf-fork command="java -Dparam=value Test %s %s" ! identity dump=true ! filesink location=test-2.out

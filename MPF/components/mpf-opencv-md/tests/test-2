@@ -1,0 +1,10 @@
+#!/bin/sh
+
+sleep=${sleep:=0.02}
+video=${video:=$MPF_HOME/media/freedom-day.1.mpg}
+
+$prefix $args gst-launch$version $gstargs filesrc location=$video ! decodebin ! \
+    mpf-identity sleep=$sleep dump=none ! ffmpegcolorspace ! \
+    toiplimage ! iplidentity ! fromiplimage ! \
+    videoscale ! ffmpegcolorspace ! ximagesink max-lateness=-1 \
+

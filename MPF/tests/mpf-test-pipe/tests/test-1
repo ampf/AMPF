@@ -1,0 +1,2 @@
+#!/bin/sh
+$prefix $args gst-launch$version filesrc location=test.in ! mpf-test-pipe ! identity dump=true ! filesink location=test.out

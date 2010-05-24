@@ -1,0 +1,12 @@
+#!/bin/sh -x
+#
+# Demonstrates a generic raw-buffer muxer.  Uses two muxers.
+#
+src="fakesrc num-buffers=20 sizetype=2 sizemax=10 filltype=4 do-timestamp=true datarate=10 sync=false "
+$prefix $args gst-launch$version $gstargs \
+  $src ! queue ! mpf-test-mux mpf-debug=0 name=mux1 \
+  $src ! queue ! mux1. \
+  mux1. ! queue ! fakesink dump=true async=false sync=false \
+  $src ! queue ! mpf-test-mux mpf-debug=0 name=mux2 \
+  $src ! queue ! mux2. \
+  mux2. ! queue ! fakesink dump=true async=false sync=false \

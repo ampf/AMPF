@@ -1,0 +1,3 @@
+#!/bin/sh
+gst-launch fakesrc num-buffers=5 ! mpf-xml-pipeline-dump location="dump.xml" ! fakesink
+

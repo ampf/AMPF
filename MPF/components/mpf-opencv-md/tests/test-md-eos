@@ -1,0 +1,31 @@
+#!/bin/sh
+
+# Perform motion detection on a video, and show the internal object detection in one video window.
+# When regions of interest are detected, show them in a second window, and capture them to a file.
+
+alpha=${alpha:=0.03}
+median=${median:=19}
+video=${video:=$MPF_HOME/media/freedom-day.1.mpg}
+draw_all=${draw_all:=false}
+visualization=${visualization:=final}
+picture_threshold=${picture_threshold:=30}
+momentum_threshold=${momentum_threshold:=5000}
+width=${width:=320}
+height=${height:=240}
+fps=${fps:=0}
+
+export USC_UAV_MOCK_EVENTS=3
+
+fake="fakesink dump=true async=false sync=false"
+
+$prefix $args gst-launch$version $gstargs filesrc location=$video ! decodebin ! ffmpegcolorspace ! tee name=t ! queue ! \
+    toiplimage ! queue ! mpf-opencv-md name=md draw-all=$draw_all alpha=$alpha median=$median visualization=$visualization picture-threshold=$picture_threshold momentum-threshold=$momentum_threshold \
+    md.output ! tee name=t1 \
+    t1. ! queue ! fromiplimage ! videoscale ! video/x-raw-rgb, width=$width, height=$height ! ffmpegcolorspace ! ximagesink sync=false async=false max-lateness=-1 \
+    md.interest ! queue ! mpf-loi-smooth threshold=1 sustain=120 ! mpf-shift shift=3 ! tee name=ti \
+    mpf-segmenter name=seg threshold=1 fps=$fps mpf-debug=0 loglevel=1 \
+    ti. ! queue ! seg.metadata \
+    t. ! queue ! seg.input \
+    seg.output ! queue ! mpf-pipeline name=pipe loglevel=1 pipeline="appsrc ! mpf-test-eos name=eos eos.events ! $fake eos.tracks ! $fake" ! $fake \
+    ti. ! queue ! mpf-loi-seg threshold=1 ! mpf-rdf-ton3 ! filesink location=`basename $video.n3` sync=false async=false buffer-mode=2 \
+

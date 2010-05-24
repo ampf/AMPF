@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# Inputs: (apply to launch line like this: gstargs=-v ./test-2)
+#
+#   prefix:	  Prefix to apply to launch line (e.g. "gdb --args" for debugging)
+#   args:     Arguments to supply to prefix (e.g. prefix=valgrind args=-v)
+#   version:  Use specific version of gstlaunch (e.g. prefix=valgrind version=-0.10)
+#   gstargs:  Gstreamer arguments (e.g. gst-args=-v)
+#
+
+export GST_PLUGIN_PATH=../.libs:$GST_PLUGIN_PATH
+
+# Drive a fake source into a multi-pipe identity.
+#
+$prefix $args gst-launch$version $gstargs \
+    fakesrc num-buffers=100 sizetype=2 sizemax=10 filltype=4 datarate=10 do-timestamp=true ! mpf-identity sleep=0.1 ! tee name=t \
+    t. ! queue ! mpf-toi verbose=1 name=toi start=20 interval=50 duration=10 \
+    mpf-segmenter name=seg loglevel=1 \
+    t. ! queue ! seg.input \
+    toi. ! queue ! seg.metadata \
+    seg. ! queue ! mpf-pipeline loglevel=0 concurrent=2 pipeline="appsrc ! mpf-identity dump=buffers sleep=0.1 name=identity-%d ! fakesink async=false sync=false "  ! fakesink async=false sync=false

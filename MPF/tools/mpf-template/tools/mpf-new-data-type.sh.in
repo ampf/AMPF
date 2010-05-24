@@ -1,0 +1,95 @@
+#!/bin/bash
+
+prefix=@prefix@
+templates=$prefix/share/mpf/templates/
+templatename=data-type-autotools
+
+if [ $# -eq 0 ]
+then
+  read -p "Enter data-type name: " destdir
+else
+  destdir=$1;shift
+fi
+
+if [ "x$1" != "x" ];then
+  compname=$1
+else
+  compname=`basename $destdir`
+fi
+# add mpf- to data-type name
+destdir=`dirname $destdir`/mpf-$compname
+
+self=`pwd`/$0
+templatepath=$templates/$templatename
+
+# Use developer path if found, otherwise use installed.
+self=`pwd`/$0
+templatepath=`dirname $0`/../templates/$templatename
+if [ ! -e $templatepath ];then
+  templatepath=$templates/$templatename
+fi
+
+# Make sure the directory actually *has* the source
+if [ ! -e $templatepath/mpf/mpf-newdatatype.c ];then
+  echo ERROR: Can\'t find template files in $templatepath !
+  exit 1
+fi
+
+if [ -e $destdir ];then
+  echo
+  echo WARNING: Destination directory \"$destdir\" already exists!
+  read -n 1 -p "Overwrite template files? (y/n): " overwrite
+  if [ "x$overwrite" != "xy" ]
+  then
+    exit 1
+  fi
+fi
+
+# make sure the complete directory heirarchy is there so the cp doesn't fail
+mkdir -p `dirname $destdir`
+
+# canonicalize for later use
+fulldir=`readlink -f $destdir`
+
+# Copy the template
+cp -r $templatepath $destdir
+
+# Now go rewrite and rename all the relevant files
+cd $destdir
+
+# Rename the spec and pc files
+mv mpf-newdatatype.pc.in mpf-$compname.pc.in
+mv mpf-newdatatype.spec.in mpf-$compname.spec.in
+mv mpf-newdatatype-uninstalled.pc.in mpf-$compname-uninstalled.pc.in
+
+# Rename the component files
+mv components/fromnewdatatype.c components/from$compname.c
+mv components/fromnewdatatype.h components/from$compname.h
+mv components/tonewdatatype.c components/to$compname.c
+mv components/tonewdatatype.h components/to$compname.h
+
+# Rename the mpf files
+mv mpf/mpf-newdatatype.c mpf/mpf-$compname.c
+mv mpf/mpf-newdatatype.h mpf/mpf-$compname.h
+
+# Check for and remove any .svn directories in case we're running from the mpf-template source tree
+find . -name \*.svn | xargs rm -rf
+
+# replace names in files
+allcapsname=`echo $compname | tr [:lower:] [:upper:]`
+firstchar=${compname:0:1}
+firstcap=`echo $firstchar | tr [:lower:] [:upper:]`
+therest=${compname:1}
+firstcapname="$firstcap$therest"
+
+find . -type f -exec sed -i -e "s/newdatatype/$compname/g" {} \;
+find . -type f -exec sed -i -e "s/Newdatatype/$firstcapname/g" {} \;
+find . -type f -exec sed -i -e "s/NEWDATATYPE/$allcapsname/g" {} \;
+
+# Give a basic set of instructions for building
+echo "MPF data-type $compname created in $destdir"
+echo
+echo "To build your new data-type:"
+echo "cd $destdir"
+echo "./autogen.sh"
+echo "make"

@@ -1,0 +1,9 @@
+#!/bin/sh
+
+GST_PLUGIN_PATH=../.libs:$GST_PLUGIN_PATH
+
+$prefix $args gst-launch$version $gstargs fakesrc num-buffers=5 name=src sizetype=2 filltype=4 sizemax=10 \
+    jira-mpf-213-split name=split \
+    src. ! split.input \
+    split.output ! queue ! fakesink dump=true \
+    split.metadata ! queue ! mpf-rdf-ton3 ! fakesink dump=true

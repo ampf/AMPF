@@ -1,0 +1,12 @@
+prefix=${pcfiledir}/../..
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+mpftypes=utterance
+
+Name: MPF PocketSphinx
+Description: Appscio PocketSphinx integration
+Requires: gstreamer-@GST_MAJORMINOR@ mpf-core
+Version: @VERSION@
+Libs: -L${libdir} -lmpf-utterance
+Cflags: -I${includedir}

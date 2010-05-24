@@ -1,0 +1,20 @@
+#!/bin/sh
+
+sleep=${sleep:=0}
+alpha=${alpha:=0.04}
+video=${video:=$MPF_HOME/media/freedom-day.1.mpg}
+draw_all=${draw_all:=false}
+visualization=${visualization:=final}
+picture_threshold=${picture_threshold:=70}
+width=${width:=320}
+height=${height:=240}
+
+basename=`basename $video`
+mkdir sc
+
+$prefix $args gst-launch$version $gstargs filesrc location=$video ! decodebin ! \
+    mpf-identity sleep=$sleep dump=dot ! ffmpegcolorspace ! \
+    toiplimage ! mpf-opencv-md name=md draw-all=$draw_all alpha=$alpha visualization=$visualization picture-threshold=$picture_threshold ! queue ! fromiplimage ! \
+    videoscale ! ffmpegcolorspace ! ffenc_mpeg4 ! ffmux_mp4 ! filesink location=sc/$basename.1.1.mp4 \
+    md.interest ! queue ! mpf-loi-smooth ! mpf-rdf-ton3 ! fakesink
+

@@ -1,0 +1,5 @@
+#!/bin/sh
+echo expect buffers at time 2, 6, 10, seconds etc.
+set -x
+
+$1 gst-launch $2 fakesrc sizetype=2 sizemax=1 filltype=5 num-buffers=600 datarate=30 ! mpf-toi $3 start=2 interval=4 verbose=2 ! fakesink 2>&1

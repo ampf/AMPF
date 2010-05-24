@@ -1,0 +1,22 @@
+#!/bin/sh -x
+
+# Extracts audio stream.  Use $4 to add parameters to the mpf-toi to slice and dice.
+
+test -d out || mkdir out
+
+$1 gst-launch$VERSION $2 filesrc location=$3 ! decodebin2 name=dec ! audio/x-raw-int ! tee name=t \
+    t. ! mpf-toi start=0 end=-1 $4 ! seg.metadata \
+    t. ! mpf-segmenter name=seg $5 ! audioconvert ! lame bitrate=128 ! mpf-xml-pipeline-dump ! filesink location=out/audio-extract.mp3
+
+#$1 gst-launch$VERSION $2 filesrc location=$3 ! decodebin name=dec ! tee name=t \
+#    t. ! mpf-toi start=0 end=-1 $4 ! seg.metadata \
+#    t. ! mpf-segmenter name=seg $5 ! mpf-xml-pipeline-dump ! fakesink
+
+#$1 gst-launch$VERSION $2 filesrc location=$3 ! mpf-xml-pipeline-dump ! decodebin2 ! \
+#    audioconvert ! lame bitrate=128 ! mpf-xml-pipeline-dump ! filesink location=out/audio-extract.mp3
+
+#$1 gst-launch$VERSION $2 filesrc location=$3 ! flvdemux name=dec dec.audio ! queue ! tee name=t \
+#    t. ! mpf-toi start=0 end=-1 $4 ! seg.metadata \
+#    t. ! mpf-segmenter name=seg $5 ! audioconvert ! lame bitrate=128 ! mpf-xml-pipeline-dump ! filesink location=out/audio-extract.mp3 \
+#    dec.video ! fakesink
+

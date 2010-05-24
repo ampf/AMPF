@@ -1,0 +1,1170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article lang="">
+<para>
+<ulink url="http://confluence.appscio.com/display/ENG/APPSCIO%28TM%29+MPF+Component+Writer%27s+Guide">APPSCIO(TM) MPF Component Writer's Guide</ulink> </para>
+<para>Added by <ulink url="http://confluence.appscio.com/display/~gcarl">Glen Carl</ulink>, last edited by <ulink url="http://confluence.appscio.com/display/~gcarl">Glen Carl</ulink> on Sep 30, 2008  (<ulink url="http://confluence.appscio.com/pages/diffpages.action?pageId=5344616&amp;originalId=5347483">view change</ulink>) </para>
+<para>
+<ulink url="http://jira.appscio.com/browse/sdk-39">SDK-39</ulink> - task to track the completion of first draft. Remove this reference when first draft is complete. Chapter 3, 4, 5, 6, 7 in progress. </para>
+<orderedlist>
+<listitem>
+<para>
+<ulink url="http://confluence.appscio.com/display/ENG/APPSCIO%28TM%29+MPF+Component+Writer%27s+Guide#APPSCIO%28TM%29MPFComponentWriter%27sGuide-Introduction">Introduction</ulink> </para>
+</listitem>
+<listitem>
+<para>
+<ulink url="http://confluence.appscio.com/display/ENG/APPSCIO%28TM%29+MPF+Component+Writer%27s+Guide#APPSCIO%28TM%29MPFComponentWriter%27sGuide-CHAPTER1%3AIntrotoMPFandwhatitdoes">CHAPTER 1: Intro to MPF and what it does</ulink> </para>
+</listitem>
+<listitem>
+<para>
+<ulink url="http://confluence.appscio.com/display/ENG/APPSCIO%28TM%29+MPF+Component+Writer%27s+Guide#APPSCIO%28TM%29MPFComponentWriter%27sGuide-CHAPTER2%3ABuildingyourfirstcomponent">CHAPTER 2: Building your first component</ulink> </para>
+</listitem>
+<listitem>
+<para>
+<ulink url="http://confluence.appscio.com/display/ENG/APPSCIO%28TM%29+MPF+Component+Writer%27s+Guide#APPSCIO%28TM%29MPFComponentWriter%27sGuide-CHAPTER3%3AConvertingyourcomponenttouseOpenCV">CHAPTER 3: Converting your component to use OpenCV</ulink> </para>
+</listitem>
+<listitem>
+<para>
+<ulink url="http://confluence.appscio.com/display/ENG/APPSCIO%28TM%29+MPF+Component+Writer%27s+Guide#APPSCIO%28TM%29MPFComponentWriter%27sGuide-CHAPTER4%3AAddingParameters">CHAPTER 4: Adding Parameters</ulink> </para>
+</listitem>
+<listitem>
+<para>
+<ulink url="http://confluence.appscio.com/display/ENG/APPSCIO%28TM%29+MPF+Component+Writer%27s+Guide#APPSCIO%28TM%29MPFComponentWriter%27sGuide-CHAPTER5%3AAddingmetadatainputforROI%28regionofinterestframeset%29">CHAPTER 5: Adding metadata input for ROI (region of interest - frameset)</ulink> </para>
+</listitem>
+<listitem>
+<para>
+<ulink url="http://confluence.appscio.com/display/ENG/APPSCIO%28TM%29+MPF+Component+Writer%27s+Guide#APPSCIO%28TM%29MPFComponentWriter%27sGuide-CHAPTER6%3ADevelopingyourownontology">CHAPTER 6: Developing your own ontology</ulink> </para>
+</listitem>
+<listitem>
+<para>
+<ulink url="http://confluence.appscio.com/display/ENG/APPSCIO%28TM%29+MPF+Component+Writer%27s+Guide#APPSCIO%28TM%29MPFComponentWriter%27sGuide-CHAPTER7%3ABuildinganewDataTypeLibrary">CHAPTER 7: Building a new Data Type Library</ulink> </para>
+</listitem>
+<listitem>
+<para>
+<ulink url="http://confluence.appscio.com/display/ENG/APPSCIO%28TM%29+MPF+Component+Writer%27s+Guide#APPSCIO%28TM%29MPFComponentWriter%27sGuide-References">References</ulink> </para>
+</listitem>
+<listitem>
+<para>
+<ulink url="http://confluence.appscio.com/display/ENG/APPSCIO%28TM%29+MPF+Component+Writer%27s+Guide#APPSCIO%28TM%29MPFComponentWriter%27sGuide-Glossary">Glossary</ulink> </para>
+</listitem>
+<listitem>
+<para>
+<ulink url="http://confluence.appscio.com/display/ENG/APPSCIO%28TM%29+MPF+Component+Writer%27s+Guide#APPSCIO%28TM%29MPFComponentWriter%27sGuide-Attachments">Attachments</ulink> </para>
+</listitem>
+<listitem>
+<para>
+<ulink url="http://confluence.appscio.com/display/ENG/APPSCIO%28TM%29+MPF+Component+Writer%27s+Guide#APPSCIO%28TM%29MPFComponentWriter%27sGuide-ProcesstoDeploytheWriter%27sGuide">Process to Deploy the Writer's Guide</ulink> </para>
+</listitem>
+</orderedlist>
+<para>Introduction</para>
+<para>Welcome to the Appscio Media Processing Framework (MPF) guide to component writing. This guide will help you understand what MPF is and how to apply the technology. The goal of this document is to provide an introduction to MPF (Chapter 1), help you build your first component package (Chapter 2), understand how to convert an existing component for custom needs (Chapter 3), learn how to expand your MPF component by adding parameters and meta data (Chapter 4, Chapter 5), develop your own ontology (Chapter 6) and finally understand how to create a new data type library for many components to share (Chapter 7).</para>
+<para>It is hoped that this document will also serve as guide to best practices for component writing, and provide you a way to quickly develop your own components to meet your needs.</para>
+<para>To best understand this technology you will need to have some understanding of C/C++ programming, Make, XML, Subversion, Yum, RPM, and Linux. Most Open Source software developers and researchers will already have familiarity with these tools, and people interested in this technology will probably have little trouble learning the tools listed. It is recommended you dive in, and see where extra reading may be needed. A reference section has been included at the end of this document to help with getting details on technology related to MPF development and use. Following the reference is a Glossary to help in learning the terms.</para>
+<para>CHAPTER 1: Intro to MPF and what it does</para>
+<orderedlist>
+<listitem>
+<para>
+<ulink url="http://confluence.appscio.com/display/ENG/APPSCIO%28TM%29+MPF+Component+Writer%27s+Guide#MPF-CWG-Chapter-1-CHAPTER1%3AIntrotoMPFandwhatitdoes">CHAPTER 1: Intro to MPF and what it does</ulink> </para>
+</listitem>
+</orderedlist>
+<para>What is Appscio(TM) MPF?</para>
+<para>The Appscio Media Processing Framework (MPF) is an open software framework that is independent of media formats and data types. To promote adoption it is distributed as open source software. To leverage existing work it is implemented as an extension to one of the most mature and respected open source projects (GStreamer) and employs the W3C standard for expressing metadata, RDF.</para>
+<para>At its heart the Appscio MPF is a tool for configuring and executing "pipelines" composed of multiple media algorithms. A Pipeline is a sequence of Algorithms (wrapped with Appscio MPF code) configured to perform an application-specific Service. Services implemented in Pipelines can be as simple as transcoding a media file from one format to another or as complex as generating a transcript from the audio track, recognizing people in the video stream or both.</para>
+<para>Algorithms perform a wide variety of elementary functions and fall into distinct categories. CODECs compress (encode) and decompress (decode) audio and video (AV) signals. Filters modify frames in AV signals. Detectors identify objects (words, faces, text, etc.) and behaviors (e.g. motion) in AV channels. Classifiers and Recognizers associate structured fragments of metadata with objects and behaviors. Analytics distill, improve, combine and/or summarize fragments of metadata.</para>
+<para>The Appscio MPF provides a mechanism for communicating semantic metadata between Algorithms. Metadata is "published" and consumed through Pads implemented in Appscio MPF software Wrappers around elementary media algorithms. Algorithms are assembled in a Pipeline and metadata flows "downstream" through Pads forming a "metadata channel."</para>
+<para>Reference "The Appscio Media Processing Framework " by Robert Marsh</para>
+<orderedlist>
+<listitem>
+<para>
+<ulink url="http://confluence.appscio.com/display/~bmarsh/OSS+Articles">Articles by Bob Marsh</ulink> </para>
+</listitem>
+<listitem>
+<para>
+<ulink url="http://www.appscio.org/">http://www.appscio.org</ulink> </para>
+</listitem>
+</orderedlist>
+<para>How to Use MPF</para>
+<para>The most common use for MPF will be to build solutions for to integrate media with META DATA. This framework allows the developer to simply mix XML META DATA with video, audio and even video/audio streams/images to allow for a many ways to control and alter media for a special need. The framework provides a common and standard system to allow for communications with many other systems. Most media systems today are considered stove pipes, and this framework allow for creative flow beyond the core system. The potential integrations are incredible and take us from science fiction to the now. The following are some scenarios how MPF can help, and as time progresses, more and more component sets and data types will become available to make the integrations with your desired platform easier.</para>
+<para>Scenario 1 - Security Camera Integration</para>
+<para>Consider the simple security camera. You only care about when something happens. For instance, you are monitoring a closed door and empty room after hours. More than likely, there is no pressing need to save all of the data showing the closed door, however, it is important to not only monitor when the door is opened. Why not record just a frame every 10 seconds when the door is closed, and really take some significant actions when that door opens. </para>
+<para>The potential solution would be to integrate your security video feed and hook it into your MPF interface. You would want to work with components to first record an image about every 10 seconds per your requirement, next you would integrate the XML META DATA to send off messages to monitoring devices and to record time and other parameters of interest. The data contained in the XML META DATA may be hooked to other software systems to provide alerts to security staff, and turn on more recording, lock down systems and detection devices until the threat has been understood.</para>
+<para>Scenario 2 - Personalized Marketing</para>
+<para>Now, here is something for some potential controversy. Let's say you are the CTO of a large chain of department stores, and your leaders call for a more personalized experience for shoppers. Maybe you think for a moment about some of the science fiction movies where face recognition systems can identify who you are and map it to database of personal information. Yes, you can do it, you realize you just need to connect the face recognition system to your security camera video feeds, and then use MPF to help you map faces to a the database of registered preferred shoppers. The face will be recognized from your database and matched to user preferences, interests and possibly needs. The information can be quickly passed to an available sales clerk who can quickly connect with the customer and direct them of items of interest. As you can imagine, there are many options that could be adapted to this scenario.</para>
+<para>Scenario 3 - C4I with a Robot on Mars</para>
+<para>You are tasked to enhance the communications with your robotic explorer on Mars. The problem is you have control the burst of data received when telecommunications have been re-established with the robot after a period of outage. Of course the goal is to do as much data transfer as possible before communications are lost again. </para>
+<para>The solution, integrate MPF component sets with your C4I systems. This will allow the XML META DATA layer to be added to filter data, issue commands, control the image and audio data. </para>
+<para>Scenario 4 - Video Conferencing</para>
+<para>As some may be aware, many of the video conferencing systems in existence have a difficult time sharing data and communications between competing systems. Therefore, it is the hope that MPF will be able to cross the boundaries and provide a standard that will allow for cross platform communications and data exchange. The idea of the Appscio Media Processing Framework is to provide a common interface of communications that is open. Just as XML is an open standard, it is the goal of MPF that the shared components will provide an open standard infrastructure.</para>
+<para>How to Customize MPF</para>
+<para>To provide you some quick reference orientation to MPF you can consider the following stack or Domain Package:</para>
+<para>DOMAIN PACKAGE</para>
+<informaltable frame="all">
+<tgroup cols="2"><tbody>
+<row>
+<entry>
+<para>Presentation</para>
+</entry>
+<entry>
+<para>External to MPF</para>
+</entry>
+</row>
+<row>
+<entry>
+<para>Taxonomy</para>
+</entry>
+<entry>
+<para>External to MPF</para>
+</entry>
+</row>
+<row>
+<entry>
+<para>Data Library</para>
+</entry>
+<entry>
+<para>MPF</para>
+</entry>
+</row>
+<row>
+<entry>
+<para>Component Sets</para>
+</entry>
+<entry>
+<para>MPF</para>
+</entry>
+</row></tbody></tgroup>
+</informaltable>
+<para>Where you have a presentation layer such as a web browser user interface, a taxonomy to put together data types and component sets package the methods of execution. A pipeline service would be launched from the presentation layer, and this pipeline would include the the taxonomy, data types and components. </para>
+<para>Pipeline</para>
+<informaltable frame="all">
+<tgroup cols="5"><tbody>
+<row>
+<entry>
+<para>element</para>
+</entry>
+<entry>
+<para> </para>
+</entry>
+<entry>
+<para>component</para>
+</entry>
+<entry>
+<para> </para>
+</entry>
+<entry>
+<para>element</para>
+</entry>
+</row>
+<row>
+<entry>
+<para>srcVideoFrame</para>
+</entry>
+<entry>
+<para>!</para>
+</entry>
+<entry>
+<para>extractFaces</para>
+</entry>
+<entry>
+<para>!</para>
+</entry>
+<entry>
+<para>toFaceImage</para>
+</entry>
+</row></tbody></tgroup>
+</informaltable>
+<para>&lt;---------------- Data Library --------------------&gt;</para>
+<para>Think of situation where your web cam has some face recognition. The taxonomy would be a type face:nose:eye, and the face consists of nose and eye data types. The Presentation would execute the component sets with the Taxonomy. The component sets would consist of extractFaces, toFaceImage. The data library will have many Data types which will consist of image types, audio types, formats and other types yet to be created. For this example data types may be faceImageType, toFaceImage. It is expected external applications to MPF will create the Presentation and the Taxonomy. Whereas in MPF you will find Data Types and Component Sets. The Data Types and Component Sets will be found in MPF, and are expected to be reusable with many combinations that will make it easy to build complex systems. </para>
+<para>In summary, MPF is about Data Types, Component Sets and Pipelines. Chapter 2 will help you get started with the Component package, and Chapter 7 will get into the details of building your own data types.</para>
+<para>How to Contribute to MPF</para>
+<para>First, join the Appscio Media Processing Framework Open Source Community at <ulink url="http://www.appscio.org/">http://www.appscio.org</ulink>. Within this community you will find the information to get involved. </para>
+<para>Second, contact the management of the Appscio MPF community to become a recognized contributor to the projects. Appscio will provide many incentives for contributing. </para>
+<para>Finally, follow the current best practices and Appscio MPF contribution processes, and you will be on your way to being significant contributor. The processes and procedures for contribution will be an ongoing change. Therefore, the process is documented here at high level, and with the hope you are directed to the path of your desire.</para>
+<para>Learn more about MPF</para>
+<para>As you may be able to tell from this chapter, we are just scratching at the surface of the capabilities. We encourage you to keep reading to learn how to integrate with this technology. Besides reading the remainder of the chapters in this document, please reference the following material. </para>
+<orderedlist>
+<listitem>
+<para>
+<ulink url="http://confluence.appscio.com/display/ENG/APPSCIO%28TM%29+MPF+Component+Writer%27s+Guide+-+Appendix+A">APPSCIO(TM) MPF Component Writer's Guide - Appendix A</ulink> </para>
+</listitem>
+<listitem>
+<para>
+<ulink url="http://www.appscio.org/">http://www.appscio.org</ulink> </para>
+</listitem>
+</orderedlist>
+<para>We hope you find what you need to get started, and enjoy the experience with MPF. Please check the forums at Appscio.org for further assistance and information. <ulink url="http://www.appscio.org/_forum_">http://www.appscio.org/_forum_</ulink>
+</para>
+<para>CHAPTER 2: Building your first component</para>
+<orderedlist>
+<listitem>
+<para>
+<ulink url="http://confluence.appscio.com/display/ENG/APPSCIO%28TM%29+MPF+Component+Writer%27s+Guide#MPF-CWG-Chapter-2-CHAPTER2%3ABuildingyourfirstcomponent">CHAPTER 2: Building your first component</ulink> </para>
+</listitem>
+</orderedlist>
+<para>Prerequisites for MPF component development</para>
+<orderedlist>
+<listitem>
+<para>sudo yum install mpf-core-devel </para>
+</listitem>
+<listitem>
+<para>If -devel is not installed, the mpf-core.pc file will not be installed </para>
+</listitem>
+<listitem>
+<para>check for mpf packages installed with "pkg-config --list-all|grep mpf" </para>
+</listitem>
+<listitem>
+<para>You need 'gtk-doc' for RPM-based and 'gtk-doc-tools' for DEB-based distros. </para>
+</listitem>
+</orderedlist>
+<para>APT option</para>
+<para>Some developers may prefer other another flavor of Linux such as Ubuntu. Instead of Yum, you will need to use APT</para>
+<orderedlist>
+<listitem>
+<para>Packages to build from Soure </para>
+</listitem>
+</orderedlist>
+<para>RPM install of MPF</para>
+<orderedlist>
+<listitem>
+<para>Fedora 9 32-bit </para>
+</listitem>
+<listitem>
+<para>only OS supported at this time </para>
+</listitem>
+<listitem>
+<para>su - root </para>
+</listitem>
+<listitem>
+<para>Add the Appsico repository to your dependency manager. For yum.copy <ulink url="http://www.appscio.com/repository/packages/continuous/trunk/fedora/9/RPMS/appscio.repo">http://www.appscio.com/repository/packages/continuous/trunk/fedora/9/RPMS/appscio.repo</ulink> into your/etc/yum.repos.d directory </para>
+</listitem>
+<listitem>
+<para>Use your dependency manager to install mpf-core and (optionally)mpf-opencv. For yum, do: </para>
+</listitem>
+<listitem>
+<para>sudo yum install mpf-core-devel (this will install the mpf-core.pc file) </para>
+</listitem>
+<listitem>
+<para>sudo yum install mpf-autotemplate </para>
+</listitem>
+</orderedlist>
+<para>Devel and Debug for each componentname or mpf-core</para>
+<orderedlist>
+<listitem>
+<para>sudo yum install mpf-componentname-devel </para>
+</listitem>
+<listitem>
+<para>sudo yum install mpf-componentname-debuginfo </para>
+</listitem>
+<listitem>
+<para>The developer is responsible for dependencies. </para>
+</listitem>
+</orderedlist>
+<para>Verify MPF install</para>
+<orderedlist>
+<listitem>
+<para>pkg-config --list-all|grep mpf </para>
+</listitem>
+<listitem>
+<para>if mpf-opencv installed </para>
+</listitem>
+<listitem>
+<para>Consider use of the GStreamer Inspector tool </para>
+</listitem>
+</orderedlist>
+<para>Source file Download Options</para>
+<para>MPF Source Download as Tar Files</para>
+<para>The source is available for download tar.gz from</para>
+<orderedlist>
+<listitem>
+<para>
+<ulink url="http://www.appscio.com/repository/packages/continuous/trunk/source/">http://www.appscio.com/repository/packages/continuous/trunk/source/</ulink> </para>
+</listitem>
+<listitem>
+<para>Set up a work directory, download the files to this directory </para>
+</listitem>
+<listitem>
+<para>gunzip each .tar.gz file </para>
+</listitem>
+<listitem>
+<para>tar -xvf each .tar file </para>
+</listitem>
+<listitem>
+<para>Follow instructions in "Build MPF from repository ..." listed in this chapter </para>
+</listitem>
+</orderedlist>
+<para>MPF Repository Download</para>
+<orderedlist>
+<listitem>
+<para>Subversion export </para>
+</listitem>
+</orderedlist>
+<para>Build MPF from repository and Install mpf-core</para>
+<para>Do this if you did not install mpf-core from the RPM, or mpf-core-devel</para>
+<orderedlist>
+<listitem>
+<para>cd mpf-work-dir </para>
+</listitem>
+</orderedlist>
+<para>If you have superuser permissions to install libraries on your system you may use buildall.sh to build mpf-core, mpf-opencv, and mpf-pocketsphinx:</para>
+<orderedlist>
+<listitem>
+<para>./buildall </para>
+</listitem>
+</orderedlist>
+<para>If you do not have permissions or do not wish to install pocketsphinx or opencv, follow these instructions and the instructions in the next section to build mpf-core and mpf-opencv.</para>
+<orderedlist>
+<listitem>
+<para>cd mpf-core </para>
+</listitem>
+<listitem>
+<para>./autogen.sh </para>
+</listitem>
+<listitem>
+<para>make </para>
+</listitem>
+<listitem>
+<para>sudo make install </para>
+</listitem>
+</orderedlist>
+<para>Verify /usr/local/liblibmpf-core.a, libmpf-core.la, libmpf-core.so, libmpf-core.so.0.0.0so, and so.0 are links to libmpf-core.so.0.0.0</para>
+<para>Build mpf-opencv and Install</para>
+<para>Mpf-opencv is a set of components and data-type libraries. Follow the steps listed here to build and install these components if you did not use buildall.sh:</para>
+<orderedlist>
+<listitem>
+<para>cd data-types/mpf-opencv </para>
+</listitem>
+<listitem>
+<para>./autogen.sh </para>
+</listitem>
+<listitem>
+<para>make </para>
+</listitem>
+<listitem>
+<para>sudo make install </para>
+</listitem>
+</orderedlist>
+<para>Verify /usr/local/lib/gstreamer-0.10libcvcanny, libcvcvtcolor, libcvhaar, libcvsmooth, libcvsobel, libfromiplimage, libiplidentity, libiplsink, libobjcorrelate, libobjmarkup, libtoiplimage </para>
+<para>Steps for New Component</para>
+<para>Create Component</para>
+<orderedlist>
+<listitem>
+<para>cd mpf-work-dir </para>
+</listitem>
+<listitem>
+<para>./newcomponent mpf-newcomponent </para>
+</listitem>
+</orderedlist>
+<para>The new component is created in the components/mpf-newcomponent folder.</para>
+<para>Modify the Component</para>
+<para>Go to the component's folder.</para>
+<orderedlist>
+<listitem>
+<para>cd components/mpf-newcomponent </para>
+</listitem>
+</orderedlist>
+<para>Edit mpf-newcomponent.cModify the definitions for the Author and Description.</para>
+<orderedlist>
+<listitem>
+<para>#define COMPONENT_DESC "Template component that passes data through unmodified" </para>
+</listitem>
+<listitem>
+<para>#define COMPONENT_AUTH "Erik Walthinsen &lt;omega@appscio.com&gt;" </para>
+</listitem>
+</orderedlist>
+<para>Look at the component_class_init method.This is where inputs and outputs are created.</para>
+<orderedlist>
+<listitem>
+<para>static void component_class_init(MpfComponentClass *klass) { </para>
+</listitem>
+<listitem>
+<para>mpf_voidstar_add_input("input"); </para>
+</listitem>
+<listitem>
+<para>mpf_voidstar_add_output("output"); </para>
+</listitem>
+<listitem>
+<para>} </para>
+</listitem>
+</orderedlist>
+<para>Look at the component_process method.This is where the component processes inputs and passes on output data.</para>
+<orderedlist>
+<listitem>
+<para>static MpfComponentProcessReturn component_process(MpfComponent *component) { </para>
+</listitem>
+<listitem>
+<para>/* Push the results out to the next component in the pipeline. */ </para>
+</listitem>
+<listitem>
+<para>mpf_voidstar_push("output",mpf_voidstar_pull("input")); </para>
+</listitem>
+<listitem>
+<para/>
+</listitem>
+<listitem>
+<para>return MPF_GOOD; </para>
+</listitem>
+<listitem>
+<para>} </para>
+</listitem>
+</orderedlist>
+<para>Build the Component</para>
+<para>If you used buildall and have your libraries installed in standard locations you do not need to set pkg-config paths.Otherwise, set pkg-config paths to dependent components by doingexport PKG_CONFIG_PATH=$PKG_CONFIG_PATH:.../mpf-core:.../mpf-opencv:.../other-componentswhere ".../ is short for the absolute path in this documentFor example:</para>
+<orderedlist>
+<listitem>
+<para>export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/lib/pkgconfig/mpf-core </para>
+</listitem>
+</orderedlist>
+<para>Check your path:</para>
+<orderedlist>
+<listitem>
+<para>echo "$PKG_CONFIG_PATH" </para>
+</listitem>
+</orderedlist>
+<para>Then build your component:</para>
+<orderedlist>
+<listitem>
+<para>./autogen.sh </para>
+</listitem>
+<listitem>
+<para>make </para>
+</listitem>
+</orderedlist>
+<para>Install the Component</para>
+<orderedlist>
+<listitem>
+<para>su - root </para>
+</listitem>
+<listitem>
+<para>export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:.../mpf-core:.../other-dependent-components:.../mpf-newcomponent </para>
+</listitem>
+<listitem>
+<para>make install </para>
+</listitem>
+</orderedlist>
+<para>Alternative Component Build and Install</para>
+<para>The buildall script will build all components, including the one you just created.It's faster to only build your own component as above, but if you want to build everything:</para>
+<orderedlist>
+<listitem>
+<para>cd mpf-work-dir </para>
+</listitem>
+<listitem>
+<para>./buildall </para>
+</listitem>
+</orderedlist>
+<para>Note, on PKG CONFIG</para>
+<orderedlist>
+<listitem>
+<para>If mpf-core and other packages you depend on are not fully installed on the system, you must add them to pkg-config's search path: </para>
+</listitem>
+<listitem>
+<para>path to the *.pc files </para>
+</listitem>
+<listitem>
+<para>export PKG_CONFIG_PATH:$PKG_CONFIG_PATH:.../mpf-core:.../mpf-dependent-components </para>
+</listitem>
+<listitem>
+<para>default location is /usr/local/lib/pkgconfig </para>
+</listitem>
+</orderedlist>
+<para>To Use the Component</para>
+<orderedlist>
+<listitem>
+<para>The MPF component is now a compliant GStreamer Plugin. </para>
+</listitem>
+<listitem>
+<para>To use the component that just built, you must add the appropriate location to GStreamer's search path: </para>
+</listitem>
+<listitem>
+<para>export GST_PLUGIN_PATH=$GST_PLUGIN_PATH:..../mycomponent/.libs </para>
+</listitem>
+<listitem>
+<para>gst-inspect | grep mycomponent </para>
+</listitem>
+</orderedlist>
+<para>Launch the Component Element</para>
+<para>mpf-launch</para>
+<orderedlist>
+<listitem>
+<para>Current expample is to use gst-launch as follows </para>
+</listitem>
+</orderedlist>
+<para>Contribute Component</para>
+<para>SVN commit</para>
+<orderedlist>
+<listitem>
+<para>set autogen.sh to executable prior to check in </para>
+</listitem>
+</orderedlist>
+<para>Monitor Hudson </para>
+<orderedlist>
+<listitem>
+<para>
+<ulink url="http://hudsonvm.internal.appscio.com:8080/hudson/">http://hudsonvm.internal.appscio.com:8080/hudson/</ulink>Help it along by clicking newpkg from private and Build Now in public </para>
+</listitem>
+<listitem>
+<para>
+<ulink url="http://hudsonvm.internal.appscio.com:8080/hudson_private/">http://hudsonvm.internal.appscio.com:8080/hudson_private/</ulink>If the build fails you will get information it failed. This may mean the build will not complete RPM and tar deployments </para>
+</listitem>
+</orderedlist>
+<para>Expanding the Capabilities of your Component</para>
+<para>Adding Libraries to your Component</para>
+<para>ADDING LIBRARIES================</para>
+<para>To add particular libraries that your component may require, you have to modify the configure.ac file. At this point the library must be supplied with a pkg-config file (.pc) in order to be used, later versions of the configure.ac file will include examples for bare libraries.</para>
+<para>There's a section in place initially that brings in the mpf-core package:</para>
+<para>dnl ---------- External library dependency ----------PKG_CHECK_MODULES(MPF_CORE, mpf-core,, AC_MSG_ERROR(no MPF Core libraries found (mpf-core)))</para>
+<para>dnl make _CFLAGS and _LIBS availableCFLAGS="$CFLAGS $MPF_CORE_CFLAGS"LIBS="$LIBS $MPF_CORE_LIBS"dnl ---------- External library dependency ----------</para>
+<para>Simply copy that entire section for each of your external dependencies, and change all instances of 'mpf-core' to the name of that package.</para>
+<para>Adding Source to your Component</para>
+<para>ADDING ADDITIONAL SOURCE FILES==============================</para>
+<para>To add another source file to the project, simply put it in place and add it to the list of sources for the component in Makefile.am:</para>
+<para>libmycomponent_la_SOURCES = mycomponent.c othersource.c</para>
+<para>Questions:</para>
+<orderedlist>
+<listitem>
+<para>If I want to use the iplimage library in my component, what changesdo I need to make to my Makefile.am?I tried adding:libmpf_cvoptflowbm_la_LIBADD = libmpf-iplimage.laIs that correct?I think I also need something so it will find the include files.What should I add for that?ANSWER For new packages external to the existing mpf-iplimage package, youwould refer to it in the same way mpf-core is. That is, you'll have toadd a section similar to the mpf-core block in configure.ac, and add theappropriate MPF_CORE_CFLAGS et al to Makefile.am. The mpf-autotemplatepackage is a good starting point actually. </para>
+</listitem>
+<listitem>
+<para>If my component takes 2 images as input, should I have 2 imput pads(seems easier) or 1 input pad which needs to read in 2 images (seemsmore complicated)?ANSWER Always separate pads, unless those two images are used for e.g. arunning temporal average, in which case you have to hang on to areference to the previous frame etc. </para>
+</listitem>
+</orderedlist>
+<para>TEST RESULTS/HARNESS:</para>
+<para>The C/C++ test harness is executable from both the command line and from inside Eclipse IDE. However, the test harness is still in a very early state.</para>
+<para>Command-line based transcoding-tests (as part of smoke tests) have been conducted and documented on the Appscio wiki. However, Flash support required the gst-plugins-bad and gst-plugins-ugly packages;these work in part (more below) on Fedora 9 but are not yetrebuilt/tested on CentOS 5.1</para>
+<para>GStreamer transcoding with FFMPEG/Flash related plugins have hadvarious bugs that require work arounds. For example, the followingwork-around (requiring insertion of audioconvert) for FLV to OGG:</para>
+<para>gst-launch filesrc location=flv/thetest.flv ! decodebin name=dec{ oggmux name=mux ! filesink location=xcode.ogg }{ dec. ! audioconvert ! vorbisenc ! queue ! mux. }{ dec. ! theoraenc ! queue ! mux. }</para>
+<para>...this expression should also work with WMV files as an alternate input;but it does not. </para>
+<para>To Compile the Test Harness</para>
+<orderedlist>
+<listitem>
+<para>pull code from SVN : MPF/trunk/src/test$ cd debugMake$ make </para>
+</listitem>
+</orderedlist>
+<para>To RUN the Test Harness</para>
+<orderedlist>
+<listitem>
+<para>must compile first, see above.$ ./test </para>
+</listitem>
+<listitem>
+<para>output is to console. </para>
+</listitem>
+</orderedlist>
+<para>AutoTools</para>
+<para>Advanced users will benefit from the use of AutoTools</para>
+<orderedlist>
+<listitem>
+<para>GNU AUTOCONF - <ulink url="http://www.gnu.org/software/autoconf/">http://www.gnu.org/software/autoconf/</ulink> </para>
+</listitem>
+<listitem>
+<para>GNU AUTOMAKE - <ulink url="http://www.gnu.org/software/automake/">http://www.gnu.org/software/automake/</ulink> </para>
+</listitem>
+<listitem>
+<para>GNU LIBTOOL - <ulink url="http://www.gnu.org/software/libtool/">http://www.gnu.org/software/libtool/</ulink> </para>
+</listitem>
+</orderedlist>
+<para>Additional Reference</para>
+<para>Read the other chapters of this Component Writers Guide to understand the data modeling and other capabilities. </para>
+<para>CHAPTER 3: Converting your component to use OpenCV</para>
+<orderedlist>
+<listitem>
+<para>
+<ulink url="http://confluence.appscio.com/display/ENG/APPSCIO%28TM%29+MPF+Component+Writer%27s+Guide#MPF-CWG-Chapter-3-CHAPTER3%3AConvertingyourcomponenttouseOpenCV">CHAPTER 3: Converting your component to use OpenCV</ulink> </para>
+</listitem>
+</orderedlist>
+<para>
+<ulink url="http://jira.appscio.com/browse/sdk-44">SDK-44</ulink>
+</para>
+<para>Explain more in depth about what the dataformat libs doConvert the component to use iplimage input and output, still passthroughBuild and test with an image-based pipeline, w/capsfilterwidth, height, depth and channelsformat definitions an issueneed to explain need for capsfilterDiscuss the cvsmooth functon we're embedding and image format variations</para>
+<orderedlist>
+<listitem>
+<para>must specify formatsSet up component to only accept a subset of image formatsmust specify which subset is allowedBuild and test again, show it doesn't assemble with wrong formatNow we include a hardcoded call to cvsmooth, and explain the buffer lifetime </para>
+</listitem>
+<listitem>
+<para>specify smooth to use and match to iplimage format (bgr)Demo (running a pipeline with a video test) </para>
+</listitem>
+</orderedlist>
+<para>Modify the Component</para>
+<para>Follow this example to add the use of the OpenCV IplImage data-type library and/or the ObjectList data-type library. The IplImage data-type is the image format used by the OpenCV computer vision components.</para>
+<orderedlist>
+<listitem>
+<para>cd components/mpf-newcomponent </para>
+</listitem>
+</orderedlist>
+<para>Edit the mpf-newcomponent.c file.Add the include file for the data-type you wish to use.</para>
+<orderedlist>
+<listitem>
+<para>#include &lt;mpf/mpf-iplimage.h&gt; </para>
+</listitem>
+<listitem>
+<para>#include &lt;mpf/mpf-objlist.h&gt; </para>
+</listitem>
+</orderedlist>
+<para>Look in the component_class_init method.Add the data-type specific inputs and outputs.</para>
+<orderedlist>
+<listitem>
+<para>static void component_class_init(MpfComponentClass *klass) { </para>
+</listitem>
+<listitem>
+<para>mpf_iplimage_add_input("input", MPF_IPLIMAGE_FORMAT_ANY); </para>
+</listitem>
+<listitem>
+<para>mpf_objlist_add_output("output"); </para>
+</listitem>
+<listitem>
+<para>} </para>
+</listitem>
+</orderedlist>
+<para>Modify the component_process method to incorporate the use of IplImage and ObjectList.For example:</para>
+<orderedlist>
+<listitem>
+<para>static MpfComponentProcessReturn component_process(MpfComponent *component) { </para>
+</listitem>
+<listitem>
+<para>MpfObjectList *objlist; </para>
+</listitem>
+<listitem>
+<para/>
+</listitem>
+<listitem>
+<para>/* Get the input */ </para>
+</listitem>
+<listitem>
+<para>IplImage *src = mpf_iplimage_pull("input"); </para>
+</listitem>
+<listitem>
+<para/>
+</listitem>
+<listitem>
+<para>/* Do any processing */ </para>
+</listitem>
+<listitem>
+<para>objlist = mpf_objlist_new(count); </para>
+</listitem>
+<listitem>
+<para/>
+</listitem>
+<listitem>
+<para>/* If the input image is not being sent down the pipeline then release it. */ </para>
+</listitem>
+<listitem>
+<para>mpf_iplimage_unref(src); </para>
+</listitem>
+<listitem>
+<para/>
+</listitem>
+<listitem>
+<para>/* Push the results out to the next component in the pipeline. */ </para>
+</listitem>
+<listitem>
+<para>mpf_objlist_push("output", objlist); </para>
+</listitem>
+<listitem>
+<para/>
+</listitem>
+<listitem>
+<para>return MPF_GOOD; </para>
+</listitem>
+<listitem>
+<para>} </para>
+</listitem>
+</orderedlist>
+<para>Modify the Build File</para>
+<para>Edit configure.acAdd the following lines to check for the opencv and mpf-opencv libraries.</para>
+<orderedlist>
+<listitem>
+<para>PKG_CHECK_MODULES(OPENCV, opencv, </para>
+</listitem>
+<listitem>
+<para>, AC_MSG_ERROR(no OpenCV libraries found (opencv))) </para>
+</listitem>
+<listitem>
+<para/>
+</listitem>
+<listitem>
+<para>dnl make _CFLAGS and _LIBS available </para>
+</listitem>
+<listitem>
+<para>AC_SUBST(OPENCV_CFLAGS) </para>
+</listitem>
+<listitem>
+<para>AC_SUBST(OPENCV_LIBS) </para>
+</listitem>
+<listitem>
+<para/>
+</listitem>
+<listitem>
+<para>PKG_CHECK_MODULES(MPF_OPENCV, mpf-opencv, </para>
+</listitem>
+<listitem>
+<para>, AC_MSG_ERROR(no MPF OpenCV IplImage/ObjectList libraries found (mpf-opencv))) </para>
+</listitem>
+<listitem>
+<para/>
+</listitem>
+<listitem>
+<para>AC_SUBST(MPF_OPENCV_CFLAGS) </para>
+</listitem>
+<listitem>
+<para>AC_SUBST(MPF_OPENCV_LIBS) </para>
+</listitem>
+</orderedlist>
+<para>Change CFLAGS and LIBS from:</para>
+<orderedlist>
+<listitem>
+<para>CFLAGS="$CFLAGS $GST_CFLAGS $MPF_CORE_CFLAGS" </para>
+</listitem>
+<listitem>
+<para>LIBS="$LIBADD $GST_LIBS $MPF_CORE_LIBS"to: </para>
+</listitem>
+<listitem>
+<para>CFLAGS="$CFLAGS $GST_CFLAGS $MPF_CORE_CFLAGS $OPENCV_CFLAGS $MPF_OPENCV_CFLAGS" </para>
+</listitem>
+<listitem>
+<para>LIBS="$LIBADD $GST_LIBS $MPF_CORE_LIBS $OPENCV_LIBS $MPF_OPENCV_LIBS" </para>
+</listitem>
+</orderedlist>
+<para>Finally, add mpf-newcomponent.spec to AC_OUTPUT as follows:</para>
+<orderedlist>
+<listitem>
+<para>AC_OUTPUT([ </para>
+</listitem>
+<listitem>
+<para>Makefile </para>
+</listitem>
+<listitem>
+<para>mpf-newcomponent.spec </para>
+</listitem>
+<listitem>
+<para>]) </para>
+</listitem>
+</orderedlist>
+<para>Build the Component</para>
+<orderedlist>
+<listitem>
+<para>./autogen.sh </para>
+</listitem>
+<listitem>
+<para>make </para>
+</listitem>
+<listitem>
+<para>sudo make install </para>
+</listitem>
+</orderedlist>
+<para>CHAPTER 4: Adding Parameters</para>
+<orderedlist>
+<listitem>
+<para>
+<ulink url="http://confluence.appscio.com/display/ENG/APPSCIO%28TM%29+MPF+Component+Writer%27s+Guide#MPF-CWG-Chapter-4-CHAPTER4%3AAddingParameters">CHAPTER 4: Adding Parameters</ulink> </para>
+</listitem>
+</orderedlist>
+<para>
+<ulink url="http://jira.appscio.com/browse/sdk-45">SDK-45</ulink>
+</para>
+<para>Quick overview of GObject/GstElement parameter structureAdd parameters to component for cvsmooth&lt;mumble&gt; not fully implementedDemo pipeline with different parameters</para>
+<para>Overview of the Parameter Structure</para>
+<para>The MPF parameters are based on the GStreamer GstElement abstract base class for all pipeline elements, and using an element as a GObject. Reference the "GStreamer Application Development Manual (0.10.20.1) 5.3 Using an element as a GObject. The MPF parameters will be set with the gst_object_set_name and retrieved with the gst_object_get_name. More details on the relationship with GStreamer can be found in the <ulink url="http://confluence.appscio.com/display/ENG/APPSCIO%28TM%29+MPF+Component+Writer%27s+Guide+-+Appendix+A">APPSCIO(TM) MPF Component Writer's Guide - Appendix A</ulink>.</para>
+<para>Adding Parameters to MPF Components</para>
+<para>The function for adding a parameter is found in mpf-core/mpf/mpfcomponent.h. </para>
+<para>/*void mpf_add_param_int(const gchar *name, const gchar *nick, const gchar *blurb, gint minimum, gint maximum, gint default_value);*/</para>
+<para>/**</para>
+<orderedlist>
+<listitem>
+<para>mpf_add_param_int: </para>
+</listitem>
+<listitem>
+<para>@name: canonical name of the property specified </para>
+</listitem>
+<listitem>
+<para>@nik: nick name for the property specified </para>
+</listitem>
+<listitem>
+<para>@blurb: description of the property specified </para>
+</listitem>
+<listitem>
+<para>@minimum: minimum value for the property specified </para>
+</listitem>
+<listitem>
+<para>@maximum: maximum value for the property specified </para>
+</listitem>
+<listitem>
+<para>@default_value: default value for the property specified* </para>
+</listitem>
+<listitem>
+<para>Increments the number of parameters before assignment; allocates and prefills </para>
+</listitem>
+<listitem>
+<para>a new #MpfComponentParamInfo structure. Constructs the #ParamSpecInt instance </para>
+</listitem>
+<listitem>
+<para>and stores it. Finally, adds it to the list of parameters.*/ </para>
+</listitem>
+</orderedlist>
+<para>To add a parameter use mpf_add_param_int and to retrieve a parameter use mpf_param_get_int. An example to add parameters is found in data-types/mpf-opencv/mpf/cvsmooth.c</para>
+<para>/*mpf_add_param_int("param1", "Param1", "OpenCV's 'param1'", 0, 32, 3);mpf_add_param_int("param2", "Param2", "OpenCV's 'param2'", 0, 32, 3);mpf_add_param_int("param3", "Param3", "OpenCV's 'param3'", 0, 32, 7);mpf_add_param_int("param4", "Param4", "OpenCV's 'param4'", 0, 32, 0);*/</para>
+<para>Getting Parameters from MPF Components</para>
+<para>The function for getting a parameter is found in mpf-core/mpf/mpfcomponent.h. </para>
+<para>/**</para>
+<orderedlist>
+<listitem>
+<para>mpf_param_get_int: </para>
+</listitem>
+<listitem>
+<para>@name: canonical name of the property specified.* </para>
+</listitem>
+<listitem>
+<para>Get the contents of a %G_TYPE_INT #GValue.* </para>
+</listitem>
+<listitem>
+<para>Returns: a #gint.*/ </para>
+</listitem>
+</orderedlist>
+<para>Questions</para>
+<orderedlist>
+<listitem>
+<para>When do the mpf_private parameter fields get set? </para>
+</listitem>
+<listitem>
+<para>Does it happen automatically or do I have to set them explicitly to the value returned by mpf_param_get_int(name)? </para>
+</listitem>
+<listitem>
+<para>In the component_process() method should I access the mpf_private fields directly or is mpf_param_get_int(name) an accessor method? </para>
+</listitem>
+</orderedlist>
+<para>CHAPTER 5: Adding metadata input for ROI (region of interest - frameset)</para>
+<orderedlist>
+<listitem>
+<para>
+<ulink url="http://confluence.appscio.com/display/ENG/APPSCIO%28TM%29+MPF+Component+Writer%27s+Guide#MPF-CWG-Chapter-5-CHAPTER5%3AAddingmetadatainputforROI%28regionofinterestframeset%29">CHAPTER 5: Adding metadata input for ROI (region of interest - frameset)</ulink> </para>
+</listitem>
+</orderedlist>
+<para>
+<ulink url="http://jira.appscio.com/browse/sdk-46">SDK-46</ulink>
+</para>
+<para>Introduce the concepts of a branching pipeline</para>
+<orderedlist>
+<listitem>
+<para>(drawing of graph of branching pipeline and show merge)Construct a source component using the RDF lib and ROI ontologyDemo a pipeline using standard elements to dump the RDF stream to stdoutAdd RDF input to cvsmooth component, and demo a branched pipelineImplement code that modifies the IplImage to set the ROI </para>
+</listitem>
+<listitem>
+<para>includes header of how image is builtDemo (test based - provide video test source, show square box in video for ROI) could have multiple calls to cvsmooth — this is a work aroundsupport more than one ROI per frame </para>
+</listitem>
+</orderedlist>
+<para>CHAPTER 6: Developing your own ontology</para>
+<orderedlist>
+<listitem>
+<para>
+<ulink url="http://confluence.appscio.com/display/ENG/APPSCIO%28TM%29+MPF+Component+Writer%27s+Guide#MPF-CWG-Chapter-6-CHAPTER6%3ADevelopingyourownontology">CHAPTER 6: Developing your own ontology</ulink> </para>
+</listitem>
+</orderedlist>
+<para>
+<ulink url="http://jira.appscio.com/browse/sdk-47">SDK-47</ulink>
+</para>
+<para>Wayne is working on this chapter[... mtg notes: Erik is working on an RDF transport mechanism; Wayne has started some ontology experients]</para>
+<para>CHAPTER 7: Building a new Data Type Library</para>
+<orderedlist>
+<listitem>
+<para>
+<ulink url="http://confluence.appscio.com/display/ENG/APPSCIO%28TM%29+MPF+Component+Writer%27s+Guide#MPF-CWG-Chapter-7-CHAPTER7%3ABuildinganewDataTypeLibrary">CHAPTER 7: Building a new Data Type Library</ulink> </para>
+</listitem>
+</orderedlist>
+<para>
+<ulink url="http://jira.appscio.com/browse/sdk-48">SDK-48</ulink>
+</para>
+<para>be clear in intro (Chap 1) there are 2 things we do (2 roles)Here is where we talk how to write a data librarydata libraries - includes and/or supports Components</para>
+<para>[... mtg notes: Wayne suggests this is a distinct subject, apart from Component Writing]</para>
+<para>Create the Data Library from the Template</para>
+<para>Follow the instructions in Chapter 2 for "Steps for New Component". However, instead of executing the "newcomponent" script, execute the "new-data-type" script.</para>
+<para>Distinction of Data Types</para>
+<para>The following needs to be rewritten However, it does have some useful information for the distinction of data types, and can be used as a starter.</para>
+<para>I cruising along until the latest repository structure was set up forpublic MPF.</para>
+<para>components-&gt; mpf-cvoptflowbm</para>
+<para>data-types-&gt; mpf-opencv-&gt; mpf-pocketsphinx</para>
+<para>From what I was understanding before was that mpf-cvoptflowbm,mpf-opencv and mpf-pocketsphinx were all considered components.</para>
+<para>All 3 contain components, but opencv and pocketsphinx both currentlyalso contain data types. A future project is to split both of thoseinto 2 packages each, would be mpf-iplimage + mpf-opencv (and probablympf-opencv-...) and mpf-rdf-stt + mpf-pocketsphinx. The first of eachpair would stay in data types, the second would move to components.</para>
+<para>Therefore, my question is what makes mpf-cvoptflowbm a component?As a package it only contains components.</para>
+<para>My other question is where I can find some documentation of what a datatype is for MPF. Is this GStreamer terminology?</para>
+<para>This is a fundamental aspect of what makes MPF superior for these kindsof pipelines, the data types provide a layer on top of GStreamer padsthat presents the developer only with the types they want to deal with(e.g. IplImage*) and lets the component template code deal with theGstBuffers that are associated with them. Each data type lib has a setof functions to manage those associated buffers, as far as buffer size,reference counting, etc.</para>
+<para>Third question, why is grdf located in "other". What is the "other"directory for?grdf is not related to GStreamer at all, it is a foundation library uponwhich the mpf-rdf type and its subtypes are being built.</para>
+<para>References</para>
+<orderedlist>
+<listitem>
+<para>
+<ulink url="http://confluence.appscio.com/display/ENG/APPSCIO%28TM%29+MPF+Component+Writer%27s+Guide#MPF-CWG-References-References">References</ulink> </para>
+</listitem>
+</orderedlist>
+<orderedlist>
+<listitem>
+<para>
+<ulink url="http://confluence.appscio.com/display/ENG/APPSCIO%28TM%29+MPF+Component+Writer%27s+Guide+-+Appendix+A">APPSCIO(TM) MPF Component Writer's Guide - Appendix A</ulink> </para>
+</listitem>
+<listitem>
+<para>Intel. Open CV Library Overview - Open Source Computer Vision Library <ulink url="http://confluence.appscio.com/pages/createpage.action?spaceKey=ENG&amp;title=Online&amp;linkCreation=true&amp;fromPageId=5344816">Online</ulink>. Available at: <ulink url="http://www.intel.com/technology/computing/opencv/overview.htm">http://www.intel.com/technology/computing/opencv/overview.htm</ulink> </para>
+</listitem>
+<listitem>
+<para>GNOME. GObject Reference Manual <ulink url="http://confluence.appscio.com/pages/createpage.action?spaceKey=ENG&amp;title=Online&amp;linkCreation=true&amp;fromPageId=5344816">Online</ulink>. Available at: <ulink url="http://library.gnome.org/devel/gobject/unstable/">http://library.gnome.org/devel/gobject/unstable/</ulink> </para>
+</listitem>
+<listitem>
+<para>Appscio(TM). MPF Subversion Repository <ulink url="http://confluence.appscio.com/pages/createpage.action?spaceKey=ENG&amp;title=Online&amp;linkCreation=true&amp;fromPageId=5344816">Online</ulink>. Available at: <ulink url="https://svn.appscio.com/svn/MPF">https://svn.appscio.com/svn/MPF</ulink> </para>
+</listitem>
+<listitem>
+<para>GStreamer Getting Started - <ulink url="http://www.ocf.berkeley.edu/~brandon/wiki/index.php5?title=Getting_Started">http://www.ocf.berkeley.edu/~brandon/wiki/index.php5?title=Getting_Started</ulink> </para>
+</listitem>
+</orderedlist>
+<para>Source Repo Structure for MPF</para>
+<orderedlist>
+<listitem>
+<para>
+<ulink url="http://confluence.appscio.com/display/ENG/Source+Repo+Structure+for+MPF">http://confluence.appscio.com/display/ENG/Source+Repo+Structure+for+MPF</ulink> </para>
+</listitem>
+<listitem>
+<para>Wayne's 300 component submission idea </para>
+</listitem>
+</orderedlist>
+<para>Glossary</para>
+<para>
+<ulink url="http://jira.appscio.com/browse/sdk-49">SDK-49</ulink>
+</para>
+<para>This page is to capture terms and acronyms relevant to the SDK.</para>
+<informaltable frame="all">
+<tgroup cols="1"><tbody>
+<row>
+<entry>
+<para/>
+</entry>
+</row></tbody></tgroup>
+</informaltable>
+<para/>
+<informaltable frame="all">
+<tgroup cols="3"><tbody>
+<row>
+<entry>
+<para>Term </para>
+</entry>
+<entry>
+<para>Definition </para>
+</entry>
+<entry>
+<para>See Also </para>
+</entry>
+</row>
+<row>
+<entry>
+<para>Component </para>
+</entry>
+<entry>
+<para>Appscio MPF basic unit of metadata-handling function (wraps Element) </para>
+</entry>
+<entry>
+<para> </para>
+</entry>
+</row>
+<row>
+<entry>
+<para>Element </para>
+</entry>
+<entry>
+<para>GStreamer's basic unit of media-handling function </para>
+</entry>
+<entry>
+<para>
+<ulink url="http://gstreamer.freedesktop.org/">http://gstreamer.freedesktop.org</ulink> </para>
+</entry>
+</row>
+<row>
+<entry>
+<para>MPF </para>
+</entry>
+<entry>
+<para>Media Processing Framework </para>
+</entry>
+<entry>
+<para> </para>
+</entry>
+</row>
+<row>
+<entry>
+<para>OpenCV </para>
+</entry>
+<entry>
+<para>Open Computer Vision </para>
+</entry>
+<entry>
+<para> </para>
+</entry>
+</row>
+<row>
+<entry>
+<para>IplImage </para>
+</entry>
+<entry>
+<para>OpenCV image definition </para>
+</entry>
+<entry>
+<para> </para>
+</entry>
+</row>
+<row>
+<entry>
+<para>ROI </para>
+</entry>
+<entry>
+<para>Region Of Interest </para>
+</entry>
+<entry>
+<para> </para>
+</entry>
+</row>
+<row>
+<entry>
+<para>RDF </para>
+</entry>
+<entry>
+<para>Resource Description Framework </para>
+</entry>
+<entry>
+<para> </para>
+</entry>
+</row>
+<row>
+<entry>
+<para>metadata </para>
+</entry>
+<entry>
+<para>Content description or data about data </para>
+</entry>
+<entry>
+<para> </para>
+</entry>
+</row>
+<row>
+<entry>
+<para>ontology </para>
+</entry>
+<entry>
+<para>A formal representation of a set of concepts within a domain and the relationships between those concepts. It is used to reason about the properties of that domain, and may be used to define the domain. </para>
+</entry>
+<entry>
+<para> </para>
+</entry>
+</row>
+<row>
+<entry>
+<para>Pad </para>
+</entry>
+<entry>
+<para>Interconnection points for passing data between components in a pipeline </para>
+</entry>
+<entry>
+<para> </para>
+</entry>
+</row>
+<row>
+<entry>
+<para>AMS </para>
+</entry>
+<entry>
+<para> </para>
+</entry>
+<entry>
+<para> </para>
+</entry>
+</row>
+<row>
+<entry>
+<para>VIMS </para>
+</entry>
+<entry>
+<para> </para>
+</entry>
+<entry>
+<para> </para>
+</entry>
+</row>
+<row>
+<entry>
+<para>Pipeline </para>
+</entry>
+<entry>
+<para> </para>
+</entry>
+<entry>
+<para> </para>
+</entry>
+</row>
+<row>
+<entry>
+<para>Data Library </para>
+</entry>
+<entry>
+<para> </para>
+</entry>
+<entry>
+<para> </para>
+</entry>
+</row>
+<row>
+<entry>
+<para>SDK </para>
+</entry>
+<entry>
+<para>Software Development Kit </para>
+</entry>
+<entry>
+<para> </para>
+</entry>
+</row></tbody></tgroup>
+</informaltable>
+<para>
+<anchor id="_PictureBullets"/>
+<anchor id="APPSCIO(TM)MPFComponentWriter'sGui"/>
+<inlinegraphic fileref="embedded:graphics1" width="0.1665inch" depth="0.1665inch"/>
+<inlinegraphic fileref="embedded:graphics2" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics3" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics4" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics5" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics6" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics7" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics8" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics9" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics10" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics11" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics12" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics13" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics14" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics15" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics16" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics17" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics18" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics19" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics20" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics21" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics22" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics23" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics24" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics25" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics26" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics27" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics28" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics29" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics30" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics31" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics32" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics33" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics34" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics35" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics36" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics37" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics38" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics39" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics40" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics41" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics42" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics43" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics44" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics45" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics46" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics47" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics48" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics49" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics50" width="3inch" depth="3inch"/>
+<inlinegraphic fileref="embedded:graphics51" width="3inch" depth="3inch"/>
+</para>
+</article>

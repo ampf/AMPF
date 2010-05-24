@@ -1,0 +1,1 @@
+See README-autogendoc.txt in reference/mpf-root for instructions to autogenerate the documentation from SGML.

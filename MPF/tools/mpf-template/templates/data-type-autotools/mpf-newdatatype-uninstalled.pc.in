@@ -1,0 +1,11 @@
+prefix=
+exec_prefix=
+libdir=${pcfiledir}/mpf
+includedir=${pcfiledir}
+
+Name: MPF GD Newdatatype data type (uninstalled)
+Description: Appscio MPF GD Newdatatype data type (uninstalled)
+Requires: mpf-core newdatatype
+Version: @VERSION@
+Libs: ${pcfiledir}/mpf/libmpf-newdatatype.la
+Cflags: -I${pcfiledir}

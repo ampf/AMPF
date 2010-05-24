@@ -1,0 +1,11 @@
+#!/bin/bash
+# Playback the file captured by test-capture.
+
+video=${video:=$MPF_HOME/media/freedom-day.1.mpg}
+width=${width:=320}
+height=${height:=240}
+
+echo "Playing ${video}"
+
+$prefix $args gst-launch$version $gstargs filesrc location=${video} ! decodebin ! mpf-window count=1 repeat=4 preserve=true loglevel=0 ! \
+    mpf-identity dump=buffers restamp=15 ! videoscale ! video/x-raw-yuv, width=$width, height=$height ! ffmpegcolorspace ! ximagesink

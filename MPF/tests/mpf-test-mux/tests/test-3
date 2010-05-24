@@ -1,0 +1,10 @@
+#!/bin/sh
+#
+# Demonstrates a generic raw-buffer muxer, no timestamps on buffers.  Make things harder by using a queue on
+# one leg of the mux inputs.
+#
+src="fakesrc num-buffers=20 sizetype=2 sizemax=10 filltype=4"
+$prefix $args gst-launch$version \
+  $src ! mpf-test-mux mpf-debug=0 name=mux \
+  $src ! queue ! mux. \
+  mux. ! fakesink dump=true

@@ -1,0 +1,15 @@
+#!/bin/sh -x
+
+video=${video:=$MPF_HOME/media/freedom-day.1.mpg}
+width=${width:=320}
+height=${height:=240}
+restamp=${restamp:=0}
+
+. $PWD/credentials
+
+
+# Monitor the video in a separate stream, so as to not interfere with capture.
+gst-launch filesrc location=$video ! \
+     decodebin ! mpf-identity dump=buffers restamp=${restamp} ! videobalance contrast=1.5 ! \
+     ffmpegcolorspace ! videoscale ! video/x-raw-rgb, width=$width, height=$height ! ximagesink sync=true \
+

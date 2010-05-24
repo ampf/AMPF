@@ -1,0 +1,13 @@
+prefix=${pcfiledir}/../..
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+mpftypes=rdf
+
+Name: MPF RDF datatype
+Description: MPF RDF datatype
+Requires: gstreamer-@GST_MAJORMINOR@ mpf-core grdf
+Version: @VERSION@
+Libs: -L${libdir} -lmpf-rdf
+Cflags: -I${includedir}
+

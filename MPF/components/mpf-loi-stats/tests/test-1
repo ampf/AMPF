@@ -1,0 +1,4 @@
+#!/bin/sh
+
+$prefix $args gst-launch$version $gstargs fakesrc sizetype=2 sizemax=1 filltype=5 num-buffers=60 datarate=10 ! \
+    mpf-toi start=2 interval=1 duration=0.5 verbose=0 ! mpf-loi-stats interval=1 loglevel=1 ! mpf-rdf-ton3 ! filesink location=/dev/stdout \

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+$prefix gst-launch filesrc location=test-1.mjpeg ! decodebin name=dec dec. ! ffmpegcolorspace ! tee name=t \
+  t. ! mpf-toi interval=10 duration=2  seg.metadata \
+  t. ! mpf-segmenter $4 name=seg fps=10 ! videoscale ! matroskamux ! filesink location=test-1.seg.mjpeg

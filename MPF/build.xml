@@ -1,0 +1,87 @@
+<project name="mpf" default="all">
+
+    <property name="product" value="appscio-nrl-mpf"/>
+    <property name="MPF" location="."/>
+    <property name="GRDF" location="../grdf"/>
+    <property name="USR_LIB" location="/usr/lib64"/>
+    <property name="build.compiler" value="modern"/>
+    <property name="junit.results" value="junit_results"/>
+
+    <!-- Override on command line if desired -->
+    <property name="test.enabled" value=""/>
+	<property name="test.disabled" value=""/>
+	<property name="test.env" value="@@"/>
+    <property name="timeout" value="40"/>
+
+    <target name="all" depends="build-all,javac"/>
+
+    <target name="clean" depends="javac-clean,clean-all" description="Clean everything"/>
+
+    <target name="build-all" description="Build all MPF plugin components and data-types">
+        <exec command="sh -c ./build-all --no-install"/>
+    </target>
+
+    <target name="clean-all" description="Clean all to 'svnclean' level'">
+        <exec command="sh -c ./clean-all.sh"/>
+    </target>
+
+    <!-- Unit Testing -->
+	<path id="test.path">
+        <pathelement path="target/test-classes"/>
+        <pathelement path="java/lib/freemarker-2.3.13.jar"/>
+        <pathelement path="junit/lib/junit-4.7.jar"/>
+        <pathelement path="junit/lib/yaccl-1.0.2.jar"/>
+    </path>
+
+    <target name="javac">
+        <mkdir dir="target/classes"/>
+        <mkdir dir="target/test-classes"/>
+        <javac destdir="target/classes" srcdir="java/src"/>
+        <javac destdir="target/test-classes">
+            <classpath refid="test.path"/>
+            <src path="junit/grammar/gen"/>
+            <src path="junit/src"/>
+        </javac>
+    </target>
+
+    <target name="javac-clean">
+        <delete dir="target/classes"/>
+        <delete dir="target/test-classes"/>
+    </target>
+
+    <!-- Run the tests for continuous build -->
+    <target name="test-build" description="Continuous build tests">
+        <mkdir dir="${junit.results}/xml"/>
+        <junit printsummary="yes" showoutput="true">
+            <sysproperty key="select" value="@junit/test-build.sel"/>
+            <sysproperty key="test.dirs" value="components;tests"/>
+            <sysproperty key="test.enabled" value="${test.enabled}"/>
+            <sysproperty key="test.disabled" value="components/mpf-fork/tests/test-1-wrap|components/uav-vad-usc/test-2"/>
+            <sysproperty key="timeout" value="${timeout}"/>
+            <sysproperty key="MPF" value="${MPF}"/>
+            <sysproperty key="test.env" value="MPF=${MPF};GRDF=${GRDF}"/>
+            <classpath refid="test.path"/>
+            <test name="com.appscio.mpf.junit.PluginSuite" todir="${junit.results}/xml"/>
+            <formatter type="xml"/>
+        </junit>
+    </target>
+
+    <target name="html-report" description="Html report">
+        <mkdir dir="${junit.results}/xml"/>
+        <mkdir dir="${junit.results}/reports"/>
+    	<mkdir dir="${junit.results}/html"/>
+        <junitreport todir="${junit.results}/reports">
+           <fileset dir="${junit.results}/xml">
+             <include name="TEST-*.xml"/>
+           </fileset>
+           <report format="frames" todir="${junit.results}/html"/>
+        </junitreport>
+    </target>
+
+
+	<target name="clean-tests">
+        <delete dir="junit_results"/>
+    </target>
+
+
+</project>

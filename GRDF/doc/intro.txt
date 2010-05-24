@@ -1,0 +1,97 @@
+Intro to GRDF
+- Erik Walthinsen
+
+GRDF is intended to be a very light-weight library designed for fast streaming 
+applications, e.g. Appscio's GStreamer-based pipeline.  As such its functionality is 
+intentionally limited.  More complex operations should generally be done with a 
+different system, usually offline (outside the pipeline, e.g. on the resulting 
+database dump).
+
+GRDF is based on the GObject libraries, which were extracted from the GTK+ system 
+(my myself in fact, early in GStreamer's life).  GObject provides a fairly 
+comprehensive C-based object system, including single inheritance, refcounting, 
+parameters, signals, closures, etc.
+
+
+- GrdfWorld
+
+The top-level object in the library is a 'world', which is the context in which 
+nodes and graphs are made.  There may be multiple worlds, as they are completely 
+independent objects.
+
+The world contains caches for the various types of nodes, which are used to reduce 
+memory footprint.  The world also [will be] the context in which ontologies are 
+added to graphs.  These ontologies are used almost exclusively for their URI 
+prefixes and nothing else.
+
+- GrdfNode
+
+The base node class is not instantiatable, just provides a common parent type and 
+some hooks for stringification and such.
+
+- GrdfNodeAnon
+
+Anonymous nodes are managed as a string key with a sequence number.  The world 
+contains a hash of the keys with the current sequence number and a reference count, 
+so any new anonymous is created with a unique key+seq.
+
+- GrdfNodeURI
+
+Simply a string URI stored as a node, these can be based on an ontology prefix or be 
+a full URI.  These [will be] cached in the world so 'creation' of a URI that already 
+exists will simply return a new reference to the existing node.
+
+- GrdfNodeLiteral*
+
+These hold literal strings, ints, and floats [and ...?], and are also cached in the 
+world
+
+- GrdfStmt
+
+The core of the graph, this object contains references to a subject, predicate, 
+object, and context (for growth, not really used at all yet).  The API is filled 
+with special-purpose constructors that take the various types of node data directly:
+
+grdf_stmt_new_nul(graph, GrdfNode *subj, gchar *preduri, gchar *objstr);
+grdf_stmt_new_uua(graph, gchar *subjuri, gchar *preduri, gchar *objanon);
+
+Statements are created in the context of a graph in order to automatically add them 
+to that graph, as well as provide a reference to the GrdfWorld in order to do cached 
+lookups of existing nodes.
+
+- GrdfGraph
+
+The graph object contains a list of statements, as well as a reference to the 
+GrfdWorld it was created under.
+
+A set of baseline query functions are provided, with two major sets.  Each set has 
+functions to search for a particular node object as well as a URI (which will be 
+'created' and the refcount checked to see if it exists *anywhere*, then scanned for) 
+in each of the 3 slots.
+
+Two of the sets return a complete list (GList *) of all the statements that match, 
+while the other two sets return just the first statement.  The other axis determines 
+whether the original search set is the entire graph or a GList of statements.  This 
+is designed to allow sub-queries, where you can e.g. look for all [anon] nodes of a 
+particular type, then look for the first [only?] of those statements that is 
+something else, etc.
+
+The graph object also is responsible for organizing the conversion to N3 or XML, by 
+way of the class methods in GrdfNode that are implemented by each node type.  
+Parsing will be in separate modules and use the public graph API.
+
+
+- Searching
+
+The plan is to start with a stock graph, with an additional node type, 
+GrdfNodeVariable, that is also unique within the World.  The graph is handed to a 
+query setup function that produces a GrdfQuery which takes over ownership of the 
+graph.
+
+My understanding of the query process is this:
+
+- For each stmt in the query graph, construct a tuple list of everything in the 
+graph that matches
+- Recursively 'unify' each pair of these graphs, growing to all the variables 
+present in the whole query - I'm not *precisely* sure how unification works, but I 
+have an idea that I'll need to talk through

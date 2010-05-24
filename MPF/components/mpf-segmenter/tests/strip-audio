@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# Strip audio track from a video.
+
+$1 gst-launch$VERSION $2 filesrc location=data/video_02.mp4 ! decodebin ! videoscale ! ffenc_libx264 ! filesink location=data/video_02_silent.mp4

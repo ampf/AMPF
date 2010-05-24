@@ -1,0 +1,23 @@
+#!/bin/sh
+
+video=${video:=freedom.mpg}
+width=${width:=320}
+height=${height:=240}
+timeout=${timeout:=120}
+bitrate=${bitrate:=1000000}
+
+if [ -z "$credentials" ]; then
+    . $PWD/credentials
+fi
+
+# Monitor the video in a separate stream, so as to not interfere with capture.
+gst-launch souphttpsrc is-live=true do-timestamp=false location="http://${credentials}@axiscam.appscio.com/axis-cgi/mjpg/video.cgi?resolution=${width}x${height}" ! \
+    decodebin ! videobalance contrast=1.5 ! queue ! ffmpegcolorspace ! videoscale ! video/x-raw-rgb, width=$width, height=$height ! ximagesink sync=false \
+    &
+
+$prefix $args gst-launch$version $gstargs \
+    souphttpsrc is-live=true do-timestamp=true location="http://${credentials}@axiscam.appscio.com/axis-cgi/mjpg/video.cgi?resolution=${width}x${height}" ! \
+    decodebin ! videorate ! video/x-raw-yuv, framerate='(fraction)15/1' ! ffmpegcolorspace ! ffenc_mpeg2video bitrate=$bitrate pass=pass1 ! mpf-identity dump=buffers timeout=$timeout ! filesink location=$video \
+
+# Cleanup.
+kill $!

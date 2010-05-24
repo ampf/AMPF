@@ -1,0 +1,5 @@
+#!/bin/sh
+gst-launch filesrc location=../../../../../Media/GrandCanyonTrail.wmv ! \
+  decodebin ! ffmpegcolorspace ! toiplimage ! mpf-opencv-opticalflow name=of \
+  of. ! mpf-rdf-dump
+

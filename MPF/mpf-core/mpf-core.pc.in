@@ -1,0 +1,11 @@
+prefix=${pcfiledir}/../..
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: MPF Core
+Description: Appscio pipeline core libraries
+Requires: gstreamer-@GST_MAJORMINOR@
+Version: @VERSION@
+Libs: -L${libdir} -lmpf-core
+Cflags: -I${includedir}

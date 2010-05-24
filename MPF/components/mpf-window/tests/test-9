@@ -1,0 +1,8 @@
+#!/bin/sh
+#
+# Split a stream, window it, and process it in parallel.  Use of datarate breaks parallel processing.
+#
+source="fakesrc sizemax=10 sizetype=2 filltype=4 datarate=10 num-buffers=100"
+$prefix $args gst-launch$version $source ! tee name=t \
+  t. ! queue ! mpf-window count=20 ! mpf-identity sleep=0.1 ! fakesink sync=false async=false  \
+  t. ! queue ! mpf-window start=50 count=20 ! mpf-identity sleep=0.1 ! fakesink sync=false async=false

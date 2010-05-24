@@ -1,0 +1,2 @@
+#!/bin/sh
+$1 $prefix $args gst-launch$version filesrc location=test-4.in blocksize=11 ! mpf-fork mode=wrap ! identity dump=true ! filesink location=test-1.out

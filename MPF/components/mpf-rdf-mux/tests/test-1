@@ -1,0 +1,15 @@
+#!/bin/sh
+#
+# Tests the GRDF muxer.  Generate two streams of data, with timestamps, and convert them to RDF.
+# Take each RDF (rdf-a and rdf-b), and multiplex them together, buffer by buffer.  Send the output
+# to stdout in readable N3 format.  The multiplexed RDF is augmented with a triple indicating
+# that the buffers were multiplexed, and from which source.
+#
+src="fakesrc num-buffers=10 sizetype=2 sizemax=10 filltype=4 do-timestamp=true datarate=10"
+
+$1 $prefix $args gst-launch$version \
+  $src ! mpf-buf-rdf name=rdf-a \
+  $src ! mpf-buf-rdf name=rdf-b \
+  rdf-a.rdf ! mpf-rdf-mux mpf-debug=0 name=mux \
+  rdf-b.rdf ! mux. \
+  mux. ! queue ! mpf-rdf-ton3 ! filesink location=/dev/stdout \

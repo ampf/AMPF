@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Segment a video stream into 2 second chunks, skipping by 10 seconds.  
+# Plays the chopped video stream, and all the audio stream.
+
+mkdir out
+
+$1 gst-launch$VERSION $2 filesrc location=data/video_02.mp4 ! decodebin name=dec dec. ! ffmpegcolorspace ! tee name=t \
+  t. ! queue ! mpf-toi interval=4 duration=2 $3 name=toi ! seg.metadata \
+  t. ! queue ! mpf-segmenter $4 name=seg ! ffmpegcolorspace ! ximagesink \
+  dec. ! audioconvert ! osssink

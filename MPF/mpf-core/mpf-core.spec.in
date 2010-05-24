@@ -1,0 +1,72 @@
+Summary:	Appscio Core
+Name:		mpf-core
+Version:	@VERSION@
+Release:	1
+License:	LGPL or Apache License
+Group:		Applications/Multimedia
+
+URL:		www.appscio.com
+Vendor:		Appscio, Inc.
+Packager:	build@issues.appscio.com
+
+Source:		%{name}-%{version}.tar.gz
+BuildRoot:	%{_tmppath}/%{name}-%{version}-root
+
+BuildRequires:	gstreamer-devel
+BuildRequires:	gstreamer-plugins-base-devel
+BuildRequires:	pkgconfig
+
+Prefix: %{_prefix}
+Docdir: %{_docdir}
+
+%description
+Core support for Appscio components, including a template and higher-level API that
+makes writing a subset of types of GStreamer elements significantly easier.
+
+%package devel
+Summary:	Appscio Core development libraries and include files
+Group:		Development/Libraries
+
+Requires:	%{name} = %{version}-%{release}
+Requires:	gstreamer-devel
+
+%description devel
+Core support for Appscio components, including a template and higher-level API that
+makes writing a subset of types of GStreamer elements significantly easier.
+
+This package contiains libraries and includes files necessary to use the Appscio
+component templating system.
+
+
+%prep
+%setup
+
+%configure --prefix %{_prefix}
+
+%build
+make
+
+%install
+rm -rf $RPM_BUILD_ROOT
+make install DESTDIR=$RPM_BUILD_ROOT
+
+# clean out the libtool files we don't need
+rm -f $RPM_BUILD_ROOT%{_libdir}/libmpf-core.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/libmpf-core.a
+
+# move docs into the right place
+mkdir -p $RPM_BUILD_ROOT%{_defaultdocdir}/mpf-core
+mv $RPM_BUILD_ROOT%{_datadir}/gtk-doc/html/mpf-core $RPM_BUILD_ROOT%{_defaultdocdir}/mpf-core/mpf/
+
+%post -p /sbin/ldconfig
+%postun -p /sbin/ldconfig
+
+%files
+%{_libdir}/libmpf-core.so.*
+
+%files devel
+%{_libdir}/libmpf-core.so
+%{_includedir}/mpf/*.h
+%{_libdir}/pkgconfig/mpf-core.pc
+%{_bindir}/mpf-build-component.sh
+%{_docdir}/*

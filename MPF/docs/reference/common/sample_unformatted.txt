@@ -1,0 +1,45 @@
+.TH GStreamer Sample Manpage LOCAL
+
+.SH NAME
+
+GStreamer Sample Manpage
+
+.SH SYNOPSIS
+
+.B hello [options]
+
+.I option option
+
+.B ["
+
+.I -yy -zz
+
+.B ..."]
+
+.SH AVAILABILITY
+
+All UNIX flavors
+
+.SH DESCRIPTION
+
+This is a description for GStreamer
+
+.SH OPTIONS
+
+There are no options, but we'll make some up.
+
+.TP 5
+
+-yy
+
+is one option
+
+.TP
+
+-zz
+
+is another option
+
+.SH AUTHOR
+
+John Smith

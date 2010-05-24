@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [ $# != 1 ]
+then
+read -p "Enter filename to play: " FILENAME
+else
+FILENAME=$1
+fi
+
+CURDIR=`pwd`
+ABSFILENAME=$CURDIR/$FILENAME
+echo "Playing $ABSFILENAME"
+gst-launch playbin uri=file://$ABSFILENAME
+

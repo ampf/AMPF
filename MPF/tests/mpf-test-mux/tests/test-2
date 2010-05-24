@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+# Demonstrates a generic raw-buffer muxer.  Uses a tee to split input buffers
+# and avoid multiple input threads.
+#
+src="fakesrc num-buffers=20 sizetype=2 sizemax=10 filltype=4 do-timestamp=true datarate=10"
+$prefix $args gst-launch$version \
+  $src ! tee name=t \
+  t. ! mpf-test-mux mpf-debug=0 name=mux \
+  t. ! mux. \
+  mux. ! fakesink dump=true

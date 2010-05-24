@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# Take a media stream, tee it into time-of-interest analyzer and the mpf-segmenter, then take the
+# toi metadata into the segmenter so it can segment the media stream (fake in this case).  Finally,
+# sink the media stream.  The time-of-interest is 2-6 seconds, repeating at 10 seconds in a 20 second
+# stream, which should yield two segments (i.e. sets of files with contiguous timestamps).
+
+mkdir out
+
+$1 gst-launch $2 fakesrc sizetype=2 sizemax=10 filltype=5 num-buffers=20 datarate=10 ! tee name=t \
+  t. ! mpf-toi start=2 interval=10 duration=4 $3 name=toi ! seg. \
+  t. ! mpf-segmenter name=seg $4 ! mpf-multifilesink location="out/multi-segments-out-%015lld"

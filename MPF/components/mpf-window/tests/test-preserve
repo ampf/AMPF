@@ -1,0 +1,15 @@
+#!/bin/sh
+#
+# Preserve buffer times.  The playback will appear to freeze between windows, 1 second of motion (15 frames) followed
+# by 4 seconds of freeze (60 frames).
+#
+debug=0
+
+width=${width:=320}
+height=${height:=240}
+video=${video:=$MPF_HOME/media/freedom-day.1.mpg}
+
+$prefix $args gst-launch$version \
+    filesrc location=$video ! decodebin ! mpf-window preserve=true count=15 repeat=60 ! \
+    videoscale ! video/x-raw-yuv, width=$width, height=$height ! \
+    ffmpegcolorspace ! ximagesink max-lateness=-1 async=false

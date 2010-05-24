@@ -1,0 +1,9 @@
+#!/bin/sh
+$prefix $args gst-launch$version $gstargs \
+    filesrc location=test-n.in blocksize=11 name=f1 \
+    filesrc location=test-a.in blocksize=11 name=f2 \
+    mpf-mux name=mux debug=0 ! fakesink dump=true \
+    f1. ! mux. \
+    f2. ! mux. \
+
+

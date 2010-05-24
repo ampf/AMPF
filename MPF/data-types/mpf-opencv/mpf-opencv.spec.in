@@ -1,0 +1,63 @@
+Summary:	Appscio OpenCV plugins
+Name:		mpf-opencv
+Version:	@VERSION@
+Release:	1
+License:	LGPL or Apache License
+Group:		Applications/Multimedia
+
+URL:		www.appscio.com
+Vendor:		Appscio, Inc.
+Packager:	build@issues.appscio.com
+
+Source:		%{name}-%{version}.tar.gz
+BuildRoot:	%{_tmppath}/%{name}-%{version}-root
+
+BuildRequires: gstreamer mpf-core opencv
+
+Prefix: %{_prefix}
+Docdir: %{_docdir}
+
+%description
+Format support for OpenCV and collection of components built from OpenCV functions.
+
+%package devel
+Summary:	Appscio OpenCV plugins development libraries and include files
+Group:		Development/Libraries
+
+Requires:	%{name} = %{version}-%{release}
+Requires:	gstreamer-devel mpf-core-devel opencv-devel
+
+%description devel
+Format support for OpenCV and collection of components built from OpenCV functions.
+
+This package contains libraries and include files necessary to use the OpenCV format
+support code.
+
+
+%prep
+%setup
+
+%configure --prefix=%{_prefix}
+
+%build
+make
+
+%install
+rm -rf $RPM_BUILD_ROOT
+make install DESTDIR=$RPM_BUILD_ROOT
+rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
+rm -f $RPM_BUILD_ROOT%{_libdir}/gstreamer-@GST_MAJORMINOR@/*.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/gstreamer-@GST_MAJORMINOR@/*.a
+
+%files
+%{_libdir}/libmpf-iplimage.so.*
+%{_libdir}/libmpf-objlist.so.*
+%{_libdir}/gstreamer-@GST_MAJORMINOR@/lib*.so
+
+%files devel
+%{_libdir}/libmpf-iplimage.so
+%{_libdir}/libmpf-objlist.so
+%{_includedir}/mpf/mpf-iplimage.h
+%{_includedir}/mpf/mpf-objlist.h
+%{_libdir}/pkgconfig/mpf-opencv.pc

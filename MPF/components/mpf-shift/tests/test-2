@@ -1,0 +1,10 @@
+#!/bin/sh
+
+shift=${shift:=0}
+
+$prefix gst-launch$version $args fakesrc num-buffers=30 sizetype=2 sizemax=10 filltype=4 datarate=10 do-timestamp=true ! tee name=t \
+    t. ! queue ! mpf-toi start=10 end=15 verbose=1 ! mpf-loi-smooth sustain=5 name=toi \
+    mpf-segmenter name=seg mpf-debug=0 loglevel=2 \
+    t. ! queue ! seg.input \
+    toi. ! queue ! mpf-shift shift=5 loglevel=2 name=shift ! seg.metadata \
+    seg.output ! mpf-identity dump=buffers ! fakesink sync=false async=false \

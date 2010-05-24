@@ -1,0 +1,6 @@
+#!/bin/bash
+
+$prefix $args gst-launch$version $gstargs \
+    fakesrc num-buffers=10 sizetype=2 sizemax=10 filltype=4 datarate=10 do-timestamp=true ! tee name=t \
+    t. ! mpf-toi interval=4 duration=1 name=toi verbose=1 ! seg.metadata \
+    t. ! mpf-segmenter name=seg mpf-debug=0 loglevel=2 ! mpf-identity dump=buffers ! fakesink dump=true

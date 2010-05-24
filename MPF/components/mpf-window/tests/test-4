@@ -1,0 +1,19 @@
+#!/bin/sh
+#
+# Five small video players playing segments of the video.
+#
+
+width=120
+height=90
+repeat=500
+count=100
+mpfdebug=0
+loglevel=${loglevel:=0}
+
+$prefix $args gst-launch$version filesrc location=../../../data/predator/predator-1.mpg ! decodebin ! tee name=t \
+  t. ! queue ! mpf-window loglevel=${loglevel} mpf-debug=$mpfdebug start=0 count=$count repeat=$repeat ! videoscale ! video/x-raw-yuv, width=$width, height=$height ! ffmpegcolorspace ! queue ! ximagesink sync=false  async=false \
+  t. ! queue ! mpf-window loglevel=${loglevel} mpf-debug=$mpfdebug start=`expr 2 \* $count - 1` count=$count repeat=$repeat ! videoscale ! video/x-raw-yuv, width=$width, height=$height ! ffmpegcolorspace ! queue ! ximagesink sync=false async=false \
+  t. ! queue ! mpf-window loglevel=${loglevel} mpf-debug=$mpfdebug start=`expr 3 \* $count - 1` count=$count repeat=$repeat ! videoscale ! video/x-raw-yuv, width=$width, height=$height ! ffmpegcolorspace ! queue ! ximagesink sync=false  async=false \
+  t. ! queue ! mpf-window loglevel=${loglevel} mpf-debug=$mpfdebug start=`expr 4 \* $count - 1` count=$count repeat=$repeat ! videoscale ! video/x-raw-yuv, width=$width, height=$height ! ffmpegcolorspace ! queue ! ximagesink sync=false  async=false \
+  t. ! queue ! mpf-window loglevel=${loglevel} mpf-debug=$mpfdebug start=`expr 5 \* $count - 1` count=$count repeat=$repeat ! videoscale ! video/x-raw-yuv, width=$width, height=$height ! ffmpegcolorspace ! queue ! ximagesink sync=false  async=false \
+

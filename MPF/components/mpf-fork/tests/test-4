@@ -1,0 +1,6 @@
+#!/bin/sh
+if [ ! -e pipe ]; then mkfifo pipe; fi
+$prefix $args gst-launch$version filesrc blocksize=11 location=test-4.in ! filesink location=pipe & $prefix $args gst-launch$version filesrc location=pipe ! fakesink dump=true
+status=$?
+rm pipe
+exit $status

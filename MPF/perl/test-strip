@@ -1,0 +1,5 @@
+./strip.pl test-1.txt /dev/stdout
+echo ------------------------------------------------
+./strip.pl test-2.txt /dev/stdout
+echo ------------------------------------------------
+./strip.pl test-3.txt /dev/stdout

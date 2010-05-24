@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# Simple fake storyboard, i.e. duration is 0 (1 frame grab per interval) 
+$1 gst-launch $2 fakesrc sizetype=2 sizemax=10 filltype=5 num-buffers=100 datarate=10  ! mpf-toi $3 name=toi interval=4 toi. ! mpf-rdf-dump

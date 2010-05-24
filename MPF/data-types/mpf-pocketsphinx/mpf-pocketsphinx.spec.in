@@ -1,0 +1,35 @@
+#
+# Spec file for mpf-opencv libraries...
+#
+Summary: Appscio PocketSphinx plugin
+Name: mpf-pocketsphinx
+Version: @VERSION@
+Release: 1
+License: LGPL or Apache License
+Group: Applications/Multimedia
+Source: %{name}-%{version}.tar.gz
+URL: www.appscio.com
+Vendor: Appscio, Inc.
+Packager: build@issues.appscio.com
+BuildRoot: %{_tmppath}/%{name}-%{version}-root
+BuildRequires: mpf-core pocketsphinx
+
+%description
+Demonstration Appscio plugin for PocketSphinx.
+
+%prep
+%setup
+
+%configure --prefix=%{_prefix}
+
+%build
+make
+
+%install
+make DESTDIR=$RPM_BUILD_ROOT install
+
+%files
+%{_libdir}/libmpf-*.*
+%{_libdir}/gstreamer-0.10/lib*.*
+%{_includedir}/mpf/mpf*.h
+%{_libdir}/pkgconfig/mpf-pocketsphinx.pc

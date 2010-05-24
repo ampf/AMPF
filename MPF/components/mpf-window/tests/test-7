@@ -1,0 +1,19 @@
+#!/bin/sh
+#
+# Parallel viewing of video segments.
+#
+export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+echo LD_LIBRARY_PATH=$LD_LIBRARY_PATH
+
+width=120
+height=90
+
+decode="filesrc location=../../../data/predator/predator-1.mpg ! decodebin "
+
+function sink {
+  echo "videoscale ! video/x-raw-yuv, width=$width, height=$height ! ffmpegcolorspace ! queue ! ximagesink max-lateness=-1 async=false sync=false "
+}
+
+$prefix $args gst-launch$version \
+  $decode ! queue ! mpf-window loglevel=2 mpf-debug=0 start=0 count=300 repeat=0 ! `sink 1` \
+  $decode ! queue ! mpf-window loglevel=1 mpf-debug=0 start=900 count=300 repeat=0 ! `sink 2` \

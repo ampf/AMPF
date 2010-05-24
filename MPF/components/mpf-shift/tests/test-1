@@ -1,0 +1,4 @@
+#!/bin/sh
+$prefix gst-launch$version $args fakesrc num-buffers=10 sizetype=2 sizemax=10 filltype=4 datarate=10 do-timestamp=true ! \
+    mpf-shift shift=2 ! mpf-buf-rdf ! mpf-rdf-ton3 ! filesink location=/dev/stdout
+

@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Take a media stream, tee it into time-of-interest analyzer and the mpf-segmenter, then take the
+# toi metadata into the segmenter so it can segment the media stream (fake in this case).  Finally,
+# sink the media stream.  The time-of-interest is 2-6 seconds in a 10 second stream.
+
+mkdir out
+
+$1 gst-launch$VERSION $2 fakesrc sizetype=2 sizemax=10 filltype=5 num-buffers=10 datarate=10 ! tee name=t \
+  t. ! mpf-toi start=2 duration=4 $3 name=toi ! seg. \
+  t. ! mpf-segmenter name=seg $4 ! mpf-multifilesink location="out/simpletest-out-%015lld"

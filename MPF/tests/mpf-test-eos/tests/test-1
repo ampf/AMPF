@@ -1,0 +1,6 @@
+#!/bin/sh
+# Note: the queues are essential to avoid deadlock here.
+#
+$prefix $args gst-launch$version fakesrc num-buffers=5 ! mpf-test-eos name=test \
+  test.output ! queue ! filesink location=/dev/stdout \
+  test.events ! queue ! filesink location=/dev/stderr

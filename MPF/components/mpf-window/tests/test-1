@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+# Simple test of the mpf-window component, driving a fakesink.
+#
+
+echo "******************************* env *****************************"
+env | sort
+echo "******************************* env *****************************"
+
+$prefix $args gst-launch$version fakesrc num-buffers=20 sizemax=10 filltype=4 sizetype=2 datarate=10 ! \
+  mpf-window start=3 count=3 ! fakesink dump=true
+
+# assert 3 buffers.

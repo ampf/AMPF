@@ -1,0 +1,3 @@
+#include <gst/video/video.h>
+
+GST_VIDEO_CAPS_RGB

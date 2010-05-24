@@ -1,0 +1,20 @@
+#!/bin/sh
+
+sleep=${sleep:=0}
+alpha=${alpha:=0.04}
+video=${video:=$MPF_HOME/media/freedom-day.1.mpg}
+draw_all=${draw_all:=false}
+visualization=${visualization:=final}
+picture_threshold=${picture_threshold:=30}
+motion_threshold=${motion_threshold:=5000}
+median=${median:=15}
+width=${width:=320}
+height=${height:=240}
+
+$prefix $args gst-launch$version $gstargs \
+    souphttpsrc num-buffers=500 is-live=true do-timestamp=true location="http://confroom:iwatch@axiscam.appscio.com/axis-cgi/mjpg/video.cgi?resolution=640x480" ! \
+    decodebin ! videobalance contrast=2 ! mpf-identity sleep=$sleep dump=none ! ffmpegcolorspace ! \
+    toiplimage ! mpf-opencv-md name=md draw-all=$draw_all alpha=$alpha visualization=$visualization picture-threshold=$picture_threshold momentum-threshold=$motion_threshold median=$median ! queue ! fromiplimage ! \
+    videoscale ! video/x-raw-rgb, width=$width, height=$height ! ffmpegcolorspace ! ximagesink max-lateness=-1 \
+    md.interest ! queue ! mpf-loi-smooth ! mpf-rdf-ton3 ! fakesink
+

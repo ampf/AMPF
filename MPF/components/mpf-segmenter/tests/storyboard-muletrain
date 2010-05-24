@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# Turns a video stream into a sequence of jpeg storyboard images, taken at 10 second intervals.
+
+
+./storyboard-src "$1" "$2" "/NAS/VIMSTest/VIMS\ Beta\ test\ media/mediaIN/MuleTrain.wmv" "$3" "$4"

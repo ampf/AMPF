@@ -1,0 +1,95 @@
+#!/bin/sh
+
+prefix=@prefix@
+templates=$prefix/share/mpf/templates
+templatename=component-autotools
+
+if [ $# -eq 0 ]
+then
+  read -p "Enter component name: " destdir
+else
+  destdir=$1;shift
+fi
+
+if [ "x$1" != "x" ];then
+  compname=$1
+else
+  compname=`basename $destdir`
+fi
+
+self=`pwd`/$0
+templatepath=$templates/$templatename
+
+# Use developer path if found, otherwise use installed.
+self=`pwd`/$0
+templatepath=`dirname $0`/../templates/$templatename
+if [ ! -e $templatepath ];then
+  templatepath=$templates/$templatename
+fi
+
+# Make sure the directory actually *has* the source
+if [ ! -e $templatepath/template-identity.c ];then
+  echo ERROR: Can\'t find template files in $templatepath !
+  exit 1
+fi
+
+if [ -e $destdir ];then
+  echo
+  echo WARNING: Destination directory \"$destdir\" already exists!
+  read -n 1 -p "Overwrite template files? (y/n): " overwrite
+  if [ "x$overwrite" != "xy" ]
+  then
+    exit 1
+  fi
+fi
+
+# make sure the complete directory heirarchy is there so the cp doesn't fail
+mkdir -p `dirname $destdir`
+
+# canonicalize for later use
+fulldir=`readlink -f $destdir`
+
+# Copy the template
+cp -r $templatepath $destdir
+
+# Now go rewrite and rename all the relevant files
+cd $destdir
+
+# Replace instances of the template name itself
+for file in autogen.sh configure.ac Makefile.am $templatename.spec.in;do
+  perl -p -i -e "s/$templatename/$compname/g" $file
+done
+
+# Replace instances of the templated component name
+for file in autogen.sh Makefile.am template-identity.c $templatename.spec.in tests/*;do
+  perl -p -i -e "s/template-identity/$compname/g" $file
+done
+undername=`echo $compname | sed 's/-/_/g'`
+perl -p -i -e "s/template_identity/$undername/g" Makefile.am
+
+# Rename the spec and source files
+mv $templatename.spec.in $compname.spec.in
+mv template-identity.c $compname.c
+
+# Check for and remove any .svn directories in case we're running from the mpf-template source tree
+find . -name \*.svn | xargs rm -rf
+
+# Give a basic set of instructions for building
+echo "MPF component $compname created in $destdir"
+echo
+echo "To build your new component:"
+echo "cd $destdir"
+echo "./autogen.sh"
+echo "make"
+echo
+echo "Add your component to the plugin search path:"
+echo "export GST_PLUGIN_PATH=$GST_PLUGIN_PATH:$fulldir/.libs"
+echo
+echo "For information about your component:"
+echo "gst-inspect $compname"
+echo
+echo "To test your component:"
+echo "cd $fulldir/tests"
+echo "./simpletest"
+echo
+echo "To modify your component, edit $compname.c."

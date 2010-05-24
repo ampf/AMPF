@@ -1,0 +1,7 @@
+#!/bin/sh
+# Note: the queue is essential to avoid deadlock here.  Send outputs to fakesinks  Run 10000
+# cycles to stress dataflow/deadlock issues (and memory leaks of course).
+#
+$prefix $args gst-launch$version fakesrc num-buffers=10000 ! mpf-test-eos name=test \
+  test.output ! queue ! fakesink dump=false async=false sync=false \
+  test.events ! queue ! filesink location=/dev/stdout async=false sync=false \

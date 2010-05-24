@@ -1,0 +1,12 @@
+prefix=
+exec_prefix=
+libdir=${pcfiledir}/mpf
+includedir=${pcfiledir}
+
+Name: MPF RDF datatype (uninstalled)
+Description: MPF RDF datatype (uninstalled)
+Requires: gstreamer-@GST_MAJORMINOR@ mpf-core grdf
+Version: @VERSION@
+Libs: ${pcfiledir}/mpf/libmpf-rdf.la
+Cflags: -I${pcfiledir}
+

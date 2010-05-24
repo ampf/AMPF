@@ -1,0 +1,60 @@
+Summary:	Appscio GD Newdatatype data type
+Name:		mpf-newdatatype
+Version:	@VERSION@
+Release:	1
+License:	LGPL or Apache License
+Group:		Applications/Multimedia
+
+URL:		www.appscio.com
+Vendor:		Appscio, Inc.
+Packager:	build@issues.appscio.com
+
+Source:		%{name}-%{version}.tar.gz
+BuildRoot:	%{_tmppath}/%{name}-%{version}-root
+Prefix:		%{_prefix}
+Docdir:		%{_docdir}
+
+BuildRequires:	gstreamer mpf-core newdatatype
+Requires:	gstreamer mpf-core newdatatype
+
+%description
+Data type support for GD's Newdatatype type
+
+
+%package devel
+Summary:	Appscio GD Newdatatype development libraries and include files
+Group:		Development/Libraries
+
+Requires:	%{name} = %{version}-%{release}
+Requires:	gstreamer-devel mpf-core-devel newdatatype-devel
+
+%description devel
+Data type support for GD's Newdatatype type
+
+This package contains libraries and include files necessary to use the GD Newdatatype format support code.
+
+
+%prep
+%setup
+
+%configure --prefix=%{_prefix}
+
+%build
+make
+
+%install
+rm -rf $RPM_BUILD_ROOT
+make install DESTDIR=$RPM_BUILD_ROOT
+rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
+rm -f $RPM_BUILD_ROOT%{_libdir}/gstreamer-@GST_MAJORMINOR@/*.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/gstreamer-@GST_MAJORMINOR@/*.a
+
+%files
+%{_libdir}/libmpf-newdatatype.so.*
+%{_libdir}/gstreamer-@GST_MAJORMINOR@/lib*.so
+
+%files devel
+%{_libdir}/libmpf-newdatatype.so
+%{_includedir}/mpf/mpf-newdatatype.h
+%{_libdir}/pkgconfig/mpf-newdatatype.pc

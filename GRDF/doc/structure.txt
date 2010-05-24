@@ -1,0 +1,50 @@
+Copyright Appscio, Inc 2008. All Rights Reserved.
+This document is licensed under a
+Creative Commons Attribution 3.0 United States License
+(see http://creativecommons.org/licenses/by/3.0/us/)
+
+Based on gobject/gvalue, gives us typing, inheritance, refcounting, memory lifetime
+management, etc.
+
+Objects have to be made in the context of the document, because of ontologies
+etc.  As such, objects created in the GrdfDoc context are automatically added
+children of the doc and don't need to be explicitly added.
+
+------
+GrdfDoc
+	// list of statements, ontologies, etc.
+
+	grdf_doc_new()
+
+GrdfOntology
+	// loads an xml/n3 doc that defines URI shortcuts
+
+	grdf_ontology_new_from_file(GrdfDoc *,char *filename,char *nick)
+	grdf_ontology_new_from_xmldom(GrdfDoc *,xmlDoc *,char *nick)
+
+GrdfStmt
+	// triple or quad of nodes
+
+	grdf_stmt_new(GrdfDoc *,GrdfNode *,GrdfNode *,GrdfNode *)
+	grdf_stmt_new_quad(GrdfDoc *,GrdfNode *,GrdfNode *,GrdfNode *,GrdfNode *)
+
+	(caps-sensitive characters denote argument type, caps are structs)
+	grdf_stmt_new_uuu(GrdfDoc *,char *,char *,char *)
+	grdf_stmt_new_UUU(GrdfDoc *,GrdfURI *,GrdfURI *,GrdfURI *)
+	grdf_stmt_new_UUl(GrdfDoc *,GrdfURI *,GrdfURI *,char *)
+	grdf_stmt_new_UUV(GrdfDoc *,GrdfURI *,GrdfURI *,GValue *)
+	grdf_stmt_new_UUi(GrdfDoc *,GrdfURI *,GrdfURI *,int)
+GrdfNode
+	GrdfURI
+		grdf_uri_new(GrdfDoc *,char *) // magic, handles everything
+		grdf_uri_new_with_prefix(GrdfDoc *,char *,char *)  // ont prefix
+	GrdfLiteral
+		GrdfLiteralString
+			grdf_literalstring_new(GrdfDoc *,char *)
+		GrdfLiteralGValue
+			grdf_literalstring_new(GrdfDoc *,GValue *)
+			grdf_literalstring_new_from_int(GrdfDoc *,int)
+			grdf_literalstring_new_from_float(GrdfDoc *,float)
+						    ...
+	GrdfAnon
+		grdf_anon_new(GrdfDoc *,char *)  // "face" and "face%d" equiv, "%dface" not

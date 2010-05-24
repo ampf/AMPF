@@ -1,0 +1,11 @@
+#!/bin/sh -x
+# export VERSION=0.10 (or appropriate) to run with valgrind.
+# example: ./audio-video data/video_02.mp4
+
+test -d out || mkdir out
+
+$1 gst-launch$VERSION $2 filesrc location=data/video_02.mp4 ! decodebin name=dec dec. \
+  dec. ! audioconvert ! osssink \
+  dec. ! tee name=t \
+  t. ! queue ! mpf-toi interval=10 duration=2 $3 name=toi ! seg.metadata \
+  t. ! queue ! mpf-segmenter $4 name=seg ! ffmpegcolorspace ! ximagesink

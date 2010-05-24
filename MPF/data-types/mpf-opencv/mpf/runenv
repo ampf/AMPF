@@ -1,0 +1,1 @@
+export GST_PLUGIN_PATH=`pwd`/../../mpf-core/mpf/.libs:`pwd`/.libs

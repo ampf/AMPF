@@ -1,0 +1,17 @@
+#!/bin/sh
+cd rasta-v2_6_1
+configure
+make
+sudo make install
+cd ..
+cd mpf-mystt-feature-gen-rasta
+# don't do autogen.sh as it is broken
+configure
+make
+sudo make install
+cd ..
+cd mpf-mystt-spnsp-gmm
+# don't do autogen.sh as it is broken
+configure
+make
+sudo make install

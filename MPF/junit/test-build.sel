@@ -1,0 +1,1 @@
+!(requires.grails.test-post=true | requires.grails.vad_test=true) & !requires.ximagesink=true

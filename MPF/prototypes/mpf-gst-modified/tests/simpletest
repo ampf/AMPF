@@ -1,0 +1,2 @@
+#!/bin/sh
+gst-launch fakesrc num-buffers=5 ! gst-modified ! fakesink

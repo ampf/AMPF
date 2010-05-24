@@ -1,0 +1,55 @@
+FIXME FIXME FIXME | This should refer to the CDG | FIXME FIXME FIXME
+
+
+
+GETTING STARTED
+===============
+
+To build your component:
+
+./autogen.sh
+make
+
+If mpf-core and other packages you depend on are not installed on the system, you must add them to pkg-config's search path:
+
+export PKG_CONFIG_PATH:$PKG_CONFIG_PATH:.../mpf-core:.../data-types/mpf-iplimage
+
+To use the component that just built, you must either add the appropriate location to GStreamer's search path:
+
+export GST_PLUGIN_PATH=$GST_PLUGIN_PATH:.../components/mycomponent/.libs
+
+or install your component on the system:
+
+sudo make install
+
+To see your component:
+
+gst-inspect | grep mycomponent
+
+
+ADDING LIBRARIES
+================
+
+To add particular libraries that your component may require, you have to modify the configure.ac file.  At this point the library must be supplied with a pkg-config file (.pc) in order to be used, later versions of the configure.ac file will include examples for bare libraries.
+
+Look at the section that brings in the mpf-core package:
+
+dnl ---------- External library dependency ----------
+PKG_CHECK_MODULES(MPF_CORE, mpf-core,
+  ,  AC_MSG_ERROR(no MPF Core libraries found (mpf-core)))
+
+dnl make _CFLAGS and _LIBS available
+CFLAGS="$CFLAGS $MPF_CORE_CFLAGS"
+LIBS="$LIBS $MPF_CORE_LIBS"
+dnl ---------- External library dependency ----------
+
+Simply copy that entire section for each of your external dependencies, and change all instances of 'mpf-core' to the name of that package.
+
+
+ADDING ADDITIONAL SOURCE FILES
+==============================
+
+To add another source file to the project, simply put it in place and add it to the list of sources for the component in Makefile.am:
+
+libmycomponent_la_SOURCES = mycomponent.c othersource.c
+

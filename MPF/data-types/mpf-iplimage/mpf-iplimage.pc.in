@@ -1,0 +1,12 @@
+prefix=${pcfiledir}/../..
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+mpftypes=iplimage
+
+Name: MPF OpenCV IplImage
+Description: Appscio MPF bindings for OpenCV's IplImage data type
+Requires: mpf-core opencv
+Version: @VERSION@
+Libs: -L${libdir} -lmpf-iplimage
+Cflags: -I${includedir}
