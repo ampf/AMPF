@@ -70,9 +70,7 @@ The following enhancements are planned for the next release of MPF:
   no longer available.
 
 * Support parameter processing in component_init.
-
-* Expose the MPF project in Appscio's JIRA issue tracking system to the community, so
-  that upcoming enhancements can be voted on. 
+ 
 
 ===============================================
 VERSION HISTORY
