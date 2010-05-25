@@ -18,7 +18,7 @@
     <target name="clean" depends="javac-clean,clean-all" description="Clean everything"/>
 
     <target name="build-all" description="Build all MPF plugin components and data-types">
-        <exec command="sh -c ./build-all --no-install"/>
+        <exec command="sh -c ./build-components.sh --no-install"/>
     </target>
 
     <target name="clean-all" description="Clean all to 'svnclean' level'">
