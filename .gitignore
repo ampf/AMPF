@@ -40,3 +40,4 @@ stamp-h1
 gtk-doc.m4
 gtk-doc.make
 depcomp
+MPF/target
