@@ -12,9 +12,12 @@ pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = mpf-core.pc
 
 svnclean:
-	make distclean
-	pushd m4; make distclean; popd
-	rm -rf configure Makefile.in tools/Makefile.in depcomp config.guess \
+	-(pushd m4; make distclean; popd)
+	-(pushd mpf; make svnclean; popd)
+	-(pushd tools; make svnclean; popd)
+	-(pushd docs; make distclean; popd)
+	-make distclean
+	-rm -rf configure Makefile.in tools/Makefile.in depcomp config.guess \
 	    ltmain.sh config.sub config.h.in autom4te.cache mpf-voidstar.spec\
-	    missing aclocal.m4 install-sh INSTALL \
+	    missing aclocal.m4 install-sh INSTALL autoregen.sh \
 	    $(PACKAGE)-[.0-9]* $(PACKAGE)-[.0-9]*.tar*

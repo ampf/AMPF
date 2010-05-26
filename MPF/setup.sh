@@ -4,7 +4,7 @@ export MPF_HOME=$PWD
 
 export PKG_CONFIG_PATH_CONSTRUCTOR="$PWD/tools/make-uninstalled-pkgconfig-path.sh $PWD"
 export GST_PLUGIN_PATH_CONSTRUCTOR="$PWD/tools/make-gst-plugin-path.sh $PWD"
-export PKG_CONFIG_PATH_CONSTRUCTOR_GRDF="$PWD/tools/make-uninstalled-pkgconfig-path.sh $PWD/../grdf"
+export PKG_CONFIG_PATH_CONSTRUCTOR_GRDF="$PWD/tools/make-uninstalled-pkgconfig-path.sh $PWD/../GRDF"
 
 export GST_PLUGIN_PATH_CONSTRUCTOR_TESTS="$PWD/tools/make-gst-plugin-path.sh $PWD/tests"
 

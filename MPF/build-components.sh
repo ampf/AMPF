@@ -10,19 +10,18 @@ TOP=`pwd`
 function usage()
 {
 cat << EOF
-usage: $0 [--clean | --no-install | --help]
+usage: $0 [--clean | --install | --help]
   --clean: $0 will "make clean" and rerun "autogen.sh" before building.
-  --no-install: Do not attempt to install libraries on the system.
+  --install: Will install the software into standared (e.g. /usr) system locations.
   --help: Print this usage message.
 EOF
 }
 
 # Parameters
 unset CLEAN
-unset NO_INSTALL
 
 # State variables
-unset INSTALL
+INSTALL=false
 unset HAVE_OPENCV
 unset HAVE_GRDF
 unset BUILT
@@ -34,9 +33,9 @@ do
   then
     CLEAN=true
   else
-    if [ "x$1" = "x--no-install" ]
+    if [ "x$1" = "x--install" ]
     then
-      NO_INSTALL=true
+      INSTALL=true
     else
       usage
       exit 1
@@ -44,6 +43,8 @@ do
   fi
   shift
 done
+
+echo INSTALL=$INSTALL, CLEAN=$CLEAN
 
 # Check for pkg-config
 if [ ! `which pkg-config` ]
@@ -112,17 +113,15 @@ else
 fi
 
 # Check for sudo permissions
-if [ $NO_INSTALL ]
+if [ $INSTALL ]
 then
-  unset INSTALL
-else
   echo "Checking sudo permissions for library installation."
   if [ `sudo echo checking` ]
   then
     INSTALL=true
   else
-    NO_INSTALL=true
-    unset INSTALL
+    echo "Unable to sudo: please ensure you have super-user privileges"
+    exit 1
   fi
 fi
 

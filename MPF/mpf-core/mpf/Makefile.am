@@ -21,3 +21,6 @@ libmpf_core_include_HEADERS =		\
 	mpf-compound-buffer.h		\
 	mpf-rawvideo.h \
 	mpf-logging.h
+
+distclean:
+	rm Makefile.in Makefile
