@@ -24,7 +24,11 @@ Fedora 10
 
       System | Administration | SE Linux Management
 
-5. Build GRDF:
+5. Install Ant, and optional packages:
+
+      sudo yum install ant ant-trax
+
+6. Build GRDF:
 
       pushd ../GRDF
       ant
