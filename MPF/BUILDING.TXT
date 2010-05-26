@@ -24,23 +24,21 @@ Fedora 10
 
       System | Administration | SE Linux Management
 
+5. Build GRDF:
 
-5. Add the Appscio repository to yum:
-
-	  sudo wget http://www.appscio.com/repository/packages/continuous/trunk/fedora/10/RPMS/appscio.repo -O /etc/yum.repos.d/appscio.repo
-
-6. Install the mpf core
-
-      sudo yum install mpf*
-
-7. Build MPF components:
-
-      ./build-components.sh
-
-   or build everything using Ant:
-
+      pushd ../GRDF
       ant
+      popd
 
-8. You should have the distribution below `pwd`.  Make sure to source 'setup.sh' to fixup paths:
+7. Build and test MPF (all tests should pass).
 
-      . setup.sh
+	  ant
+	  ant test-build
+
+8. Examine the test results:
+
+	  ant html-report
+	  firefox junit_results/html/index.html
+
+9. You should have the distribution below `pwd`.  Rememnber to '. setup.sh' to set your paths before using the locally built
+   elements.

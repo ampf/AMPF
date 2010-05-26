@@ -41,3 +41,6 @@ gtk-doc.m4
 gtk-doc.make
 depcomp
 MPF/target
+MPF/junit_results
+*.out
+*.err
