@@ -33,7 +33,8 @@ Fedora 10
 
       sudo yum install mpf*
       
-7. Build everything:
+7. Build everything.  This uses autotools, and generates a *lot* of console outputs, most
+   of which can be ignored.
 
       ./build-all --no-install
       
