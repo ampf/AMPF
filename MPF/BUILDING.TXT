@@ -44,5 +44,13 @@ Fedora 10
 	  ant html-report
 	  firefox junit_results/html/index.html
 
-9. You should have the distribution below `pwd`.  Rememnber to '. setup.sh' to set your paths before using the locally built
-   elements.
+   A couple of tests are currently failing intermittently with the following error:
+
+      junit.framework.AssertionFailedError: test components.mpf-pipeline.tests.test-7 process returned 134
+	  stderr:
+	      mpf_component_send_outbuffers: component=appscio-mpf-identity0 pad=output result=wrong-state != ok
+
+   These can be safely ignored (they appear to be a race-condition on shutdown).
+
+9. You should have the distribution below this directory (MPF).  Remember to '. setup.sh' to set your paths
+   before using the locally built component.
