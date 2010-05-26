@@ -34,7 +34,8 @@ Fedora 10
       ant
       popd
 
-7. Build and test MPF (all tests should pass).
+7. Build and test MPF (all tests should pass). This uses autotools, and generates a *lot* of console outputs, most
+   of which can be ignored.
 
 	  ant
 	  ant test-build
@@ -50,7 +51,7 @@ Fedora 10
 	  stderr:
 	      mpf_component_send_outbuffers: component=appscio-mpf-identity0 pad=output result=wrong-state != ok
 
-   These can be safely ignored (they appear to be a race-condition on shutdown).
+   These can be safely ignored for now (they appear to be a race-condition on shutdown).
 
 9. You should have the distribution below this directory (MPF).  Remember to '. setup.sh' to set your paths
    before using the locally built component.

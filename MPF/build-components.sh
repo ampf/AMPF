@@ -21,7 +21,7 @@ EOF
 unset CLEAN
 
 # State variables
-INSTALL=false
+unser INSTALL
 unset HAVE_OPENCV
 unset HAVE_GRDF
 unset BUILT
@@ -43,8 +43,6 @@ do
   fi
   shift
 done
-
-echo INSTALL=$INSTALL, CLEAN=$CLEAN
 
 # Check for pkg-config
 if [ ! `which pkg-config` ]

@@ -44,3 +44,6 @@ MPF/target
 MPF/junit_results
 *.out
 *.err
+GRDF/test/basic
+GRDF/test/test-equal
+

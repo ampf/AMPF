@@ -13,11 +13,11 @@
 	<property name="test.env" value="@@"/>
     <property name="timeout" value="40"/>
 
-    <target name="all" depends="build-all,javac"/>
+    <target name="all" depends="build-components,javac"/>
 
     <target name="clean" depends="javac-clean,clean-all" description="Clean everything"/>
 
-    <target name="build-all" description="Build all MPF plugin components and data-types">
+    <target name="build-components" description="Build all MPF plugin components and data-types">
         <exec command="sh -c './build-components.sh'"/>
     </target>
 
