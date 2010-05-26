@@ -336,6 +336,7 @@ mpf_component_send_outbuffers(MpfComponent *component)
                     gst_pad_get_name(pad),
                     (long long int)GST_BUFFER_TIMESTAMP(padinfo->outbuf));
             //      fprintf(stderr,"pushing...\n");
+            // Valgrind is reporting a thread data-race condition here.
             GstFlowReturn result = gst_pad_push(pad, GST_BUFFER(padinfo->outbuf));
 
             // What went wrong?
