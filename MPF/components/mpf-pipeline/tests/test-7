@@ -10,7 +10,7 @@
 
 export GST_PLUGIN_PATH=../.libs:$GST_PLUGIN_PATH
 
-# Drive a fake source into a multi-pipe identity.
+# Drive a fake source into a multi-pipe identity.  Sub-pipeline is slow, so run multiple of them to test the threading model.
 #
 $prefix $args gst-launch$version $gstargs \
     fakesrc num-buffers=100 sizetype=2 sizemax=10 filltype=4 datarate=10 do-timestamp=true ! mpf-identity sleep=0.1 ! tee name=t \

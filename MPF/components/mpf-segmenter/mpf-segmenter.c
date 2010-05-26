@@ -40,12 +40,14 @@ static gboolean pad_event_handler(GstPad *pad, GstEvent *event) {
             event->type));
 
     if (event->type == GST_EVENT_EOS) {
+    	LOCK();
     	mpf_private.eos_count++;
     	MPF_PRIVATE_DEBUG("eos_count=%d\n", mpf_private.eos_count);
     	if (mpf_private.eos_count == 2) {
     		MPF_PRIVATE_DEBUG("EOS -> output\n");
     		gst_pad_push_event(mpf_private.output_pad, gst_event_new_eos());
     	}
+    	UNLOCK();
     	return TRUE;
     }
 

@@ -48,16 +48,6 @@ static GstFlowReturn mpf_component_chain (GstPad * pad, GstBuffer * buf);
 
 static GstStateChangeReturn mpf_component_change_state (GstElement *element, GstStateChange transition);
 
-#define mpf_debug(comp,...) G_STMT_START{				\
-        if ((comp && (comp->flags&MPF_DEBUG))) {				\
-            fprintf(stdout,"thread %p: %s: ", g_thread_self(), GST_OBJECT_CAST(comp)->name);			\
-            fprintf(stdout, __VA_ARGS__);					\
-        }									\
-}G_STMT_END
-
-#define LOCK()   mpf_debug(component, "LOCK name=%s, mutex=%p\n", GST_OBJECT_CAST(component)->name, component->mutex); g_mutex_lock(component->mutex)
-#define UNLOCK() mpf_debug(component, "UNLOCK name=%s, mutex=%p\n", GST_OBJECT_CAST(component)->name, component->mutex); g_mutex_unlock(component->mutex)
-
 
 GType
 mpf_component_get_type (void)

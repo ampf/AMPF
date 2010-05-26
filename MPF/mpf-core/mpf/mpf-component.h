@@ -16,6 +16,17 @@
 #define MPF_IS_COMPONENT_CLASS(klass) \
   (G_TYPE_CHECK_CLASS_TYPE((klass),MPF_TYPE_COMPONENT))
 
+#define mpf_debug(comp,...) G_STMT_START{				\
+        if ((comp && (comp->flags&MPF_DEBUG))) {				\
+            fprintf(stdout,"thread %p: %s: ", g_thread_self(), GST_OBJECT_CAST(comp)->name);			\
+            fprintf(stdout, __VA_ARGS__);					\
+        }									\
+}G_STMT_END
+
+#define LOCK()   mpf_debug(component, "LOCK name=%s, mutex=%p\n", GST_OBJECT_CAST(component)->name, component->mutex); g_mutex_lock(component->mutex)
+#define UNLOCK() mpf_debug(component, "UNLOCK name=%s, mutex=%p\n", GST_OBJECT_CAST(component)->name, component->mutex); g_mutex_unlock(component->mutex)
+
+
 /* --- typedefs & structures --- */
 /**
  * MpfComponentProcessReturn:
