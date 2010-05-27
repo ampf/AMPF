@@ -2,6 +2,7 @@
 video=${video:=$MPF_HOME/media/freedom-day.1.mpg}
 width=${width:=320}
 height=${height:=240}
+timestamp=${timestamp:=false}
 
 if [ -z "$credentials" ]; then
     . $PWD/credentials
@@ -9,6 +10,6 @@ fi
 
 
 # Monitor the video in a separate stream, so as to not interfere with capture.
-gst-launch souphttpsrc is-live=true do-timestamp=true location="http://${credentials}@axiscam.appscio.com/axis-cgi/mjpg/video.cgi?resolution=${width}x${height}&fps=15" ! \
+gst-launch -e souphttpsrc is-live=true do-timestamp=$timestamp location="http://${credentials}@axiscam.appscio.com/axis-cgi/mjpg/video.cgi?resolution=${width}x${height}&fps=15" ! \
      decodebin ! mpf-identity dump=buffers ! queue ! ffmpegcolorspace ! videoscale ! video/x-raw-rgb, width=$width, height=$height ! ximagesink sync=false \
 

@@ -10,13 +10,14 @@ motion_threshold=${motion_threshold:=5000}
 median=${median:=15}
 width=${width:=320}
 height=${height:=240}
+timestamp=${timestamp:=false}
 
 if [ -z "$credentials" ]; then
     . $PWD/credentials
 fi
 
 $prefix $args gst-launch$version $gstargs \
-    souphttpsrc is-live=true do-timestamp=true location="http://${credentials}@axiscam.appscio.com/axis-cgi/mjpg/video.cgi?resolution=640x480" ! \
+    souphttpsrc is-live=true do-timestamp=$timestamp location="http://${credentials}@axiscam.appscio.com/axis-cgi/mjpg/video.cgi?resolution=640x480" ! \
     decodebin ! videobalance contrast=1.5 ! mpf-identity sleep=$sleep dump=none ! ffmpegcolorspace ! \
     toiplimage ! mpf-opencv-md name=md draw-all=$draw_all alpha=$alpha visualization=$visualization picture-threshold=$picture_threshold momentum-threshold=$motion_threshold median=$median ! queue ! fromiplimage ! \
     videoscale ! video/x-raw-rgb, width=$width, height=$height ! ffmpegcolorspace ! ximagesink max-lateness=-1 \
