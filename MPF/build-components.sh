@@ -21,7 +21,7 @@ EOF
 unset CLEAN
 
 # State variables
-unser INSTALL
+unset INSTALL
 unset HAVE_OPENCV
 unset HAVE_GRDF
 unset BUILT
