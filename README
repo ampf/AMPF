@@ -7,8 +7,6 @@ INDEX:
 
 -> Directory Structure
 -> Building MPF
--> Building the grails-mpf-detector plugin
--> Building the Large Data Evaluator application
 -> Road Map
 -> Version History
 
@@ -26,25 +24,7 @@ The Appscio MPF project contains the following subdirectories:
 BUILDING MPF
 ============
 
-To build MPF you will need a recent, 64-bit Linux distribution with the
-following prerequisites:
-
-- Apache Ant (http://ant.apache.org)
-- ffmpeg version 0.5 or above (can be obtained from http://rpmfusion.org)
-- ffmpeg-devel
-- gstreamer version 0.10.24 or above
-- gstreamer-devel
-- gstreamer-ffmpeg
-- gstreamer-plugins-base
-- gstreamer-plugins-base-devel
-- gstreamer-plugins-flumpegdemux
-- Java JDK version 1.6.0 or above
-- opencv version 1.0.0 or above
-- opencv-devel
-
-Once the prerequisites are installed, go to the MPF subdirectory and run:
-
-ant build-all
+Please see MPF/BUILDING.TXT for build instructions.
 
 
 ROAD MAP
