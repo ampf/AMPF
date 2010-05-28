@@ -20,8 +20,20 @@
         </exec>
     </target>
 
+	<!-- Note: the install/uninstall targets require sudo, which will not work from inside Eclipse
+	     because Eclipse Ant runner does not allocate a tty.  Run 'ant install/ant uninstall' from
+	     the command line.
+	-->
+	<target name="install" description="Install components in standard system locations (requires supeuser)">
+	   <exec command="sh -c './build-components.sh --install'"/>
+	</target>
+
+    <target name="uninstall" description="Remove components from standard system locations (requires supeuser)">
+       <exec command="sh -c './build-components.sh --uninstall'"/>
+    </target>
+
     <target name="clean-all" description="Clean build artifacts from workspace">
-        <exec command="sh -c ./clean-all.sh" />
+        <exec command="sh -c clean-all.sh" />
     </target>
 
 	<target name="test-build">
