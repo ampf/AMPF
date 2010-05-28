@@ -1,4 +1,4 @@
-<project name="grdf" default="all">
+<project name="GRDF" default="all">
 
     <property name="product" value="appscio-nrl-mpf" />
     <property name="USR_LIB" location="/usr/lib64" />
@@ -11,17 +11,17 @@
     <property name="test.env" value="@@"/>
     <property name="timeout" value="40"/>
 
-    <target name="all" depends="build-all" />
+    <target name="all" depends="build-components" />
 
     <target name="clean" depends="clean-all" />
 
-    <target name="build-all">
-        <exec command="sh -c ./build-all.sh" >
+    <target name="build-components">
+        <exec command="sh -c ./build-components.sh" >
         </exec>
     </target>
 
-    <target name="clean-all">
-        <exec command="make svnclean" />
+    <target name="clean-all" description="Clean build artifacts from workspace">
+        <exec command="sh -c ./clean-all.sh" />
     </target>
 
 	<target name="test-build">

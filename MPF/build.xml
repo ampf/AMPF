@@ -1,4 +1,4 @@
-<project name="mpf" default="all">
+<project name="MPF" default="all">
 
     <property name="product" value="appscio-nrl-mpf"/>
     <property name="MPF" location="."/>
@@ -21,7 +21,7 @@
         <exec command="sh -c './build-components.sh'"/>
     </target>
 
-    <target name="clean-all" description="Clean all to 'svnclean' level'">
+    <target name="clean-all" description="Clean build artifacts from workspace">
         <exec command="sh -c './clean-all.sh'"/>
     </target>
 

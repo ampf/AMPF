@@ -12,7 +12,8 @@ function usage()
 cat << EOF
 usage: $0 [--clean | --install | --help]
   --clean: $0 will "make clean" and rerun "autogen.sh" before building.
-  --install: Will install the software into standared (e.g. /usr) system locations.
+  --install: Will install the software into standard (e.g. /usr) system locations.
+  --uninstall: Will remove the software from standard (e.g. /usr) system locations.
   --help: Print this usage message.
 EOF
 }
@@ -35,10 +36,15 @@ do
   else
     if [ "x$1" = "x--install" ]
     then
-      INSTALL=true
+      INSTALL=install
     else
-      usage
-      exit 1
+      if [ "x$1" = "x--uninstall" ]
+      then
+        INSTALL=uninstall
+      else
+	    usage
+	    exit 1
+	  fi
     fi
   fi
   shift
@@ -114,10 +120,8 @@ fi
 if [ $INSTALL ]
 then
   echo "Checking sudo permissions for library installation."
-  if [ `sudo echo checking` ]
+  if [ ! `sudo echo checking` ]
   then
-    INSTALL=true
-  else
     echo "Unable to sudo: please ensure you have super-user privileges"
     exit 1
   fi
@@ -157,8 +161,8 @@ then
     }
     if [ $INSTALL ]
     then
-      sudo make install || {
-        echo Error: make install in `pwd` failed!
+      sudo make $INSTALL || {
+        echo Error: make $INSTALL in `pwd` failed!
         exit 1
       }
     else
@@ -214,8 +218,8 @@ then
       }
       if [ $INSTALL ]
       then
-        sudo make install || {
-          echo Error: make install in `pwd` failed!
+        sudo make $INSTALL || {
+          echo Error: make $INSTALL in `pwd` failed!
           exit 1
         }
       else
@@ -263,8 +267,8 @@ then
       }
       if [ $INSTALL ]
       then
-        sudo make install || {
-          echo Error: make install in `pwd` failed!
+        sudo make $INSTALL || {
+          echo Error: make $INSTALL in `pwd` failed!
           exit 1
         }
       else
@@ -312,8 +316,8 @@ then
       }
       if [ $INSTALL ]
       then
-        sudo make install || {
-          echo Error: make install in `pwd` failed!
+        sudo make $INSTALL || {
+          echo Error: make $INSTALL in `pwd` failed!
           exit 1
         }
       else
@@ -365,7 +369,7 @@ then
         make && TOOL_BUILT=true
         if [ $INSTALL ]
         then
-          sudo make install
+          sudo make $INSTALL
         fi
       fi
       cd $SECTIONTOP
@@ -417,7 +421,7 @@ then
         make && COMP_BUILT=true
         if [ $INSTALL ]
         then
-          sudo make install
+          sudo make $INSTALL
         else
           GPP="$GPP:`pwd`/.libs"
         fi
@@ -471,7 +475,7 @@ then
         make && COMP_BUILT=true
         if [ $INSTALL ]
         then
-          sudo make install
+          sudo make $INSTALL
         else
           GPP="$GPP:`pwd`/.libs"
         fi
@@ -525,7 +529,7 @@ then
         make && COMP_BUILT=true
         if [ $INSTALL ]
         then
-          sudo make install
+          sudo make $INSTALL
         else
           GPP="$GPP:`pwd`/.libs"
         fi
@@ -554,7 +558,7 @@ then
 fi
 if [ $INSTALL ]
 then
-  echo "Installed libraries on system."
+  echo "${INSTALL}ed libraries on system."
 fi
 if [ $PKG_CONFIG_PATH ]
 then

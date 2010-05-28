@@ -55,3 +55,22 @@ Fedora 10
 
 9. You should have the distribution below this directory (MPF).  Remember to '. setup.sh' to set your paths
    before using the locally built component.
+
+
+10. [Optional] Install GRDF and MPF on your system, in the 'standard' (/usr) locations:
+
+     pushd ../GRDF; ./build-components.sh --install; popd
+     ./build-components.sh --install
+
+    You may have to 'export GST_PLUGIN_PATH=/usr/local/lib' to make the libraries visible to gst-launch etc.
+
+11. [Optional] Uninstall GRDF and MPF from your system:
+
+     pushd ../GRDF; ./build-components.sh --uninstall; popd
+     ./build-components.sh --uninstall
+
+     This is advisable if you are doing development to avoid problems caused by installed components 'hiding'
+     uninstalled (development) components.
+
+     If you chose to do development on a machine with installed components, make sure that the GST_PLUGIN_PATH
+     established by setup.sh has local .libs directories *ahead* of /usr/local/lib.
