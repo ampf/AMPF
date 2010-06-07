@@ -1,0 +1,27 @@
+<project name="AMPF" default="build-all">
+
+    <!-- Override on command line if desired -->
+    <property name="MPF" value="./MPF"/>
+    <property name="GRDF" value="./GRDF"/>
+
+    <target name="build-all" depends="build-grdf, build-mpf" />
+
+    <target name="clean-all" depends="clean-grdf, clean-mpf" />
+
+    <target name="build-grdf">
+        <ant dir="${GRDF}" target="all" />
+    </target>
+
+    <target name="build-mpf">
+        <ant dir="${MPF}" target="all" />
+    </target>
+
+    <target name="clean-grdf">
+        <ant dir="${GRDF}" target="clean" />
+    </target>
+
+    <target name="clean-mpf">
+        <ant dir="${MPF}" target="clean" />
+    </target>
+
+</project>
