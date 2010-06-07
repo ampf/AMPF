@@ -18,7 +18,7 @@
     <target name="clean" depends="javac-clean,clean-all" description="Clean everything"/>
 
     <target name="build-components" description="Build all MPF plugin components and data-types">
-        <exec command="sh -c './build-components.sh'"/>
+        <exec command="sh -c './build-components.sh'" failonerror="true"/>
     </target>
 
     <!-- Note: the install/uninstall targets require sudo, which will not work from inside Eclipse
@@ -26,19 +26,19 @@
          the command line.
     -->
     <target name="install" description="Install components in standard system locations (requires supeuser)">
-       <exec command="sh -c './build-components.sh --install'"/>
+       <exec command="sh -c './build-components.sh --install'" failonerror="true"/>
     </target>
 
     <target name="uninstall" description="Remove components from standard system locations (requires supeuser)">
-       <exec command="sh -c './build-components.sh --uninstall'"/>
+       <exec command="sh -c './build-components.sh --uninstall'" failonerror="true"/>
     </target>
 
     <target name="clean-all" description="Clean build artifacts from workspace">
-        <exec command="sh -c './clean-all.sh'"/>
+        <exec command="sh -c './clean-all.sh'" failonerror="true"/>
     </target>
 
     <!-- Unit Testing -->
-	<path id="test.path">
+    <path id="test.path">
         <pathelement path="target/test-classes"/>
         <pathelement path="java/lib/freemarker-2.3.13.jar"/>
         <pathelement path="junit/lib/junit-4.7.jar"/>
@@ -48,8 +48,8 @@
     <target name="javac">
         <mkdir dir="target/classes"/>
         <mkdir dir="target/test-classes"/>
-        <javac destdir="target/classes" srcdir="java/src"/>
-        <javac destdir="target/test-classes">
+        <javac destdir="target/classes" srcdir="java/src" failonerror="true"/>
+        <javac destdir="target/test-classes" failonerror="true">
             <classpath refid="test.path"/>
             <src path="junit/grammar/gen"/>
             <src path="junit/src"/>
@@ -91,7 +91,7 @@
     </target>
 
 
-	<target name="clean-tests">
+    <target name="clean-tests">
         <delete dir="junit_results"/>
     </target>
 

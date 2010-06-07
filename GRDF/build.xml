@@ -16,7 +16,7 @@
     <target name="clean" depends="clean-all" />
 
     <target name="build-components">
-        <exec command="sh -c ./build-components.sh" >
+        <exec command="sh -c ./build-components.sh" failonerror="true">
         </exec>
     </target>
 
@@ -25,15 +25,15 @@
 	     the command line.
 	-->
 	<target name="install" description="Install components in standard system locations (requires supeuser)">
-	   <exec command="sh -c './build-components.sh --install'"/>
+	   <exec command="sh -c './build-components.sh --install'" failonerror="true"/>
 	</target>
 
     <target name="uninstall" description="Remove components from standard system locations (requires supeuser)">
-       <exec command="sh -c './build-components.sh --uninstall'"/>
+       <exec command="sh -c './build-components.sh --uninstall'" failonerror="true"/>
     </target>
 
     <target name="clean-all" description="Clean build artifacts from workspace">
-        <exec command="sh -c clean-all.sh" />
+        <exec command="sh -c clean-all.sh" failonerror="true"/>
     </target>
 
 	<target name="test-build">
