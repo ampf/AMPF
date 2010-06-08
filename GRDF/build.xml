@@ -33,7 +33,7 @@
     </target>
 
     <target name="clean-all" description="Clean build artifacts from workspace">
-        <exec command="sh -c clean-all.sh" failonerror="true"/>
+        <exec command="sh -c ./clean-all.sh" failonerror="true"/>
     </target>
 
 	<target name="test-build">

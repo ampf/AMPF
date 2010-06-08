@@ -1,46 +1,53 @@
 Pre-requisites for MPF Build
 ----------------------------
 
-Fedora 10
----------
+Fedora 10, 11, 12
+-----------------
+
 1. Install the Redhat Fusion repository (current URLs as of 12/2008)
 
       sudo rpm -Uvh http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-stable.noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-stable.noarch.rpm
 
 2. Bring all of GStreamer up-to-date
 
-      yum install gstreamer*
+      sudo yum install gstreamer*
 
-3. Make sure you have lots of packages (92 isn't enough)
+3. Make sure you have all the expected GStreamer plugins and features
 
-	  gst-inspect
-	  ... blah blah blah
+      gst-inspect
+	  ... 
 	  Total count: 197 plugins, 894 features
 
-4. Turn off SE Linux Management (change Enforced mode to Permissive in System and Current Enforcing modes)
+4. Install remaining package dependencies for MPF
+
+      sudo yum install check opencv
+
+   (NOTE: MPF does not currently work with OpenCV version 2, which is installed with Fedora 13.  Version 1.1 is required). 
+
+5. Turn off SE Linux Management (change Enforced mode to Permissive in System and Current Enforcing modes)
    to suppress relocation errors for libgstproc
 
       SELinux is preventing gst-inspect-0.1 from loading /usr/lib/sse2/libpostproc.so.51.2.0 which requires text relocation.
 
       System | Administration | SE Linux Management
 
-5. Install Ant, and optional packages:
+6. Install Ant, and optional packages:
 
       sudo yum install ant ant-trax
 
-6. Build GRDF:
+7. Build GRDF:
 
       pushd ../GRDF
       ant
       popd
 
-7. Build and test MPF (all tests should pass). This uses autotools, and generates a *lot* of console outputs, most
+8. Build and test MPF (all tests should pass). This uses autotools, and generates a *lot* of console outputs, most
    of which can be ignored.
 
 	  ant
 	  ant test-build
 
-8. Examine the test results:
+9. Examine the test results:
 
 	  ant html-report
 	  firefox junit_results/html/index.html
@@ -53,18 +60,18 @@ Fedora 10
 
    These can be safely ignored for now (they appear to be a race-condition on shutdown).
 
-9. You should have the distribution below this directory (MPF).  Remember to '. setup.sh' to set your paths
+10. You should have the distribution below this directory (MPF).  Remember to '. setup.sh' to set your paths
    before using the locally built component.
 
 
-10. [Optional] Install GRDF and MPF on your system, in the 'standard' (/usr) locations:
+11. [Optional] Install GRDF and MPF on your system, in the 'standard' (/usr) locations:
 
      pushd ../GRDF; ./build-components.sh --install; popd
      ./build-components.sh --install
 
     You may have to 'export GST_PLUGIN_PATH=/usr/local/lib' to make the libraries visible to gst-launch etc.
 
-11. [Optional] Uninstall GRDF and MPF from your system:
+12. [Optional] Uninstall GRDF and MPF from your system:
 
      pushd ../GRDF; ./build-components.sh --uninstall; popd
      ./build-components.sh --uninstall
