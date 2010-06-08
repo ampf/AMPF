@@ -24,4 +24,8 @@
         <ant dir="${MPF}" target="clean" />
     </target>
 
+    <target name="test-build">
+        <ant dir="${MPF}" target="test-build" />
+    </target>
+
 </project>

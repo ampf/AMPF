@@ -33,7 +33,7 @@ Fedora 10, 11, 12
 
 6. Install Ant, and optional packages:
 
-      sudo yum install ant ant-trax
+      sudo yum install ant ant-junit ant-trax
 
 7. Build GRDF:
 
